@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>claude-task-master：为开发者打造的AI驱动任务管理工具</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+      .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px;
+        }
+        header {
+            background: #333;
+            color: #fff;
+            padding: 1rem 0;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        header p {
+            font-size: 1.1em;
+        }
+        section {
+            background: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        h3 {
+            color: #555;
+        }
+        ul {
+            list-style: disc;
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        code {
+            background: #f4f4f4;
+            color: #333;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        pre {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        pre code {
+            background: transparent;
+            color: inherit;
+            padding: 0;
+        }
+      .note {
+            background: #e7f3fe;
+            border-left: 6px solid #2196F3;
+            padding: 15px;
+            margin: 15px 0;
+        }
+      .warning {
+            background: #fff3cd;
+            border-left: 6px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+        }
+      .highlight {
+            color: #007bff;
+            font-weight: bold;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #333;
+            color: #fff;
+            margin-top: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .icon-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .icon-title i {
+            color: #007bff;
+        }
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .feature-icon {
+            color: #007bff;
+            font-size: 1.2em;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .step-number {
+            background: #007bff;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><i class="fas fa-robot" style="margin-right: 10px;"></i>初识 claude-task-master</h1>
+        <p><i class="fas fa-magic" style="margin-right: 8px;"></i>AI驱动的任务管理，无缝融入您的开发工作流</p>
+    </header>
+
+    <div class="container">
+        <section id="intro">
+            <h2 class="icon-title"><i class="fas fa-question-circle"></i>什么是 claude-task-master？</h2>
+            <p><code>claude-task-master</code> 是一个创新的任务管理系统，专为在编码过程中利用人工智能（AI）的开发者设计。您可以将其视为一个智能助手，它直接驻留在您的代码编辑器中，帮助您更高效地定义、组织和执行开发任务。</p>
+            <p>其核心理念是利用大型语言模型（LLM），如 Anthropic 的 Claude、OpenAI 的 GPT、Google 的 Gemini，甚至是本地通过 Ollama 运行的模型，来理解您的项目需求并在整个软件开发生命周期中为您提供支持。</p>
+        </section>
+
+        <section id="features">
+            <h2 class="icon-title"><i class="fas fa-star"></i>核心功能</h2>
+            <div class="feature-item">
+                <i class="fas fa-brain feature-icon"></i>
+                <div>
+                    <span class="highlight">AI驱动的任务管理：</span> 利用LLM解析产品需求文档（PRD）、生成任务、建议后续步骤，甚至协助执行任务。
+                </div>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-code feature-icon"></i>
+                <div>
+                    <span class="highlight">无缝编辑器集成：</span> 专为AI优先的编辑器（如Cursor）设计，通过模型控制协议（MCP）提供流畅的编辑器内体验。无需频繁切换上下文！
+                </div>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-layer-group feature-icon"></i>
+                <div>
+                    <span class="highlight">多LLM支持：</span> 灵活选择AI模型。您可以配置它使用各种基于云的LLM（Claude、GPT、Gemini等），或者（对我们的演示至关重要）通过 <span class="highlight">Ollama</span> 使用本地模型。
+                </div>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-file-alt feature-icon"></i>
+                <div>
+                    <span class="highlight">以PRD为中心的工作流：</span> 通过解析详细的PRD来创建全面的任务列表，鼓励结构化的方法。PRD越好，AI的辅助效果越佳。（新项目的PRD应位于 <code>.taskmaster/docs/prd.txt</code>）。
+                </div>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-comments feature-icon"></i>
+                <div>
+                    <span class="highlight">自然语言交互：</span> 直接在编辑器的AI聊天面板中使用简单的自然语言命令与 <code>claude-task-master</code> 交流。
+                </div>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-tasks feature-icon"></i>
+                <div>
+                    <span class="highlight">任务生命周期管理：</span> 协助规划、执行、将复杂任务分解为子任务，以及更新任务状态。
+                </div>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-terminal feature-icon"></i>
+                <div>
+                    <span class="highlight">命令行可用性：</span> 也为偏好终端或需要编写任务管理脚本的用户提供了命令行界面。
+                </div>
+            </div>
+        </section>
+
+        <section id="why-use">
+            <h2 class="icon-title"><i class="fas fa-thumbs-up"></i>为何选择 claude-task-master？</h2>
+            <p>如果您希望将AI更深入地集成到开发流程中，<code>claude-task-master</code> 具有以下优势：</p>
+            <ul>
+                <li><span class="highlight">提升生产力：</span> 自动化部分任务定义和规划工作，让您专注于编码。</li>
+                <li><span class="highlight">优化工作流：</span> 将任务管理保留在编辑器内，减少干扰。</li>
+                <li><span class="highlight">增强清晰度：</span> 帮助将高层需求（来自PRD）转化为可操作的开发任务。</li>
+                <li><span class="highlight">灵活性与控制力：</span> 选择您偏好的LLM，包括像Ollama这样的本地选项，以实现隐私保护、离线工作或成本节约。</li>
+                <li><span class="highlight">更好的项目结构：</span> 鼓励清晰的文档（PRD），从而使项目更有条理。</li>
+            </ul>
+        </section>
+
+        <section id="cursor-ollama-deep-dive">
+            <h2 class="icon-title"><i class="fas fa-microscope"></i>深度剖析：Cursor + Ollama 集成 (用于现场演示)</h2>
+            <p>这部分非常关键！我们将配置 <code>claude-task-master</code> 在 Cursor 编辑器中运行，并由通过 Ollama 在您本地计算机上运行的大型语言模型提供支持。</p>
+
+            <div id="ollama-setup">
+                <h3 class="icon-title"><i class="fas fa-server"></i>1. Ollama：您的本地LLM引擎</h3>
+                <p>Ollama 允许您在自己的计算机上直接运行强大的开源LLM（如 Llama 3.1, Mistral, Qwen 等）。这带来了诸多好处：</p>
+                <ul>
+                    <li><span class="highlight">隐私保护：</span> 您的代码和提示不会离开您的机器。</li>
+                    <li><span class="highlight">离线访问：</span> 下载模型后，即使没有互联网连接也能工作。</li>
+                    <li><span class="highlight">成本节约：</span> 无需为LLM使用支付API费用。</li>
+                    <li><span class="highlight">定制化：</span> 体验各种开源模型。</li>
+                </ul>
+                <h4>Ollama 快速设置步骤：</h4>
+                <ol>
+                    <li>
+                        <strong>安装 Ollama：</strong>
+                        <p>访问 <a href="https://ollama.com" target="_blank">ollama.com</a> 并根据您的操作系统（macOS, Linux, Windows）下载安装程序。或者，对于 Linux/macOS，您可以使用：</p>
+                        <pre><code>curl -fsSL https://ollama.com/install.sh | sh</code></pre>
+                    </li>
+                    <li>
+                        <strong>拉取 LLM 模型：</strong>
+                        <p>您至少需要一个模型。我们以 Llama 3.1 为例（或者您偏好的、<code>claude-task-master</code> 通过Ollama支持的任何其他模型）：</p>
+                        <pre><code>ollama pull llama3.1</code></pre>
+                        <p class="note">其他模型如 <code>qwen3:0.6b</code> 或 <code>mistral</code> 也是不错的选择。模型大小各不相同，下载时间也会有所差异。</p>
+                    </li>
+                    <li>
+                        <strong>确保 Ollama 服务正在运行：</strong>
+                        <p>Ollama 需要通过其API提供模型服务。通常，拉取或运行模型后服务会自动启动。您也可以显式启动它：</p>
+                        <pre><code>ollama serve</code></pre>
+                        <p>默认情况下，它运行在 <code>http://localhost:11434</code>。</p>
+                    </li>
+                    <li>
+                        <strong>验证安装和可用模型：</strong>
+                        <p>查看本地已有哪些模型：</p>
+                        <pre><code>ollama list</code></pre>
+                        <p>您应该能看到您拉取的模型（例如 <code>llama3.1:latest</code>）。</p>
+                    </li>
+                </ol>
+            </div>
+
+            <div id="cursor-intro">
+                <h3 class="icon-title"><i class="fas fa-edit"></i>2. Cursor 编辑器：AI优先的IDE</h3>
+                <p>Cursor 是一款从头开始构建、具备AI功能的代码编辑器。它是 VS Code 的一个分支，因此感觉很熟悉，但内置了强大的AI特性。它对 <span class="highlight">模型控制协议 (MCP)</span> 的支持，使得像 <code>claude-task-master</code> 这样的工具能够如此深入地集成。</p>
+            </div>
+
+            <div id="ctm-config">
+                <h3 class="icon-title"><i class="fas fa-cogs"></i>3. 配置 claude-task-master 与 Cursor 和 Ollama</h3>
+                <p>现在，让我们把所有部分连接起来。</p>
+                <h4>步骤 3.1：配置 Cursor 的 `mcp.json`</h4>
+                <p>Cursor 使用 <code>mcp.json</code> 文件来了解如何运行像 <code>claude-task-master</code> 这样与MCP兼容的服务。您可以进行全局配置或针对每个项目进行配置。</p>
+                <p><strong>文件路径：</strong></p>
+                <ul>
+                    <li><strong>全局 (Linux/macOS)：</strong> <code>~/.cursor/mcp.json</code></li>
+                    <li><strong>全局 (Windows)：</strong> <code>%USERPROFILE%\.cursor\mcp.json</code></li>
+                    <li><strong>项目特定：</strong> <code>&lt;您的项目文件夹&gt;/.cursor/mcp.json</code> (如果 <code>.cursor</code> 文件夹不存在，请创建它)</li>
+                </ul>
+                <p><strong><code>mcp.json</code> 内容示例：</strong></p>
+                <pre><code class="language-json">{
+  "mcpServers": {
+    "taskmaster-ai": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "--package=task-master-ai",
+        "task-master-ai"
+      ],
+      "env": {
+        // 对于 Ollama，此处不需要 API 密钥。
+        // 如果您计划使用云端 LLM 作为备用，请添加它们的 API 密钥：
+        // "ANTHROPIC_API_KEY": "您的ANTHROPIC密钥",
+        // "OPENAI_API_KEY": "您的OPENAI密钥"
+      }
+    }
+  }
+}</code></pre>
+                <div class="warning">
+                    <strong>Windows 用户请注意：</strong> 在 Windows 上通过 MCP 运行 <code>npx</code> 有时可能会遇到问题。如果上述 <code>"command": "npx"</code> 配置无效，您可能需要将其更改为：
+                    <pre><code>"command": "cmd",
+"args": ["/c", "npx", "-y", "--package=task-master-ai", "task-master-ai"]</code></pre>
+                    <p>或者可能是 <code>cmd /k...</code>。如果遇到问题，请参考 <code>claude-task-master</code> 或 Cursor 社区的讨论。</p>
+                </div>
+
+                <h4>步骤 3.2：为 Ollama 配置项目级的 `claude-task-master`</h4>
+                <ol>
+                    <li>
+                        <strong>在您的项目中初始化 `claude-task-master`：</strong>
+                        <p>在 Cursor 中打开您的项目。在 Cursor 的 AI 聊天面板中（通常是 <code>Ctrl+L</code> 或 <code>Cmd+L</code>），输入：</p>
+                        <pre><code>Initialize taskmaster-ai in my project</code></pre>
+                        <p>这会在您的项目根目录下创建一个 <code>.taskmaster/</code> 目录。</p>
+                    </li>
+                    <li>
+                        <strong>配置 Ollama 基础 URL：</strong>
+                        <p><code>claude-task-master</code> 需要知道您的 Ollama API 在哪里运行。在项目根目录下创建或编辑文件 <code>.taskmaster/config.json</code>，并确保它包含：</p>
+                        <pre><code class="language-json">{
+  "ollamaBaseUrl": "http://localhost:11434"
+  // 如果需要，您还可以添加特定角色的URL，例如：
+  // "mainOllamaBaseUrl": "http://localhost:11434",
+  // "researchOllamaBaseUrl": "http://another-ollama-host:11434"
+}</code></pre>
+                    </li>
+                </ol>
+
+                <h4>步骤 3.3：在 Cursor 中启用 `taskmaster-ai` MCP 服务</h4>
+                <p>即使配置了 <code>mcp.json</code> 文件，您仍需要在 Cursor 的设置界面中显式启用该服务：</p>
+                <ol>
+                    <li>打开 Cursor 设置（例如，<code>Ctrl+Shift+J</code> 或 <code>Cmd+Shift+J</code>，或通过菜单访问）。</li>
+                    <li>导航到左侧的 "MCP" 选项卡。</li>
+                    <li>在 MCP 服务列表中找到 "taskmaster-ai" 并使用切换开关启用它。</li>
+                </ol>
+                <p class="note">启用后，Cursor 可能需要重启，或者它会自动尝试启动该服务。</p>
+
+                <h4>步骤 3.4：告知 `claude-task-master` 使用您的 Ollama 模型</h4>
+                <p>最后，指示 <code>claude-task-master</code> 使用您本地可用的 Ollama 模型之一。您可以通过 Cursor 的 AI 聊天来完成此操作：</p>
+                <pre><code>Change the main model to ollama/&lt;您的Ollama模型名称&gt;</code></pre>
+                <p>例如，如果您通过 Ollama 拉取了 <code>llama3.1</code>：</p>
+                <pre><code>Change the main model to ollama/llama3.1</code></pre>
+                <p>或者，您可以在项目的终端中使用 CLI 命令：</p>
+                <pre><code># 初始化一个新项目
+task-master init
+
+# 解析 PRD 并生成任务
+task-master parse-prd your-prd.txt
+
+# 列出所有任务
+task-master list
+
+# 显示下一个要处理的任务
+task-master next
+
+# 生成任务文件
+task-master generate</code></pre>
+                <p>这些是 Task Master 的主要 CLI 命令。您可以使用 <code>task-master --help</code> 查看完整的命令列表。</p>
+                <p><code>claude-task-master</code> 会尝试通过查询 <code>/api/tags</code> 端点来验证模型是否在您正在运行的 Ollama 实例中可用。</p>
+            </div>
+        </section>
+
+        <section id="live-demo-steps">
+            <h2 class="icon-title"><i class="fas fa-play-circle"></i>现场演示：整合所有内容 (建议步骤)</h2>
+            <p>以下是为您现场演示建议的流程：</p>
+            <ol>
+                <li><strong>展示先决条件：</strong>
+                    <ul>
+                        <li>简要展示 Ollama 正在运行 (在终端中运行 <code>ollama list</code> 以显示本地模型)。</li>
+                        <li>展示 Cursor 的 <code>mcp.json</code> 配置。</li>
+                        <li>展示项目的 <code>.taskmaster/config.json</code> 文件以及其中的 <code>ollamaBaseUrl</code>。</li>
+                    </ul>
+                </li>
+                <li><strong>初始化项目 (如果尚未完成)：</strong>
+                    <ul>
+                        <li>在 Cursor AI 聊天中：<code>Initialize taskmaster-ai in my project</code></li>
+                    </ul>
+                </li>
+                <li><strong>设置 Ollama 模型：</strong>
+                    <ul>
+                        <li>在 Cursor AI 聊天中：<code>Change the main model to ollama/您选择的模型名称</code> (例如 <code>ollama/llama3.1</code>)。等待确认。</li>
+                    </ul>
+                </li>
+                <li><strong>创建简单的 PRD：</strong>
+                    <ul>
+                        <li>在 <code>.taskmaster/docs/prd.txt</code> 中创建/展示一个简单的 <code>prd.txt</code> 文件。例如：
+                            <pre><code>项目：简单问候器
+目标：创建一个网页，询问用户姓名并显示问候语。
+功能：
+1. 用于输入姓名的输入框。
+2. 提交按钮。
+3. 在页面上显示“您好，[姓名]！”。</code></pre>
+                        </li>
+                    </ul>
+                </li>
+                <li><strong>解析 PRD：</strong>
+                    <ul>
+                        <li>在 Cursor AI 聊天中：<code>Can you parse my PRD at.taskmaster/docs/prd.txt?</code></li>
+                        <li>观察 AI 的响应，并（可选）展示生成的 <code>.taskmaster/tasks/tasks.json</code> 文件。</li>
+                    </ul>
+                </li>
+                <li><strong>获取下一个任务：</strong>
+                    <ul>
+                        <li>在 Cursor AI 聊天中：<code>What's the next task I should work on?</code></li>
+                    </ul>
+                </li>
+                <li><strong>AI辅助实现：</strong>
+                    <ul>
+                        <li>假设 AI 建议“任务1：创建HTML结构”。
+                        <li>在 Cursor AI 聊天中：<code>Can you help me implement task 1?</code> [1, 2]</li>
+                        <li>观察 AI 提供代码建议或插入代码。</li>
+                    </ul>
+                </li>
+                <li><strong>更新任务状态：</strong>
+                    <ul>
+                        <li>在“完成”任务后：<code>Task 1 is now complete. Please update its status.</code> [2]</li>
+                    </ul>
+                </li>
+                <li><strong>(可选) 扩展任务：</strong>
+                    <ul>
+                        <li>如果某个任务看起来比较复杂：<code>Can you help me expand task 2 into 2 subtasks?</code> [2]</li>
+                    </ul>
+                </li>
+            </ol>
+            <p class="note">请记住，像用户一样自然地与AI聊天进行交互！</p>
+        </section>
+
+        <section id="getting-started">
+            <h2 class="icon-title"><i class="fas fa-rocket"></i>开始使用和相关资源</h2>
+            <p>有兴趣亲自尝试吗？有两种主要的使用方式：</p>
+            
+            <h3 class="icon-title"><i class="fas fa-terminal"></i>方式1：命令行安装</h3>
+            <p>对于偏好命令行操作的用户：</p>
+            <pre><code># 全局安装
+npm install -g task-master-ai
+
+# 或在项目内本地安装
+npm install task-master-ai</code></pre>
+            <p>安装后，您可以使用以下命令：</p>
+            <pre><code># 初始化项目（如果全局安装）
+task-master init
+
+# 初始化项目（如果本地安装）
+npx task-master init</code></pre>
+            
+            <h3 class="icon-title"><i class="fas fa-plug"></i>方式2：MCP集成（推荐）</h3>
+            <p>通过模型控制协议直接在编辑器中使用，无需单独安装。这是演示中展示的方法。</p>
+            
+            <h3 class="icon-title"><i class="fas fa-link"></i>相关资源</h3>
+            <ul>
+                <li><strong>GitHub 仓库：</strong> <a href="https://github.com/eyaltoledano/claude-task-master" target="_blank">https://github.com/eyaltoledano/claude-task-master</a></li>
+                <li><strong>NPM 包：</strong> <a href="https://www.npmjs.com/package/task-master-ai" target="_blank">task-master-ai</a></li>
+            </ul>
+            <p>该仓库的 README 和 <code>docs</code> 文件夹是您获取详细安装、配置和使用指南的最佳帮手。</p>
+        </section>
+
+        <section id="q-a">
+            <h2 class="icon-title"><i class="fas fa-question"></i>问答环节</h2>
+            <p>现在，我很乐意回答您可能有的任何问题！</p>
+        </section>
+    </div>
+
+    <footer>
+        <p><i class="fas fa-heart" style="color: #e74c3c;"></i> 感谢您的聆听！ <i class="fas fa-smile"></i></p>
+    </footer>
+</body>
+</html>
