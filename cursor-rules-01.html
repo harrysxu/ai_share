@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第一期：Cursor Rules 基础入门 - 全面掌握AI编程规则</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .content-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 2em;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: #764ba2;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .highlight-box h3 {
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-card h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Consolas', 'Monaco', monospace;
+            border-left: 5px solid #667eea;
+        }
+
+        .code-block pre {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+
+        .diagram {
+            background: #f8f9fa;
+            border: 2px dashed #667eea;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .diagram-title {
+            font-size: 1.3em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .flow-chart {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .flow-item {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            min-width: 120px;
+            text-align: center;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .arrow {
+            font-size: 1.5em;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid #ecf0f1;
+            background: white;
+        }
+
+        .comparison-table tr:nth-child(even) td {
+            background: #f8f9fa;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-left: 5px solid #fdcb6e;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .warning-box h4 {
+            color: #e17055;
+            margin-bottom: 10px;
+        }
+
+        .success-box {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-left: 5px solid #28a745;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .success-box h4 {
+            color: #155724;
+            margin-bottom: 10px;
+        }
+
+        .footer {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 25px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .content-section {
+                padding: 25px;
+            }
+            
+            .nav {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .flow-chart {
+                flex-direction: column;
+            }
+            
+            .arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <div class="header">
+            <h1>🚀 第一期：Cursor Rules 基础入门</h1>
+            <p>全面掌握AI编程规则，提升开发效率的终极指南</p>
+            <div class="nav">
+                <a href="#what-is" class="nav-btn">什么是Cursor Rules</a>
+                <a href="#problems" class="nav-btn">解决的问题</a>
+                <a href="#types" class="nav-btn">规则类型</a>
+                <a href="#mdc-format" class="nav-btn">.mdc文件格式</a>
+            </div>
+        </div>
+
+        <!-- 什么是Cursor Rules -->
+        <div id="what-is" class="content-section">
+            <h2 class="section-title">🎯 什么是Cursor Rules</h2>
+            
+            <div class="highlight-box">
+                <h3>💡 核心概念</h3>
+                <p>Cursor Rules是一种为AI编程助手提供<strong>持久化、可复用上下文</strong>的精密机制。它不仅仅是简单的指令集，而是将AI从通用代码生成器转变为深度理解项目特定领域知识、架构决策和编码风格的专业伙伴。</p>
+            </div>
+
+            <p>在人工智能辅助开发的浪潮中，Cursor IDE以其深度集成AI的能力脱颖而出。其核心特性之一——"Rules"（规则），超越了聊天框中一次性的提示，旨在为AI编程伙伴提供系统级指导。</p>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>🎯 持久化上下文</h4>
+                    <p>规则提供持久化、可复用的上下文，解决大型语言模型固有的"无状态"问题，让AI在不同会话间保持一致的理解。</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🧠 智能化指导</h4>
+                    <p>通过规则，AI能够理解项目的特定架构、编码风格和业务逻辑，提供更精准的代码建议和生成。</p>
+                </div>
+                <div class="feature-card">
+                    <h4>⚡ 效率提升</h4>
+                    <p>避免重复解释项目规范，让开发者专注于核心业务逻辑，显著提升开发效率和代码质量。</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🤝 团队协作</h4>
+                    <p>规则可以版本控制和团队共享，确保所有成员和AI助手都遵循统一的开发标准。</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 解决的问题 -->
+        <div id="problems" class="content-section">
+            <h2 class="section-title">🔧 Cursor Rules解决了什么问题</h2>
+
+            <div class="highlight-box">
+                <h3>⚡ 核心价值：一致性、高质量、自动化</h3>
+                <p>通过规则，开发者可以将关于代码库的领域特定知识、项目特有的工作流程或模板、以及标准化的代码风格或架构决策进行编码，最终带来更高的代码质量、更强的团队协作一致性，并显著提升开发效率。</p>
+            </div>
+
+            <h3>🎯 主要解决的问题</h3>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>❌ AI"健忘症"</h4>
+                    <p><strong>问题：</strong>大型语言模型在会话间不保留记忆<br>
+                    <strong>解决：</strong>规则提供持久化上下文，确保AI始终记住项目规范</p>
+                </div>
+                <div class="feature-card">
+                    <h4>❌ 重复解释</h4>
+                    <p><strong>问题：</strong>每次对话都需要重新解释项目背景<br>
+                    <strong>解决：</strong>规则自动注入相关上下文，减少重复性工作</p>
+                </div>
+                <div class="feature-card">
+                    <h4>❌ 代码不一致</h4>
+                    <p><strong>问题：</strong>AI生成的代码风格和架构不统一<br>
+                    <strong>解决：</strong>通过规则强制执行编码标准和架构模式</p>
+                </div>
+                <div class="feature-card">
+                    <h4>❌ 团队协作困难</h4>
+                    <p><strong>问题：</strong>团队成员使用AI的方式不统一<br>
+                    <strong>解决：</strong>共享规则确保团队使用统一的AI指导原则</p>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <h4>✅ 令牌经济学优化</h4>
+                <p>规则中的每一个词都会消耗大型语言模型的令牌，这会减少可用于理解代码和用户查询的上下文窗口容量。因此，最高效的规则编写者，并非提供信息最多的人，而是提供最相关、最简洁信息的人。</p>
+            </div>
+        <!-- 规则类型 -->
+        <div id="types" class="content-section">
+            <h2 class="section-title">📋 Cursor Rules的类型与工作原理</h2>
+
+            <div class="highlight-box">
+                <h3>🏗️ 三层规则体系</h3>
+                <p>Cursor提供了多种作用域的规则，形成一个层次化的上下文系统，以适应从个人偏好到团队规范的各种需求。</p>
+            </div>
+
+            <h3>🌐 规则作用域分类</h3>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>👤 User Rules (用户规则)</h4>
+                    <p><strong>作用域：</strong>全局，所有项目<br>
+                    <strong>存储：</strong>Cursor设置中<br>
+                    <strong>用途：</strong>个人编码风格、响应语调、通用编程习惯</p>
+                    <div class="code-block">
+                        <pre>// 示例：全局用户规则
+- 注释使用中文
+- 优先使用函数式编程
+- 变量命名使用驼峰式</pre>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <h4>📁 Project Rules (项目规则)</h4>
+                    <p><strong>作用域：</strong>特定项目<br>
+                    <strong>存储：</strong>.cursor/rules文件夹<br>
+                    <strong>用途：</strong>项目特定的技术栈、架构模式、团队规范</p>
+                    <div class="code-block">
+                        <pre>// 示例：项目规则
+- 使用TypeScript
+- 遵循Next.js最佳实践
+- 使用Tailwind CSS进行样式设计</pre>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <h4>🧠 Memories (记忆)</h4>
+                    <p><strong>作用域：</strong>对话级别<br>
+                    <strong>存储：</strong>自动生成<br>
+                    <strong>用途：</strong>AI根据对话自动学习和归纳的决策和上下文</p>
+                </div>
+                <div class="feature-card">
+                    <h4>📄 .cursorrules (遗留)</h4>
+                    <p><strong>作用域：</strong>项目根目录<br>
+                    <strong>存储：</strong>单一文件<br>
+                    <strong>状态：</strong>已弃用，建议迁移到新格式</p>
+                </div>
+            </div>
+
+            <h3>⚙️ 规则激活机制</h3>
+
+            <div class="diagram">
+                <div class="diagram-title">两阶段激活过程</div>
+                <div class="flow-chart">
+                    <div class="flow-item">阶段一：注入</div>
+                    <div class="arrow">→</div>
+                    <div class="flow-item">阶段二：激活</div>
+                </div>
+                <p style="margin-top: 15px; color: #666;">规则首先被注入到系统提示中，然后AI根据相关性决定是否激活使用</p>
+            </div>
+
+            <h3>🎮 四种激活类型详解</h3>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>激活类型</th>
+                        <th>配置方式</th>
+                        <th>触发条件</th>
+                        <th>适用场景</th>
+                        <th>令牌成本</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Always</strong><br>始终应用</td>
+                        <td>alwaysApply: true</td>
+                        <td>任何请求</td>
+                        <td>项目级核心准则</td>
+                        <td>高</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Auto Attached</strong><br>自动附加</td>
+                        <td>globs: ["*.tsx"]</td>
+                        <td>文件匹配时</td>
+                        <td>特定文件类型规则</td>
+                        <td>中</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Agent Requested</strong><br>代理请求</td>
+                        <td>description: "..."</td>
+                        <td>AI判断相关性</td>
+                        <td>专业化任务规则</td>
+                        <td>低</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Manual</strong><br>手动触发</td>
+                        <td>@ruleName</td>
+                        <td>用户显式引用</td>
+                        <td>临时或特殊场景</td>
+                        <td>按需</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>💡 实际应用示例</h3>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>📝 Always 类型示例</h4>
+                    <div class="code-block">
+                        <pre>---
+description: 项目核心架构规则
+alwaysApply: true
+---
+
+# 核心规则
+- 本项目使用TypeScript
+- 严格遵循函数式编程
+- 禁止使用any类型</pre>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <h4>🎯 Auto Attached 类型示例</h4>
+                    <div class="code-block">
+                        <pre>---
+description: React组件开发规范
+globs: ["src/components/**/*.tsx"]
+---
+
+# React组件规则
+- 使用函数组件
+- 必须定义Props接口
+- 使用Tailwind进行样式设计</pre>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <h4>🤖 Agent Requested 类型示例</h4>
+                    <div class="code-block">
+                        <pre>---
+description: API开发和测试相关规范
+---
+
+# API开发规则
+- 使用RESTful设计原则
+- 必须编写单元测试
+- 使用Zod进行数据验证</pre>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <h4>✋ Manual 类型示例</h4>
+                    <div class="code-block">
+                        <pre>---
+description: 数据库迁移模板
+---
+
+# 数据库迁移
+@migration-template.sql
+
+使用此模板创建新的数据库迁移文件</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h4>⚠️ 重要提醒</h4>
+                <p>规则的激活不仅取决于配置，还依赖于AI对规则description的理解。能力较弱的模型可能无法有效理解和应用规则，建议使用高性能模型如Claude-4-Sonnet。</p>
+            </div>
+        </div>
+
+        <!-- .mdc文件格式 -->
+        <div id="mdc-format" class="content-section">
+            <h2 class="section-title">📄 .mdc文件格式详解</h2>
+
+            <div class="highlight-box">
+                <h3>🎯 MDC格式概述</h3>
+                <p>MDC (Markdown Configuration) 是Cursor专用的规则文件格式，结合了YAML前置元数据和Markdown内容，提供了强大而灵活的规则定义能力。</p>
+            </div>
+
+            <h3>🏗️ 文件结构解析</h3>
+
+            <div class="diagram" style="text-align: left;">
+                <div class="diagram-title" style="text-align: left;">.mdc文件结构</div>
+                <div class="code-block">
+                    <pre>---
+description: 规则描述（AI用于判断是否应用此规则）
+globs: ["文件匹配模式"]
+alwaysApply: true/false
+---
+
+# 规则标题
+
+## 规则内容
+- 使用Markdown语法编写
+- 可以包含代码示例
+- 支持@文件引用
+
+@template-file.ts</pre>
+                </div>
+            </div>
+
+            <h3>📋 前置元数据字段详解</h3>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>字段名</th>
+                        <th>类型</th>
+                        <th>必需</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>description</td>
+                        <td>字符串</td>
+                        <td>推荐</td>
+                        <td>AI用于判断规则相关性的描述</td>
+                    </tr>
+                    <tr>
+                        <td>globs</td>
+                        <td>数组</td>
+                        <td>可选</td>
+                        <td>文件匹配模式，支持通配符</td>
+                    </tr>
+                    <tr>
+                        <td>alwaysApply</td>
+                        <td>布尔值</td>
+                        <td>可选</td>
+                        <td>是否始终应用此规则</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>🎨 Markdown内容编写最佳实践</h3>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>📝 结构化组织</h4>
+                    <p>使用清晰的标题层次结构，利用Markdown的格式化功能组织内容，包括标题、列表、代码块等。</p>
+                </div>
+                <div class="feature-card">
+                    <h4>💡 具体示例</h4>
+                    <p>提供具体的代码示例，特别是"正反对比"的示例，明确展示期望和禁止的代码模式。</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🔗 文件引用</h4>
+                    <p>使用@符号引用项目中的特定文件，为AI提供具体的上下文锚点。</p>
+                </div>
+                <div class="feature-card">
+                    <h4>⚡ 简洁明了</h4>
+                    <p>保持规则简洁，目标是每个规则文件少于500行，避免信息过载。</p>
+                </div>
+            </div>
+
+            <h3>🛠️ 创建和管理规则</h3>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>🎮 UI驱动创建</h4>
+                    <p>使用命令面板（Cmd+Shift+P）执行"New Cursor Rule"命令，或在"Cursor Settings > Rules"界面操作。</p>
+                </div>
+                <div class="feature-card">
+                    <h4>💬 聊天驱动生成</h4>
+                    <p>使用/Generate Cursor Rules命令，让AI根据当前对话内容直接生成规则。</p>
+                </div>
+                <div class="feature-card">
+                    <h4>✏️ 手动编辑</h4>
+                    <p>直接创建.mdc文件，完全控制文件结构和内容，适合复杂规则。</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🔧 批量管理</h4>
+                    <p>使用社区工具如vscode-cursor-rules扩展，从awesome-cursorrules仓库批量获取规则。</p>
+                </div>
+            </div>
+
+            <h3>📖 完整示例</h3>
+
+            <div class="code-block">
+                <pre>---
+description: TypeScript React项目开发规范和最佳实践
+globs: ["src/**/*.{ts,tsx}", "components/**/*.{ts,tsx}"]
+alwaysApply: false
+---
+
+# TypeScript React 开发规范
+
+## 组件开发规则
+
+### ✅ 推荐做法
+```typescript
+// 使用函数组件和TypeScript接口
+interface ButtonProps {
+  text: string;
+  onClick: () => void;
+  variant?: 'primary' | 'secondary';
+}
+
+export const Button: React.FC<ButtonProps> = ({ text, onClick, variant = 'primary' }) => {
+  return (
+    <button 
+      className={`btn btn-${variant}`}
+      onClick={onClick}
+    >
+      {text}
+    </button>
+  );
+};
+```
+
+### ❌ 避免的做法
+```typescript
+// 不要使用any类型
+const Button = (props: any) => {
+  return <button>{props.text}</button>;
+};
+```
+
+## 样式规范
+- 使用Tailwind CSS进行样式设计
+- 避免内联样式
+- 遵循移动优先的响应式设计
+
+## 文件引用
+@src/components/ui/Button.tsx
+@docs/component-guidelines.md
+
+## 测试要求
+- 每个组件必须有对应的测试文件
+- 测试覆盖率不低于80%
+- 使用Jest和React Testing Library</pre>
+            </div>
+
+            <div class="warning-box">
+                <h4>⚠️ 常见错误避免</h4>
+                <ul>
+                    <li>前置元数据必须位于文件顶部，使用正确的YAML格式</li>
+                    <li>JSON格式的注解必须是有效的JSON</li>
+                    <li>避免引用不存在的文件，确保所有@引用的文件都存在</li>
+                    <li>保持规则简洁，避免信息过载影响AI理解</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        <div class="footer" style="text-align: left;">
+            <h3>🎓 总结</h3>
+            <p>Cursor Rules是提升AI辅助编程效率的关键工具。通过合理使用三层规则体系和.mdc文件格式，你可以：</p>
+            <ul style="text-align: left; max-width: 600px; margin: 20px 0;">
+                <li>✅ 建立持久化的项目上下文</li>
+                <li>✅ 确保代码质量和一致性</li>
+                <li>✅ 提升团队协作效率</li>
+                <li>✅ 减少重复性工作</li>
+            </ul>
+            <p style="margin-top: 30px; font-style: italic; color: #7f8c8d;">
+                下期预告：《Cursor Rules进阶技巧 - 高级配置与优化策略》
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // 平滑滚动导航
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // 代码块复制功能
+        document.querySelectorAll('.code-block').forEach(block => {
+            const copyBtn = document.createElement('button');
+            copyBtn.textContent = '复制';
+            copyBtn.style.cssText = `
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background: #667eea;
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 12px;
+            `;
+            
+            block.style.position = 'relative';
+            block.appendChild(copyBtn);
+            
+            copyBtn.addEventListener('click', () => {
+                const code = block.querySelector('pre').textContent;
+                navigator.clipboard.writeText(code).then(() => {
+                    copyBtn.textContent = '已复制!';
+                    setTimeout(() => {
+                        copyBtn.textContent = '复制';
+                    }, 2000);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
