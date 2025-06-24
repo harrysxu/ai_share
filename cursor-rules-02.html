@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第二期：Cursor Rules 架构设计与进阶技巧 - 从战略蓝图到工程实践</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            font-size: 0.9em;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .content-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 2em;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: #764ba2;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .highlight-box h3 {
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-card h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Consolas', 'Monaco', monospace;
+            border-left: 5px solid #667eea;
+        }
+
+        .code-block pre {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+
+        .architecture-diagram {
+            background: #f8f9fa;
+            border: 2px solid #667eea;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .layer {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            position: relative;
+        }
+
+        .layer h4 {
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .arrow-down {
+            text-align: center;
+            font-size: 2em;
+            color: #667eea;
+            margin: 10px 0;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid #ecf0f1;
+            background: white;
+        }
+
+        .comparison-table tr:nth-child(even) td {
+            background: #f8f9fa;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-left: 5px solid #fdcb6e;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .warning-box h4 {
+            color: #e17055;
+            margin-bottom: 10px;
+        }
+
+        .success-box {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-left: 5px solid #28a745;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .success-box h4 {
+            color: #155724;
+            margin-bottom: 10px;
+        }
+
+        .principle-card {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+        }
+
+        .principle-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        }
+
+        .principle-card h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .step-card {
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            border-left: 5px solid #667eea;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+        }
+
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .footer {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 25px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .content-section {
+                padding: 25px;
+            }
+            
+            .nav {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <div class="header">
+            <h1>🏗️ 第二期：Cursor Rules 架构设计与进阶技巧</h1>
+            <p>从战略蓝图到工程实践的权威指南</p>
+            <div class="nav">
+                <a href="#architecture" class="nav-btn">多层次架构</a>
+                <a href="#principles" class="nav-btn">设计原则</a>
+                <a href="#implementation" class="nav-btn">实施指南</a>
+                <a href="#example" class="nav-btn">实战示例</a>
+            </div>
+        </div>
+
+        <!-- 多层次规则架构 -->
+        <div id="architecture" class="content-section">
+            <h2 class="section-title">🏗️ 多层次规则架构验证</h2>
+            
+            <div class="highlight-box">
+                <h3>💡 核心理念</h3>
+                <p>多层次规则架构将AI从简单的代码补全工具转变为深度理解项目架构、遵循团队最佳实践的智能开发伙伴。这是一种从指令式交互到编排式控制的重大范式转变。</p>
+            </div>
+
+            <div class="architecture-diagram">
+                <h3 style="color: #2c3e50; margin-bottom: 20px;">三层规则架构体系</h3>
+                
+                <div class="layer">
+                    <h4>🌐 全局基础层 (User Rules)</h4>
+                    <p>个人偏好 • 通用编码哲学 • AI沟通风格</p>
+                </div>
+                
+                <div class="arrow-down">⬇️</div>
+                
+                <div class="layer">
+                    <h4>🏗️ 项目蓝图层 (Always-On Project Rules)</h4>
+                    <p>技术栈规范 • 架构模式 • 核心禁令</p>
+                </div>
+                
+                <div class="arrow-down">⬇️</div>
+                
+                <div class="layer">
+                    <h4>🔧 专业化工具箱 (Context-Aware Rules)</h4>
+                    <p>Auto Attached • Agent Requested • Nested • Manual</p>
+                </div>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>🌐 全局基础 → User Rules</h4>
+                    <p><strong>作用域：</strong>所有项目<br>
+                    <strong>内容：</strong>AI角色定义、沟通风格、个人编码哲学<br>
+                    <strong>特点：</strong>纯文本格式，全局生效</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h4>🏗️ 项目蓝图 → Always-On Rules</h4>
+                    <p><strong>作用域：</strong>单个项目<br>
+                    <strong>内容：</strong>技术栈、架构原则、关键禁令<br>
+                    <strong>特点：</strong>.mdc格式，alwaysApply: true</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h4>🔧 专业化工具箱 → Context-Aware</h4>
+                    <p><strong>作用域：</strong>特定上下文<br>
+                    <strong>内容：</strong>领域特定标准、工作流SOP<br>
+                    <strong>特点：</strong>按需激活，最大化令牌效率</p>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <h4>✅ 智能体控制系统</h4>
+                <p>这种架构将AI转变为一个具有"认知层"的智能体，能够感知项目状态、推理任务需求、规划执行路径。它不再是简单地执行指令，而是基于预设的价值观和约束进行智能决策。</p>
+            </div>
+        </div>
+
+        <!-- 设计原则 -->
+        <div id="principles" class="content-section">
+            <h2 class="section-title">⚖️ 高效规则架构设计的核心原则</h2>
+            
+            <div class="highlight-box">
+                <h3>🎯 五大核心原则</h3>
+                <p>设计强大而持久的Cursor规则架构，需要遵循五个基石原则，这些原则将指导您构建高效、可维护的规则体系。</p>
+            </div>
+
+            <div class="principle-card">
+                <h3>💰 1. 令牌经济学原则</h3>
+                <p><strong>核心理念：</strong>令牌是最稀缺的资源</p>
+                <p>用于规则的令牌 = 无法用于理解代码上下文的令牌。过长的规则会导致AI"分心"，表现甚至不如没有规则的AI。</p>
+                <ul style="margin-top: 10px;">
+                    <li>保持单个规则文件在500行以下</li>
+                    <li>每条规则只关注一个核心概念</li>
+                    <li>组合优于继承，分解复杂概念为小规则</li>
+                </ul>
+            </div>
+
+            <div class="principle-card">
+                <h3>🔍 2. 知识粒度原则</h3>
+                <p><strong>核心理念：</strong>解构复杂性</p>
+                <p>将宏大抽象的标准分解为具体、细粒度、可操作的规则，实现"恰到好处"的上下文加载。</p>
+                <div class="code-block">
+                    <pre>// 粒度分解示例
+testing.mdc → 分解为：
+├── unit-testing.mdc
+├── integration-testing.mdc
+└── e2e-testing-playwright.mdc</pre>
+                </div>
+            </div>
+
+            <div class="principle-card">
+                <h3>🎯 3. 具体性与可操作性原则</h3>
+                <p><strong>核心理念：</strong>从模糊到生动</p>
+                <p>AI的表现与指令清晰度成正比。避免模糊表述，提供生动范例和明确的Do/Don't清单。</p>
+                <div class="code-block">
+                    <pre>❌ 模糊：使用良好的命名规范
+✅ 具体：组件文件名必须使用帕斯卡命名法，例如 UserProfileCard.tsx
+✅ 具体：工具函数文件名必须使用驼峰命名法，例如 calculateTotal.ts</pre>
+                </div>
+            </div>
+
+            <div class="principle-card">
+                <h3>📝 4. "规则即代码"原则</h3>
+                <p><strong>核心理念：</strong>纪律化的方法论</p>
+                <p>将规则视为项目代码库的一等公民，采用与管理源代码同等严格的纪律。</p>
+                <ul style="margin-top: 10px;">
+                    <li>版本控制：存储在.cursor/rules目录</li>
+                    <li>代码审查：规则修改纳入PR流程</li>
+                    <li>持续维护：随项目演进更新规则</li>
+                    <li>知识沉淀：将隐性知识显性化</li>
+                </ul>
+            </div>
+
+            <div class="principle-card">
+                <h3>🤝 5. 人在回路中的必要性原则</h3>
+                <p><strong>核心理念：</strong>增强而非取代</p>
+                <p>AI的作用是增强开发者能力，而不是取代开发者判断。开发者是机长，AI是副驾驶。</p>
+                <div class="success-box" style="margin-top: 15px;">
+                    <h4>战略意义</h4>
+                    <p>自动化重复性、已达成共识的劳动，解放开发者专注于高阶创造性任务：系统架构设计、技术难题解决、业务逻辑思考。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 实施战略蓝图 -->
+        <div id="implementation" class="content-section">
+            <h2 class="section-title">🚀 实施战略蓝图：分步指南</h2>
+            
+            <div class="highlight-box">
+                <h3>📋 四阶段实施流程</h3>
+                <p>从零开始构建完整的多层次规则架构，遵循清晰、可操作的分步指南，循序渐进地建立强大的AI协作体系。</p>
+            </div>
+
+            <div class="step-card">
+                <h3><span class="step-number">1</span>第一阶段：奠定全局基础 (User Rules)</h3>
+                <p><strong>目标：</strong>定义个人的、跨所有项目的AI交互偏好</p>
+                <p><strong>操作：</strong>Cursor Settings → Rules → User Rules</p>
+                <div class="code-block">
+                    <pre>// 示例：全局用户规则
+- 扮演专精分布式系统的高级软件架构师角色
+- 简洁、技术性地回复，避免冗余的对话填充
+- 提供选项时，从性能、可扩展性、可维护性角度解释权衡
+- 所有代码示例必须使用 TypeScript</pre>
+                </div>
+                <div class="warning-box">
+                    <h4>⚠️ 注意事项</h4>
+                    <p>保持极简性，只包含真正普适的、高价值的指令。每条规则都会在所有AI请求中消耗令牌。</p>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <h3><span class="step-number">2</span>第二阶段：构建项目蓝图 (Always-On Rules)</h3>
+                <p><strong>目标：</strong>为具体项目编码不可动摇的核心架构和规范</p>
+                <p><strong>操作：</strong>创建 .cursor/rules/project-core.mdc</p>
+                <div class="code-block">
+                    <pre>---
+alwaysApply: true
+description: "项目核心架构原则和标准"
+---
+
+# 项目核心原则
+## 1. 项目概述
+这是一个现代电商平台的后端API项目。
+
+## 2. 技术栈
+- Next.js 14+ (App Router)
+- TypeScript 5+ (严格模式)
+- Supabase (PostgreSQL 15+)
+
+## 3. 架构强制要求
+- **安全优先：** 所有数据库查询必须强制执行RLS
+- **仅使用API路由：** 使用App Router创建API路由
+- **验证是强制的：** 所有请求必须使用Zod模式验证
+
+## 4. 关键禁令
+- 🚨 绝不从已废弃的 @supabase/auth-helpers-nextjs 导入
+- 🚨 绝不在应用代码中编写原始SQL字符串</pre>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <h3><span class="step-number">3</span>第三阶段：打造专业化工具箱 (Context-Aware Rules)</h3>
+                <p><strong>目标：</strong>创建细粒度规则库，仅在特定上下文中激活</p>
+                
+                <h4>3.1 Auto Attached 规则示例</h4>
+                <div class="code-block">
+                    <pre>// /src/components/ui/.cursor/rules/styling.mdc
+---
+globs: ["*.tsx"]
+description: "UI组件样式规则"
+---
+
+# 样式标准
+- 始终使用 Tailwind CSS 进行样式设计
+- 不要使用内联样式或 CSS-in-JS 库
+- 所有颜色值必须来自 Tailwind 主题配置</pre>
+                </div>
+
+                <h4>3.2 Agent Requested 规则示例</h4>
+                <div class="code-block">
+                    <pre>// .cursor/rules/create-new-endpoint.mdc
+---
+description: "创建安全API端点的分步指南"
+---
+
+# 如何创建新的API端点
+1. 在 `/src/api/v1/[feature]/route.ts` 中创建路由处理器
+2. 导入服务端 Supabase 客户端
+3. 使用 Zod 模式进行请求验证
+4. 实现身份验证中间件
+5. 在 try 块中添加业务逻辑
+6. 在 catch 块中使用自定义错误处理器</pre>
+                </div>
+
+                <h4>3.3 Manual 规则示例</h4>
+                <div class="code-block">
+                    <pre>// .cursor/rules/refactor-database-schema.mdc
+---
+description: "数据库架构重构安全检查清单"
+---
+
+# 数据库架构重构检查清单
+- **警告：** 这是一个高风险操作
+- 步骤1：确认数据库备份已存在
+- 步骤2：生成迁移脚本
+- 步骤3：编写回滚脚本
+- 步骤4：在应用前请求人工确认</pre>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <h3><span class="step-number">4</span>第四阶段：迭代优化循环</h3>
+                <p><strong>目标：</strong>持续测试、评估、改进规则架构</p>
+                <ul style="margin-left: 20px;">
+                    <li><strong>提示与观察：</strong>创建规则后立即测试AI行为</li>
+                    <li><strong>分析失败：</strong>找出规则太模糊、复杂或冲突的原因</li>
+                    <li><strong>精炼：</strong>重写规则，使其更具体、添加范例</li>
+                    <li><strong>从对话中生成：</strong>使用 /Generate Cursor Rules 命令</li>
+                    <li><strong>团队反馈：</strong>将规则变更纳入代码审查流程</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 实战示例 -->
+        <div id="example" class="content-section">
+            <h2 class="section-title">💼 实战示例：Next.js & Supabase 电商后端</h2>
+            
+            <div class="highlight-box">
+                <h3>🎯 项目背景</h3>
+                <p><strong>项目：</strong>现代电商平台后端API<br>
+                <strong>技术栈：</strong>Next.js (App Router) + TypeScript + Supabase<br>
+                <strong>核心要求：</strong>通过行级安全(RLS)实现数据安全，功能切片设计模式</p>
+            </div>
+
+            <h3>🌐 第一层：全局基础 (User Rules)</h3>
+            <div class="code-block">
+                <pre>// Cursor Settings → Rules → User Rules
+- 扮演专精 TypeScript、Next.js 和 PostgreSQL 的高级全栈开发者
+- 按此优先级编写代码：安全、可读、性能
+- 提供选项时，解释每个选项的权衡
+- 简洁回复，避免冗余的对话填充</pre>
+            </div>
+
+            <h3>🏗️ 第二层：项目蓝图 (.cursor/rules/project-core.mdc)</h3>
+            <div class="code-block">
+                <pre>---
+alwaysApply: true
+description: "Next.js/Supabase 电商后端核心原则"
+---
+
+# 项目核心原则
+
+## 1. 项目概述
+这是使用 Next.js App Router 和 Supabase 构建的电商平台后端API。
+
+## 2. 技术栈
+- Next.js 14+ (App Router)
+- TypeScript 5+ (启用严格模式)
+- Supabase (PostgreSQL 15+)
+- Zod 用于验证
+- pnpm 用于包管理
+
+## 3. 架构强制要求
+- **安全优先：** 所有数据库查询必须通过强制执行RLS的客户端进行
+- **仅使用API路由：** 使用App Router创建API路由 (`/src/app/api/...`)
+- **验证是强制的：** 所有传入请求必须使用Zod模式验证
+- **错误处理：** 使用 `@/lib/errors.ts` 中的自定义错误处理器
+
+## 4. 关键禁令
+- 🚨 绝不从 `@supabase/auth-helpers-nextjs` 导入。使用 `@supabase/ssr`
+- 🚨 绝不编写原始SQL字符串。使用Supabase JS客户端或RPC调用</pre>
+            </div>
+
+            <h3>🔧 第三层：专业化工具箱示例</h3>
+
+            <h4>SQL函数嵌套规则</h4>
+            <div class="code-block">
+                <pre>// /src/database/functions/.cursor/rules/sql-functions.mdc
+---
+globs: ["*.sql"]
+description: "Supabase中PostgreSQL函数标准"
+---
+
+# SQL函数最佳实践
+- 绕过RLS的函数必须使用 `security definer`
+- 默认函数应使用 `security invoker` 以遵守RLS
+- 使用 `COMMENT ON FUNCTION` 添加注释以便文档化
+- 数据修改使用 `VOLATILE`，只读使用 `STABLE` 或 `IMMUTABLE`
+- 始终优雅地处理潜在的空输入</pre>
+            </div>
+
+            <h4>API路由脚手架规则</h4>
+            <div class="code-block">
+                <pre>// .cursor/rules/scaffold-api-route.mdc
+---
+description: "创建包含验证、认证和错误处理的新API路由分步指南"
+---
+
+# 如何搭建新的API路由
+1. 在 `/src/app/api/[feature]/route.ts` 中创建路由处理器
+2. 导入服务端Supabase客户端：`import { createClient } from '@/lib/supabase/server'`
+3. 从 `@/lib/validators` 导入/定义Zod模式
+4. 在POST/GET函数中，创建Supabase客户端
+5. 在try/catch中使用Zod模式验证请求输入
+6. 验证用户身份并检查权限
+7. 实现核心业务逻辑
+8. 返回带有适当状态码和数据的NextResponse</pre>
+            </div>
+
+            <div class="success-box">
+                <h4>✅ 集成系统在行动</h4>
+                <p>当开发者发出"为产品模块添加库存更新API"指令时：</p>
+                <ul>
+                    <li><strong>全局基础</strong>设定回应基调和专业角色</li>
+                    <li><strong>项目蓝图</strong>确保遵循架构原则和安全要求</li>
+                    <li><strong>专业化工具箱</strong>提供具体的实施步骤和最佳实践</li>
+                </ul>
+                <p>AI将生成符合所有项目规范的高质量代码，真正成为深度理解项目的智能开发伙伴。</p>
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        <div class="footer">
+            <h3>🎯 总结</h3>
+            <p>通过多层次规则架构，我们将AI从简单的代码生成工具转变为理解项目架构、遵循团队最佳实践的智能开发伙伴。</p>
+            <p style="margin-top: 15px; color: #7f8c8d;">
+                📺 关注我的B站频道，获取更多Cursor AI开发技巧！<br>
+                🔗 下期预告：Cursor Rules高级应用与团队协作
+            </p>
+        </div>
+    </div>
+</body>
+</html>
