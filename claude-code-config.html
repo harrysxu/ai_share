@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Code 配置完全指南 - B站UP主专属</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 4rem 0;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: slideInDown 1s ease-out;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease-out 0.5s both;
+        }
+
+        .nav {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1rem;
+            margin: 2rem 0;
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .nav a:hover::before {
+            left: 100%;
+        }
+
+        .nav a:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        .section {
+            background: white;
+            margin: 3rem 0;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #667eea);
+            background-size: 200% 100%;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            margin-right: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-icon::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(transparent, rgba(255,255,255,0.3), transparent);
+            animation: rotate 4s linear infinite;
+        }
+
+        .section h2 {
+            font-size: 2.5rem;
+            color: #333;
+            margin: 0;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f8f9ff, #e8edff);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid #e0e6ff;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(180deg, #667eea, #764ba2);
+            transform: scaleY(0);
+            transform-origin: bottom;
+            transition: transform 0.5s ease;
+        }
+
+        .feature-card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.2);
+        }
+
+        .feature-card h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .command-showcase {
+            background: #1e1e1e;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .command-showcase::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: #2d2d30;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .command-showcase::after {
+            content: '● ● ●';
+            position: absolute;
+            top: 6px;
+            left: 10px;
+            color: #ff5f56;
+            font-size: 10px;
+            letter-spacing: 3px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 2rem 0;
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .comparison-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background-color 0.3s ease;
+        }
+
+        .comparison-table tr:hover td {
+            background-color: #f8f9ff;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        .highlight-box::before {
+            content: '💡';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 1.5rem;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .step-indicator::before {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            right: 25px;
+            height: 2px;
+            background: #e0e6ff;
+            z-index: 1;
+        }
+
+        .step {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            position: relative;
+            z-index: 2;
+            font-size: 1.2rem;
+            animation: pulse 2s infinite;
+        }
+
+        .memory-hierarchy {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .memory-level {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            position: relative;
+            transform: perspective(500px) rotateX(10deg);
+            transition: transform 0.3s ease;
+        }
+
+        .memory-level:hover {
+            transform: perspective(500px) rotateX(0deg) scale(1.02);
+        }
+
+        .memory-level::before {
+            content: attr(data-priority);
+            position: absolute;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #ff6b6b;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        .mcp-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .mcp-node {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 15px;
+            padding: 1rem;
+            text-align: center;
+            min-width: 150px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .mcp-node:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.2);
+        }
+
+        .mcp-arrow {
+            font-size: 2rem;
+            color: #667eea;
+            animation: bounce 2s infinite;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 3rem 0;
+            color: white;
+            background: rgba(0,0,0,0.1);
+            border-radius: 20px;
+            margin-top: 3rem;
+        }
+
+        .footer a {
+            color: #ffeaa7;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 0%; }
+            100% { background-position: 0% 0%; }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(10px); }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2.5rem; }
+            .nav ul { flex-direction: column; gap: 1rem; }
+            .section { padding: 2rem 1rem; }
+            .feature-grid { grid-template-columns: 1fr; }
+            .mcp-flow { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Claude Code 配置完全指南</h1>
+            <p>从入门到精通 - B站UP主专属分享</p>
+        </header>
+
+        <nav class="nav">
+            <ul>
+                <li><a href="#cli-commands">CLI命令</a></li>
+                <li><a href="#slash-commands">斜杠命令</a></li>
+                <li><a href="#settings">Settings设置</a></li>
+                <li><a href="#memory-management">内存管理</a></li>
+                <li><a href="#mcp">MCP协议</a></li>
+            </ul>
+        </nav>
+
+        <!-- CLI命令部分 -->
+        <section id="cli-commands" class="section" data-aos="fade-up">
+            <div class="section-header">
+                <div class="section-icon">
+                    <span>⚡</span>
+                </div>
+                <h2>CLI命令：终端中的AI伙伴</h2>
+            </div>
+
+            <div class="highlight-box">
+                <h3>为什么选择CLI？</h3>
+                <p>Claude Code采用命令行优先的设计哲学，完美融入开发者的原生工作环境，提供强大的可组合性和脚本化能力。</p>
+            </div>
+
+            <div class="step-indicator">
+                <div class="step">1</div>
+                <div class="step">2</div>
+                <div class="step">3</div>
+                <div class="step">4</div>
+                <div class="step">5</div>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>🚀 安装与启动</h3>
+                    <div class="command-showcase">
+                        <pre><code class="language-bash"># 全局安装
+npm install -g @anthropic-ai/claude-code
+
+# 进入项目目录
+cd your-project
+
+# 启动交互模式
+claude</code></pre>
+                    </div>
+                    <p>一行命令即可安装，支持macOS、Linux和WSL环境</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>💬 交互模式 (REPL)</h3>
+                    <div class="command-showcase">
+                        <pre><code class="language-bash"># 启动持续对话
+claude
+
+# 项目分析示例
+> 这个项目是做什么的？
+> 请解释一下主要的架构模式</code></pre>
+                    </div>
+                    <p>进入持续对话模式，适合复杂的开发任务和项目分析</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>⚡ 一次性模式</h3>
+                    <div class="command-showcase">
+                        <pre><code class="language-bash"># 快速查询
+claude -p "分析这个错误日志"
+
+# 管道操作
+cat app.log | claude -p "总结错误类型"
+
+# 脚本化使用
+npm audit --json | claude -p "解释漏洞"</code></pre>
+                    </div>
+                    <p>支持Unix管道操作，完美融入自动化脚本</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>🔧 高级参数</h3>
+                    <div class="command-showcase">
+                        <pre><code class="language-bash"># 危险模式（跳过权限确认）
+claude --dangerously-skip-permissions
+
+# 继续最近会话
+claude --continue
+
+# 恢复特定会话
+claude --resume</code></pre>
+                    </div>
+                    <p>提供多种启动选项，满足不同工作流需求</p>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="cliUsageChart"></canvas>
+            </div>
+        </section>
+
+        <!-- 斜杠命令部分 -->
+        <section id="slash-commands" class="section" data-aos="fade-up">
+            <div class="section-header">
+                <div class="section-icon">
+                    <span>🎯</span>
+                </div>
+                <h2>斜杠命令：AI的快捷指令集</h2>
+            </div>
+
+            <div class="highlight-box">
+                <h3>什么是斜杠命令？</h3>
+                <p>斜杠命令是Claude Code的快捷操作方式，类似游戏中的技能快捷键，让复杂操作一键执行。</p>
+            </div>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>命令</th>
+                        <th>分类</th>
+                        <th>功能描述</th>
+                        <th>使用场景</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>/clear</code></td>
+                        <td>对话管理</td>
+                        <td>清空对话历史，释放上下文空间</td>
+                        <td>开始新任务时</td>
+                    </tr>
+                    <tr>
+                        <td><code>/compact</code></td>
+                        <td>对话管理</td>
+                        <td>压缩对话历史，保留核心信息</td>
+                        <td>长时间会话</td>
+                    </tr>
+                    <tr>
+                        <td><code>/cost</code></td>
+                        <td>成本管理</td>
+                        <td>查看Token使用量和费用</td>
+                        <td>成本控制</td>
+                    </tr>
+                    <tr>
+                        <td><code>/init</code></td>
+                        <td>项目管理</td>
+                        <td>生成项目的CLAUDE.md文件</td>
+                        <td>项目初始化</td>
+                    </tr>
+                    <tr>
+                        <td><code>/config</code></td>
+                        <td>配置</td>
+                        <td>调整模型、主题等设置</td>
+                        <td>个性化配置</td>
+                    </tr>
+                    <tr>
+                        <td><code>/model</code></td>
+                        <td>模型</td>
+                        <td>切换Claude模型版本</td>
+                        <td>性能优化</td>
+                    </tr>
+                    <tr>
+                        <td><code>/mcp</code></td>
+                        <td>扩展</td>
+                        <td>管理MCP服务器连接</td>
+                        <td>功能扩展</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>📝 自定义斜杠命令</h3>
+                    <div class="command-showcase">
+                        <pre><code class="language-markdown"># .claude/commands/review.md
+请对当前代码进行安全审查：
+1. 检查输入验证
+2. 查找XSS漏洞
+3. 验证API安全性</code></pre>
+                    </div>
+                    <p>创建项目专属的命令模板，标准化工作流程</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>🔄 命令组合使用</h3>
+                    <div class="command-showcase">
+                        <pre><code class="language-bash"># 典型工作流
+/clear          # 清空上下文
+/init           # 初始化项目
+/cost           # 检查成本
+/model opus     # 切换高级模型</code></pre>
+                    </div>
+                    <p>通过命令组合实现高效的开发工作流</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Settings设置部分 -->
+        <section id="settings" class="section" data-aos="fade-up">
+            <div class="section-header">
+                <div class="section-icon">
+                    <span>⚙️</span>
+                </div>
+                <h2>Settings设置：个性化你的AI助手</h2>
+            </div>
+
+            <div class="memory-hierarchy">
+                <div class="memory-level" data-priority="1">
+                    <strong>企业策略设置</strong> - /etc/claude-code/managed-settings.json
+                    <br><small>系统级强制执行，无法覆盖</small>
+                </div>
+                <div class="memory-level" data-priority="2">
+                    <strong>命令行参数</strong> - claude --arg value
+                    <br><small>单次运行生效，最高优先级</small>
+                </div>
+                <div class="memory-level" data-priority="3">
+                    <strong>本地项目设置</strong> - .claude/settings.local.json
+                    <br><small>个人偏好，不提交到Git</small>
+                </div>
+                <div class="memory-level" data-priority="4">
+                    <strong>共享项目设置</strong> - .claude/settings.json
+                    <br><small>团队共享，提交到Git</small>
+                </div>
+                <div class="memory-level" data-priority="5">
+                    <strong>用户全局设置</strong> - ~/.claude/settings.json
+                    <br><small>个人默认设置</small>
+                </div>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>🎨 界面配置</h3>
+                    <div class="command-showcase">
+                        <pre><code class="language-json">{
+  "appearance": {
+    "theme": "dark",
+    "colors": {
+      "primary": "#667eea",
+      "accent": "#764ba2"
+    }
+  }
+}</code></pre>
+                    </div>
+                    <p>自定义终端主题和颜色方案</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>🤖 模型配置</h3>
+                    <div class="command-showcase">
+                        <pre><code class="language-json">{
+  "model": {
+    "default": "claude-3-5-sonnet",
+    "temperature": 0.3,
+    "max_tokens": 4000
+  }
+}</code></pre>
+                    </div>
+                    <p>配置默认模型和生成参数</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>🔐 权限管理</h3>
+                    <div class="command-showcase">
+                        <pre><code class="language-json">{
+  "permissions": {
+    "allow": ["bash", "editFile"],
+    "deny": ["webFetch"],
+    "autoApprove": false
+  }
+}</code></pre>
+                    </div>
+                    <p>精确控制AI的操作权限</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>⚡ 性能优化</h3>
+                    <div class="command-showcase">
+                        <pre><code class="language-json">{
+  "performance": {
+    "cacheEnabled": true,
+    "parallelRequests": 3,
+    "timeout": 30000
+  }
+}</code></pre>
+                    </div>
+                    <p>优化响应速度和资源使用</p>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="settingsChart"></canvas>
+            </div>
+        </section>
+
+        <!-- 内存管理部分 -->
+        <section id="memory-management" class="section" data-aos="fade-up">
+            <div class="section-header">
+                <div class="section-icon">
+                    <span>🧠</span>
+                </div>
+                <h2>内存管理：AI的项目记忆系统</h2>
+            </div>
+
+            <div class="highlight-box">
+                <h3>CLAUDE.md：AI的项目宪法</h3>
+                <p>CLAUDE.md文件是Claude Code的核心记忆系统，它让AI能够记住项目的规范、架构和工作流程，实现真正的个性化协作。</p>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>🏠 项目内存 (./CLAUDE.md)</h3>
+                    <div class="command-showcase">
+                        <pre><code class="language-markdown"># 项目技术栈
+- React + TypeScript
+- Tailwind CSS
+- Vite 构建工具
+
+# 常用命令
+- 开发: npm run dev
+- 测试: npm run test
+- 构建: npm run build
+
+# 代码规范
+- 使用函数式组件
+- 遵循 ESLint 配置</code></pre>
+                    </div>
+                    <p>团队共享的项目规范，应提交到版本控制</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>👤 用户内存 (~/.claude/CLAUDE.md)</h3>
+                    <div class="command-showcase">
+                        <pre><code class="language-markdown"># 个人偏好
+- 总是使用 TypeScript
+- 喜欢函数式编程风格
+- 提交信息遵循 Conventional Commits
+
+# 常用工具
+- 包管理器: pnpm
+- 编辑器: VS Code
+- 数据库: PostgreSQL</code></pre>
+                    </div>
+                    <p>个人全局偏好，适用于所有项目</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>🔒 本地项目内存 (./CLAUDE.local.md)</h3>
+                    <div class="command-showcase">
+                        <pre><code class="language-markdown"># 本地开发配置
+- API端点: http://localhost:3000
+- 测试数据库: test_db_local
+- 调试端口: 9229
+
+# 临时笔记
+- 待修复的bug: 登录页面样式问题
+- 下次重构: 用户认证模块</code></pre>
+                    </div>
+                    <p>个人本地配置，不应提交到Git</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>🔗 模块化导入</h3>
+                    <div class="command-showcase">
+                        <pre><code class="language-markdown"># 主CLAUDE.md
+@docs/api-guidelines.md
+@docs/testing-strategy.md
+@docs/deployment-guide.md
+
+# 保持主文件简洁
+# 详细内容通过@导入</code></pre>
+                    </div>
+                    <p>通过@符号导入其他文档，保持文件结构清晰</p>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="memoryChart"></canvas>
+            </div>
+        </section>
+
+        <!-- MCP协议部分 -->
+        <section id="mcp" class="section" data-aos="fade-up">
+            <div class="section-header">
+                <div class="section-icon">
+                    <span>🔌</span>
+                </div>
+                <h2>MCP协议：连接万物的AI接口</h2>
+            </div>
+
+            <div class="highlight-box">
+                <h3>什么是MCP？</h3>
+                <p>模型上下文协议(Model Context Protocol)是一个开放标准，让AI能够安全地连接和操作外部工具、数据库和服务，是AI的"USB-C接口"。</p>
+            </div>
+
+            <div class="mcp-flow">
+                <div class="mcp-node">
+                    <strong>Claude Code</strong>
+                    <br><small>AI客户端</small>
+                </div>
+                <div class="mcp-arrow">→</div>
+                <div class="mcp-node">
+                    <strong>MCP服务器</strong>
+                    <br><small>协议转换</small>
+                </div>
+                <div class="mcp-arrow">→</div>
+                <div class="mcp-node">
+                    <strong>外部服务</strong>
+                    <br><small>数据库/API</small>
+                </div>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>🗄️ 数据库连接</h3>
+                    <div class="command-showcase">
+                        <pre><code class="language-bash"># 添加PostgreSQL连接
+claude mcp add postgres-server \
+  --connection "postgresql://user:pass@host/db"
+
+# 查询数据
+> @postgres:查询销售前十的产品</code></pre>
+                    </div>
+                    <p>直接用自然语言查询数据库</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>🌐 Web服务集成</h3>
+                    <div class="command-showcase">
+                        <pre><code class="language-bash"># 添加GitHub服务
+claude mcp add github-server \
+  --token YOUR_GITHUB_TOKEN
+
+# 分析Issue
+> @github:分析issue #123的解决方案</code></pre>
+                    </div>
+                    <p>与GitHub、Slack等服务深度集成</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>🛠️ 自定义MCP服务器</h3>
+                    <div class="command-showcase">
+                        <pre><code class="language-python"># 简单的MCP服务器示例
+from mcp import Server
+
+server = Server("my-service")
+
+@server.resource("/api/data")
+def get_data():
+    return {"status": "success"}</code></pre>
+                    </div>
+                    <p>创建自己的MCP服务器扩展AI能力</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>🔧 高级配置</h3>
+                    <div class="command-showcase">
+                        <pre><code class="language-json">{
+  "mcp": {
+    "servers": {
+      "postgres": {
+        "command": "postgres-mcp-server",
+        "args": ["--read-only"]
+      }
+    }
+  }
+}</code></pre>
+                    </div>
+                    <p>在.mcp.json中配置多个MCP服务器</p>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="mcpChart"></canvas>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>🎬 感谢观看！记得点赞投币关注三连哦～</p>
+            <p>更多AI工具分享请关注我的B站：<a href="#">@你的B站账号</a></p>
+            <p><small>本指南基于官方文档整理，内容持续更新中...</small></p>
+        </footer>
+    </div>
+
+    <script>
+        // 初始化AOS动画
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+
+        // CLI使用情况图表
+        const cliCtx = document.getElementById('cliUsageChart').getContext('2d');
+        new Chart(cliCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['交互模式', '一次性模式', '脚本化使用', '自动化流程'],
+                datasets: [{
+                    data: [45, 25, 20, 10],
+                    backgroundColor: [
+                        'rgba(102, 126, 234, 0.8)',
+                        'rgba(118, 75, 162, 0.8)',
+                        'rgba(255, 107, 107, 0.8)',
+                        'rgba(255, 234, 167, 0.8)'
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Claude Code CLI使用模式分布',
+                        font: { size: 16, weight: 'bold' }
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        // 设置优先级图表
+        const settingsCtx = document.getElementById('settingsChart').getContext('2d');
+        new Chart(settingsCtx, {
+            type: 'bar',
+            data: {
+                labels: ['企业策略', '命令行参数', '本地项目', '共享项目', '用户全局'],
+                datasets: [{
+                    label: '优先级等级',
+                    data: [5, 4, 3, 2, 1],
+                    backgroundColor: 'rgba(102, 126, 234, 0.6)',
+                    borderColor: 'rgba(102, 126, 234, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 5,
+                        title: {
+                            display: true,
+                            text: '优先级 (5=最高)'
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Claude Code 配置优先级体系',
+                        font: { size: 16, weight: 'bold' }
+                    }
+                }
+            }
+        });
+
+        // 内存层级图表
+        const memoryCtx = document.getElementById('memoryChart').getContext('2d');
+        new Chart(memoryCtx, {
+            type: 'line',
+            data: {
+                labels: ['项目启动', '代码分析', '功能开发', '测试编写', '部署上线'],
+                datasets: [{
+                    label: '项目内存使用',
+                    data: [20, 45, 80, 65, 90],
+                    borderColor: 'rgba(102, 126, 234, 1)',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    fill: true
+                }, {
+                    label: '用户内存使用',
+                    data: [100, 100, 100, 100, 100],
+                    borderColor: 'rgba(118, 75, 162, 1)',
+                    backgroundColor: 'rgba(118, 75, 162, 0.1)',
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: '项目生命周期中的内存使用情况',
+                        font: { size: 16, weight: 'bold' }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        title: {
+                            display: true,
+                            text: '内存使用率 (%)'
+                        }
+                    }
+                }
+            }
+        });
+
+        // MCP连接图表
+        const mcpCtx = document.getElementById('mcpChart').getContext('2d');
+        new Chart(mcpCtx, {
+            type: 'radar',
+            data: {
+                labels: ['数据库', 'Web API', '文件系统', '版本控制', '消息服务', '监控工具'],
+                datasets: [{
+                    label: 'MCP支持程度',
+                    data: [95, 85, 90, 80, 75, 70],
+                    borderColor: 'rgba(102, 126, 234, 1)',
+                    backgroundColor: 'rgba(102, 126, 234, 0.2)',
+                    pointBackgroundColor: 'rgba(102, 126, 234, 1)',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'MCP协议生态系统覆盖范围',
+                        font: { size: 16, weight: 'bold' }
+                    }
+                },
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            stepSize: 20
+                        }
+                    }
+                }
+            }
+        });
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // 动态背景效果
+        document.addEventListener('mousemove', (e) => {
+            const cursor = document.createElement('div');
+            cursor.style.cssText = `
+                position: fixed;
+                width: 10px;
+                height: 10px;
+                background: radial-gradient(circle, rgba(102,126,234,0.3) 0%, transparent 50%);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 9999;
+                left: ${e.clientX - 5}px;
+                top: ${e.clientY - 5}px;
+                animation: fadeOut 1s ease-out forwards;
+            `;
+            document.body.appendChild(cursor);
+
+            setTimeout(() => cursor.remove(), 1000);
+        });
+
+        // 添加fadeOut动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeOut {
+                from { opacity: 1; transform: scale(1); }
+                to { opacity: 0; transform: scale(2); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
