@@ -425,6 +425,70 @@
             font-weight: bold;
         }
 
+        /* 配置层级弹窗样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 20px;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: #667eea;
+        }
+
+        .modal-title {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .config-layer {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .config-layer:hover {
+            transform: scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
         /* 动画 */
         @keyframes fadeInUp {
             from {
@@ -532,66 +596,140 @@
         <section id="cli" class="content-card">
             <h2 class="section-title">🖥️ CLI命令：终端原生的强大体验</h2>
             
-            <div class="feature-grid">
-                <div class="feature-item">
-                    <div class="feature-icon">⚙️</div>
-                    <h3 class="feature-title">基础安装</h3>
-                    <p>通过npm全局安装，一条命令即可开始AI编程之旅</p>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">🚀</div>
-                    <h3 class="feature-title">交互模式</h3>
-                    <p>进入项目目录，运行claude命令开启智能对话</p>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">⚡</div>
-                    <h3 class="feature-title">一次性模式</h3>
-                    <p>使用-p参数快速执行单次任务，完美融入脚本</p>
-                </div>
-            </div>
+            <p>Claude Code 命令行界面的完整参考，包括命令和标志。</p>
 
-            <div class="code-block">
-                <div class="code-title">基础CLI命令示例</div>
-                <pre># 全局安装Claude Code
-npm install -g @anthropic-ai/claude-code
+            <h3>CLI 命令</h3>
+            <table class="command-table">
+                <thead>
+                    <tr>
+                        <th>命令</th>
+                        <th>描述</th>
+                        <th>示例</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="command">claude</span></td>
+                        <td>启动交互式 REPL</td>
+                        <td>claude</td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">claude "query"</span></td>
+                        <td>使用初始提示启动 REPL</td>
+                        <td>claude "explain this project"</td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">claude -p "query"</span></td>
+                        <td>通过 SDK 查询，然后退出</td>
+                        <td>claude -p "explain this function"</td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">cat file | claude -p "query"</span></td>
+                        <td>处理管道内容</td>
+                        <td>cat logs.txt | claude -p "explain"</td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">claude -c</span></td>
+                        <td>继续最近的对话</td>
+                        <td>claude -c</td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">claude -c -p "query"</span></td>
+                        <td>通过 SDK 继续</td>
+                        <td>claude -c -p "Check for type errors"</td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">claude -r "&lt;session-id&gt;" "query"</span></td>
+                        <td>通过 ID 恢复会话</td>
+                        <td>claude -r "abc123" "Finish this PR"</td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">claude update</span></td>
+                        <td>更新到最新版本</td>
+                        <td>claude update</td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">claude mcp</span></td>
+                        <td>配置模型上下文协议 (MCP) 服务器</td>
+                        <td>claude mcp</td>
+                    </tr>
+                </tbody>
+            </table>
 
-# 进入交互模式
-claude
+            <h3>CLI 标志</h3>
+            <table class="command-table">
+                <thead>
+                    <tr>
+                        <th>标志</th>
+                        <th>描述</th>
+                        <th>示例</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="command">--add-dir</span></td>
+                        <td>添加额外的工作目录供 Claude 访问</td>
+                        <td>claude --add-dir ../apps ../lib</td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">--allowedTools</span></td>
+                        <td>应该在不提示用户许可的情况下允许的工具列表</td>
+                        <td>"Bash(git log:*)" "Read"</td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">--disallowedTools</span></td>
+                        <td>应该在不提示用户许可的情况下禁止的工具列表</td>
+                        <td>"Bash(git diff:*)" "Edit"</td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">--print, -p</span></td>
+                        <td>打印响应而不使用交互模式</td>
+                        <td>claude -p "query"</td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">--output-format</span></td>
+                        <td>指定打印模式的输出格式（text、json、stream-json）</td>
+                        <td>claude -p "query" --output-format json</td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">--verbose</span></td>
+                        <td>启用详细日志记录</td>
+                        <td>claude --verbose</td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">--model</span></td>
+                        <td>设置使用的模型</td>
+                        <td>claude --model claude-sonnet-4-20250514</td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">--permission-mode</span></td>
+                        <td>在指定的权限模式下开始</td>
+                        <td>claude --permission-mode plan</td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">--continue</span></td>
+                        <td>在当前目录中加载最近的对话</td>
+                        <td>claude --continue</td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">--dangerously-skip-permissions</span></td>
+                        <td>跳过权限提示（谨慎使用）</td>
+                        <td>claude --dangerously-skip-permissions</td>
+                    </tr>
+                                 </tbody>
+             </table>
 
-# 一次性查询模式
-claude -p "分析这个项目的技术栈"
-
-# 与其他命令结合使用
-tail -f app.log | claude -p "监控日志并发现异常时通知我"</pre>
-            </div>
-
-            <div class="flow-chart">
-                <div class="flow-step">
-                    <strong>安装配置</strong><br>
-                    npm install & 身份验证
-                </div>
-                <div class="flow-step">
-                    <strong>启动CLI</strong><br>
-                    claude 命令
-                </div>
-                <div class="flow-step">
-                    <strong>智能交互</strong><br>
-                    自然语言编程
-                </div>
-                <div class="flow-step">
-                    <strong>执行任务</strong><br>
-                    代码生成 & 文件操作
-                </div>
-            </div>
-
-            <p><strong>核心优势：</strong></p>
-            <ul>
-                <li><strong>终端原生：</strong>完全生活在开发者最熟悉的命令行环境中</li>
-                <li><strong>可组合性：</strong>遵循Unix哲学，可与其他命令行工具无缝配合</li>
-                <li><strong>脚本化：</strong>支持自动化脚本和CI/CD流程集成</li>
-                <li><strong>全项目感知：</strong>自动理解整个代码库结构和上下文</li>
-            </ul>
-        </section>
+             <div style="text-align: center; margin-top: 40px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+                 <h4 style="color: #2c3e50; margin-bottom: 15px;">📚 官方文档参考</h4>
+                 <p style="margin: 0;">
+                     <a href="https://docs.anthropic.com/zh-CN/docs/claude-code/cli-reference" 
+                        style="color: #667eea; text-decoration: none; font-weight: bold;" 
+                        target="_blank">
+                         ➤ Claude Code CLI 参考文档
+                     </a>
+                 </p>
+             </div>
+         </section>
 
         <!-- 斜杠命令 -->
         <section id="slash" class="content-card">
@@ -671,52 +809,116 @@ tail -f app.log | claude -p "监控日志并发现异常时通知我"</pre>
                 <pre># 创建自定义命令文件
 .claude/commands/review.md
 
-# 文件内容：
-请对最近的Git变更执行全面的代码审查：
+# 文件内容（支持参数传递）：
+请对$*指定的文件或Git变更执行全面的代码审查：
 1. 检查是否遵循TypeScript和React最佳实践
 2. 验证错误处理逻辑和用户体验
 3. 确保符合无障碍设计标准
 4. 评估单元测试覆盖率
 
-# 使用方法
-/review</pre>
-            </div>
-        </section>
+如果没有指定参数，则审查最近的Git变更。
 
-        <!-- Settings设置 -->
+# 使用方法示例：
+/review                          # 审查最近的Git变更
+/review src/components/Button.tsx # 审查指定文件
+/review --help                   # 显示帮助信息
+
+# 创建带多个参数的命令
+.claude/commands/deploy.md
+
+# 文件内容：
+部署应用到$1环境，使用$2配置文件：
+1. 验证$1环境的配置
+2. 使用$2配置文件进行构建
+3. 执行部署流程
+4. 运行健康检查
+
+# 使用方法：
+/deploy staging config/staging.yml
+/deploy production config/prod.yml</pre>
+                          </div>
+
+              <div style="text-align: center; margin-top: 40px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+                  <h4 style="color: #2c3e50; margin-bottom: 15px;">📚 官方文档参考</h4>
+                  <p style="margin: 0;">
+                      <a href="https://docs.anthropic.com/zh-CN/docs/claude-code/slash-commands" 
+                         style="color: #667eea; text-decoration: none; font-weight: bold;" 
+                         target="_blank">
+                          ➤ Claude Code 斜杠命令文档
+                      </a>
+                  </p>
+              </div>
+          </section>
+
+          <!-- Settings设置 -->
         <section id="settings" class="content-card">
-            <h2 class="section-title">⚙️ Settings设置：精细化配置管理</h2>
+            <h2 class="section-title">⚙️ Settings设置：五层配置体系</h2>
             
-            <p>Claude Code提供了分层的配置系统，让你能够精确控制AI代理的行为，平衡安全性与效率。</p>
+            <h3>🎯 什么是Settings设置？</h3>
+            <p>Settings设置是Claude Code的核心配置系统，它决定了AI代理如何与您的代码库交互。通过精细的配置管理，您可以：</p>
+            <ul>
+                <li><strong>控制AI行为：</strong>设置AI使用的模型、温度参数、最大token数等</li>
+                <li><strong>管理工具权限：</strong>精确控制AI可以执行哪些操作，保障代码安全</li>
+                <li><strong>定制工作流：</strong>适配团队的编码规范和项目特定需求</li>
+                <li><strong>平衡效率与安全：</strong>在自动化便利性和操作安全性之间找到最佳平衡点</li>
+            </ul>
+            
+            <h3>🔧 设置的作用</h3>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">🛡️</div>
+                    <h3 class="feature-title">安全控制</h3>
+                    <p>通过allow/deny规则精确控制AI可以执行的命令和访问的文件</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">⚡</div>
+                    <h3 class="feature-title">性能优化</h3>
+                    <p>配置模型选择、token限制、温度参数来优化响应质量和速度</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">👥</div>
+                    <h3 class="feature-title">团队协作</h3>
+                    <p>项目级配置确保团队成员使用一致的AI行为标准</p>
+                </div>
+            </div>
+            
+            <p>Claude Code提供了精细的五层配置系统，按优先级从高到低排列，让你能够精确控制AI代理的行为。</p>
 
             <div class="memory-structure">
                 <div class="memory-layer">
-                    <div class="memory-bar level1">
-                        <strong>企业策略</strong><br>
+                    <div class="memory-bar level1 config-layer" onclick="showConfigModal('enterprise')">
+                        <strong>1. 企业策略</strong><br>
                         系统级强制设置
                     </div>
-                    <p>管理员统一配置</p>
+                    <p>最高优先级</p>
                 </div>
                 <div class="memory-layer">
-                    <div class="memory-bar level2">
-                        <strong>命令行参数</strong><br>
+                    <div class="memory-bar level2 config-layer" onclick="showConfigModal('cmdline')">
+                        <strong>2. 命令行参数</strong><br>
                         临时覆盖设置
                     </div>
                     <p>单次运行有效</p>
                 </div>
                 <div class="memory-layer">
-                    <div class="memory-bar level3">
-                        <strong>项目设置</strong><br>
+                    <div class="memory-bar level3 config-layer" onclick="showConfigModal('project')">
+                        <strong>3. 项目设置</strong><br>
                         团队共享配置
                     </div>
                     <p>项目特定规则</p>
                 </div>
                 <div class="memory-layer">
-                    <div class="memory-bar level1">
-                        <strong>用户全局</strong><br>
+                    <div class="memory-bar level1 config-layer" onclick="showConfigModal('user')">
+                        <strong>4. 用户全局</strong><br>
                         个人默认偏好
                     </div>
                     <p>跨项目设置</p>
+                </div>
+                <div class="memory-layer">
+                    <div class="memory-bar level2 config-layer" onclick="showConfigModal('default')">
+                        <strong>5. 默认设置</strong><br>
+                        系统内置配置
+                    </div>
+                    <p>最低优先级</p>
                 </div>
             </div>
 
@@ -774,15 +976,81 @@ claude --dangerously-skip-permissions</pre>
                     <div class="stat-label">安全可控</div>
                 </div>
             </div>
+
+            <!-- 配置弹窗 -->
+            <div id="configModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h3 class="modal-title" id="modalTitle">配置详情</h3>
+                    <div id="modalContent">
+                        <!-- 动态内容将在这里显示 -->
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+                <h4 style="color: #2c3e50; margin-bottom: 15px;">📚 官方文档参考</h4>
+                <p style="margin: 0;">
+                    <a href="https://docs.anthropic.com/zh-CN/docs/claude-code/settings" 
+                       style="color: #667eea; text-decoration: none; font-weight: bold;" 
+                       target="_blank">
+                        ➤ Claude Code Settings 官方文档
+                    </a>
+                </p>
+            </div>
         </section>
 
         <!-- 内存管理 -->
         <section id="memory" class="content-card">
             <h2 class="section-title">🧠 内存管理：AI的项目记忆系统</h2>
             
+            <h3>📝 什么是CLAUDE.md文件？</h3>
+            <p>CLAUDE.md文件是Claude Code的"大脑"，它是一个特殊的Markdown文件，相当于给AI的<strong>项目说明书</strong>和<strong>行为指南</strong>。当Claude Code启动时，会自动读取这个文件，将其内容作为高优先级的上下文信息。</p>
+            
+            <h3>🎯 CLAUDE.md的作用</h3>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">📖</div>
+                    <h3 class="feature-title">项目文档</h3>
+                    <p>记录项目技术栈、架构决策、核心模块，让AI快速理解代码库</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">📏</div>
+                    <h3 class="feature-title">编码规范</h3>
+                    <p>定义代码风格、命名约定、测试要求，确保AI生成的代码符合团队标准</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">⚡</div>
+                    <h3 class="feature-title">常用命令</h3>
+                    <p>记录构建、测试、部署等常用命令，让AI能够直接执行项目操作</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🔄</div>
+                    <h3 class="feature-title">工作流程</h3>
+                    <p>说明Git分支策略、提交规范、发布流程，让AI遵循团队协作模式</p>
+                </div>
+            </div>
+            
+            <h3>💡 为什么需要CLAUDE.md？</h3>
+            <div style="padding: 20px; background: linear-gradient(135deg, #e3f2fd, #f3e5f5); border-radius: 10px; margin: 20px 0;">
+                <h4 style="color: #1976d2; margin-bottom: 15px;">解决AI"健忘"问题</h4>
+                <p style="margin: 0; color: #424242;">
+                    没有CLAUDE.md时，每次与AI交互都需要重新解释项目背景、技术栈、编码规范等信息，不仅浪费时间，还消耗大量token。
+                    CLAUDE.md文件实现了"<strong>一次告知，永久遵循</strong>"的效果，让AI成为真正了解你项目的智能助手。
+                </p>
+            </div>
+            
             <p>CLAUDE.md文件系统是Claude Code最具革命性的功能之一，它为AI提供持久化的项目记忆，让每次交互都基于完整的上下文。</p>
 
-            <h3>📁 三层记忆架构</h3>
+            <div style="padding: 20px; background: #fff3cd; border-left: 4px solid #ffc107; margin: 20px 0; border-radius: 5px;">
+                <h4 style="color: #856404; margin-bottom: 10px;">⚠️ 重要更新</h4>
+                <p style="color: #856404; margin: 0;">
+                    <strong>./CLAUDE.local.md 已被废弃：</strong>根据官方文档，本地项目内存文件 ./CLAUDE.local.md 已不再支持。
+                    现在推荐使用项目级和用户级的CLAUDE.md文件来管理项目记忆。
+                </p>
+            </div>
+
+            <h3>📁 双层记忆架构</h3>
             <div class="memory-structure">
                 <div class="memory-layer">
                     <div class="memory-bar level2">
@@ -798,12 +1066,19 @@ claude --dangerously-skip-permissions</pre>
                     </div>
                     <p>个人全局偏好设置</p>
                 </div>
-                <div class="memory-layer">
-                    <div class="memory-bar level1">
-                        <strong>本地内存</strong><br>
-                        ./CLAUDE.local.md
-                    </div>
-                    <p>个人项目便利贴</p>
+            </div>
+
+            <h3>🛠️ 内存管理命令</h3>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">🚀</div>
+                    <h3 class="feature-title">/init 命令</h3>
+                    <p>自动分析项目并生成或更新CLAUDE.md文件，创建项目的AI记忆基础</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">💾</div>
+                    <h3 class="feature-title">/memory 命令</h3>
+                    <p>显示当前会话的内存使用情况，包括加载的CLAUDE.md文件和上下文信息</p>
                 </div>
             </div>
 
@@ -870,6 +1145,17 @@ claude --dangerously-skip-permissions</pre>
                     <p>使用@符号导入其他文档，实现知识库模块化</p>
                 </div>
             </div>
+
+            <div style="text-align: center; margin-top: 40px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+                <h4 style="color: #2c3e50; margin-bottom: 15px;">📚 官方文档参考</h4>
+                <p style="margin: 0;">
+                    <a href="https://docs.anthropic.com/zh-CN/docs/claude-code/memory" 
+                       style="color: #667eea; text-decoration: none; font-weight: bold;" 
+                       target="_blank">
+                        ➤ Claude Code Memory 官方文档
+                    </a>
+                </p>
+            </div>
         </section>
 
         <!-- MCP协议 -->
@@ -878,40 +1164,55 @@ claude --dangerously-skip-permissions</pre>
             
             <p>模型上下文协议（MCP）是Claude Code的"终极武器"，它为AI打开了通往整个数字世界的大门。</p>
 
-            <div class="mcp-diagram">
-                <div class="mcp-center pulse">
-                    Claude Code<br>
-                    核心引擎
+            <div style="display: flex; justify-content: center; align-items: center; margin: 40px 0;">
+                <div style="text-align: center; padding: 30px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border-radius: 20px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);">
+                    <h3 style="margin: 0; font-size: 1.5rem;">Claude Code</h3>
+                    <p style="margin: 10px 0 0 0; opacity: 0.9;">通过MCP协议连接各种外部服务</p>
                 </div>
-                <div class="mcp-node">数据库<br>PostgreSQL</div>
-                <div class="mcp-node">代码仓库<br>GitHub</div>
-                <div class="mcp-node">文件系统<br>本地/云端</div>
-                <div class="mcp-node">API服务<br>RESTful</div>
             </div>
 
-            <h3>🔌 MCP服务器类型</h3>
-            <div class="feature-grid">
-                <div class="feature-item">
-                    <div class="feature-icon">🗄️</div>
-                    <h3 class="feature-title">数据库连接</h3>
-                    <p>直接查询PostgreSQL、MySQL等数据库，用自然语言操作数据</p>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">🐙</div>
-                    <h3 class="feature-title">GitHub集成</h3>
-                    <p>分析Issues、审查PR、管理项目，深度融入开发流程</p>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">🌐</div>
-                    <h3 class="feature-title">Web自动化</h3>
-                    <p>通过Playwright控制浏览器，实现端到端测试和数据抓取</p>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">📱</div>
-                    <h3 class="feature-title">企业应用</h3>
-                    <p>连接Notion、Slack、Jira等工具，打通工作流程</p>
-                </div>
-            </div>
+            <h3>🛠️ MCP 命令列表</h3>
+            <table class="command-table">
+                <thead>
+                    <tr>
+                        <th>命令</th>
+                        <th>功能描述</th>
+                        <th>使用示例</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="command">claude mcp</span></td>
+                        <td>启动MCP配置向导</td>
+                        <td>claude mcp</td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">claude mcp add</span></td>
+                        <td>添加新的MCP服务器</td>
+                        <td>claude mcp add postgres-server</td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">claude mcp list</span></td>
+                        <td>列出已配置的MCP服务器</td>
+                        <td>claude mcp list</td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">claude mcp remove</span></td>
+                        <td>移除指定的MCP服务器</td>
+                        <td>claude mcp remove server-name</td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">claude mcp status</span></td>
+                        <td>查看MCP服务器连接状态</td>
+                        <td>claude mcp status</td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">claude mcp test</span></td>
+                        <td>测试MCP服务器连接</td>
+                        <td>claude mcp test server-name</td>
+                    </tr>
+                </tbody>
+            </table>
 
             <div class="code-block">
                 <div class="code-title">MCP配置示例</div>
@@ -930,28 +1231,15 @@ claude mcp add pg_server /path/to/postgres-mcp-server \
 > 执行 /mcp__github__review_pr 456 审查这个PR</pre>
             </div>
 
-            <h3>🚀 MCP生态系统</h3>
-            <p>MCP采用开放标准，社区已经构建了丰富的服务器生态：</p>
-            <ul>
-                <li><strong>Awesome MCP Servers：</strong>GitHub上的宝藏级资源库，包含各种MCP服务器</li>
-                <li><strong>Bilibili MCP Server：</strong>专门用于搜索B站内容的服务器</li>
-                <li><strong>企业级连接器：</strong>支持各种企业系统和云服务的集成</li>
-                <li><strong>自定义开发：</strong>基于标准协议开发专属的MCP服务器</li>
-            </ul>
-
-            <div class="stats-container">
-                <div class="stat-item">
-                    <div class="stat-number">50+</div>
-                    <div class="stat-label">可用MCP服务器</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">∞</div>
-                    <div class="stat-label">扩展可能性</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">开源</div>
-                    <div class="stat-label">标准协议</div>
-                </div>
+            <div style="text-align: center; margin-top: 40px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+                <h4 style="color: #2c3e50; margin-bottom: 15px;">📚 官方文档参考</h4>
+                <p style="margin: 0;">
+                    <a href="https://docs.anthropic.com/zh-CN/docs/claude-code/mcp" 
+                       style="color: #667eea; text-decoration: none; font-weight: bold;" 
+                       target="_blank">
+                        ➤ Claude Code MCP 协议文档
+                    </a>
+                </p>
             </div>
         </section>
 
@@ -1132,6 +1420,166 @@ claude mcp add pg_server /path/to/postgres-mcp-server \
 
         document.querySelectorAll('.stats-container').forEach(container => {
             statsObserver.observe(container);
+        });
+
+        // 配置弹窗功能
+        function showConfigModal(type) {
+            const modal = document.getElementById('configModal');
+            const title = document.getElementById('modalTitle');
+            const content = document.getElementById('modalContent');
+            
+            const configData = {
+                enterprise: {
+                    title: '企业策略配置',
+                    content: `
+                        <h4>配置说明：</h4>
+                        <p>由系统管理员统一配置的强制性设置，个人用户无法覆盖。</p>
+                        
+                        <h4>配置文件位置：</h4>
+                        <ul>
+                            <li><strong>Linux/Mac:</strong> /etc/claude-code/managed-settings.json</li>
+                            <li><strong>Windows:</strong> C:\\ProgramData\\claude-code\\managed-settings.json</li>
+                        </ul>
+                        
+                        <h4>示例配置：</h4>
+                        <pre style="background: #f5f5f5; padding: 15px; border-radius: 5px;">
+{
+  "model": "claude-3-5-sonnet-20241022",
+  "allowedTools": ["Read", "Write"],
+  "disallowedTools": ["Bash"],
+  "maxTokens": 4096
+}</pre>
+                    `
+                },
+                cmdline: {
+                    title: '命令行参数配置',
+                    content: `
+                        <h4>配置说明：</h4>
+                        <p>通过命令行参数传递的设置，仅对当前会话有效，优先级最高。</p>
+                        
+                        <h4>常用命令行参数：</h4>
+                        <pre style="background: #f5f5f5; padding: 15px; border-radius: 5px;">
+# 设置模型
+claude --model claude-3-5-sonnet-20241022
+
+# 设置允许的工具
+claude --allowedTools "Read" "Write" "Bash(git:*)"
+
+# 设置权限模式
+claude --permission-mode auto
+
+# 跳过权限检查（谨慎使用）
+claude --dangerously-skip-permissions</pre>
+                    `
+                },
+                project: {
+                    title: '项目设置配置',
+                    content: `
+                        <h4>配置说明：</h4>
+                        <p>项目级别的配置，团队成员共享，存储在项目根目录。</p>
+                        
+                        <h4>配置文件位置：</h4>
+                        <p><strong>./settings.json</strong> (项目根目录)</p>
+                        
+                        <h4>示例配置：</h4>
+                        <pre style="background: #f5f5f5; padding: 15px; border-radius: 5px;">
+{
+  "model": "claude-3-5-sonnet-20241022",
+  "allow": [
+    "bash:npm run test",
+    "bash:git status",
+    "edit:src/**/*.js"
+  ],
+  "deny": [
+    "bash:rm -rf",
+    "bash:sudo *"
+  ],
+  "temperature": 0.3
+}</pre>
+                    `
+                },
+                user: {
+                    title: '用户全局配置',
+                    content: `
+                        <h4>配置说明：</h4>
+                        <p>用户个人的全局默认设置，应用于所有项目。</p>
+                        
+                        <h4>配置文件位置：</h4>
+                        <ul>
+                            <li><strong>Linux/Mac:</strong> ~/.claude/settings.json</li>
+                            <li><strong>Windows:</strong> %APPDATA%\\claude\\settings.json</li>
+                        </ul>
+                        
+                        <h4>命令行配置：</h4>
+                        <pre style="background: #f5f5f5; padding: 15px; border-radius: 5px;">
+# 通过CLI配置用户全局设置
+claude config set model claude-3-5-sonnet-20241022
+claude config set temperature 0.3
+claude config list  # 查看所有配置</pre>
+                        
+                        <h4>示例配置文件：</h4>
+                        <pre style="background: #f5f5f5; padding: 15px; border-radius: 5px;">
+{
+  "model": "claude-3-5-sonnet-20241022",
+  "temperature": 0.3,
+  "maxTokens": 4096,
+  "defaultPermissionMode": "interactive"
+}</pre>
+                    `
+                },
+                default: {
+                    title: '默认设置配置',
+                    content: `
+                        <h4>配置说明：</h4>
+                        <p>Claude Code的内置默认配置，当其他层级都未设置时使用。</p>
+                        
+                        <h4>默认配置值：</h4>
+                        <pre style="background: #f5f5f5; padding: 15px; border-radius: 5px;">
+{
+  "model": "claude-3-5-sonnet-20241022",
+  "temperature": 0,
+  "maxTokens": 8192,
+  "permissionMode": "interactive",
+  "outputFormat": "text",
+  "verbose": false
+}</pre>
+                        
+                        <h4>注意事项：</h4>
+                        <ul>
+                            <li>默认设置无法直接修改</li>
+                            <li>可通过上级配置层级进行覆盖</li>
+                            <li>确保系统的基本可用性</li>
+                        </ul>
+                    `
+                }
+            };
+            
+            const data = configData[type];
+            if (data) {
+                title.textContent = data.title;
+                content.innerHTML = data.content;
+                modal.style.display = 'block';
+            }
+        }
+        
+        // 关闭弹窗
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('configModal');
+            const closeBtn = document.getElementsByClassName('close')[0];
+            
+            // 点击关闭按钮
+            if (closeBtn) {
+                closeBtn.onclick = function() {
+                    modal.style.display = 'none';
+                }
+            }
+            
+            // 点击背景关闭
+            window.onclick = function(event) {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            }
         });
     </script>
 </body>

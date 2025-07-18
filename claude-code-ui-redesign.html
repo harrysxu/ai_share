@@ -1,0 +1,2104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Code 五大核心功能深度解析 | 现代化UI设计</title>
+    <style>
+        /* 重置样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 现代字体系统 */
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            line-height: 1.7;
+            color: #1a202c;
+            background: #f8fafc;
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        /* 流体容器系统 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* 现代导航栏 - 简洁设计 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            z-index: 1000;
+            padding: 16px 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: #4f46e5;
+            letter-spacing: -0.025em;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 32px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #64748b;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            padding: 8px 16px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #4f46e5;
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        /* Hero区域 - 现代简约风格 */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 160px 0 100px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="hero-pattern" width="40" height="40" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="1.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23hero-pattern)"/></svg>');
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 24px;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+
+        .hero .subtitle {
+            font-size: clamp(1.1rem, 2vw, 1.4rem);
+            margin-bottom: 32px;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+
+        .hero .description {
+            font-size: clamp(1rem, 1.5vw, 1.1rem);
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.85;
+            line-height: 1.6;
+        }
+
+        /* 现代卡片系统 */
+        .section {
+            padding: 80px 0;
+        }
+
+        .section:nth-child(even) {
+            background: white;
+        }
+
+        .section-card {
+            background: white;
+            border-radius: 24px;
+            padding: 60px;
+            margin: 40px 0;
+            box-shadow: 
+                0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            transition: all 0.3s ease;
+        }
+
+        .section-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 
+                0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        /* 标题系统 */
+        .section-title {
+            font-size: clamp(2rem, 4vw, 2.5rem);
+            font-weight: 800;
+            color: #1a202c;
+            margin-bottom: 16px;
+            text-align: center;
+            letter-spacing: -0.025em;
+            line-height: 1.2;
+        }
+
+        .section-subtitle {
+            font-size: 1.125rem;
+            color: #64748b;
+            text-align: center;
+            margin-bottom: 48px;
+            font-weight: 400;
+        }
+
+        .subsection-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #374151;
+            margin: 48px 0 24px 0;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .subsection-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        /* 网格系统 */
+        .grid {
+            display: grid;
+            gap: 24px;
+            margin: 40px 0;
+        }
+
+        .grid-2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+        .grid-3 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+        .grid-4 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+
+        /* 功能卡片 */
+        .feature-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 32px 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: #667eea;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.15);
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 12px;
+        }
+
+        .feature-text {
+            color: #64748b;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        /* 表格系统 */
+        .table-container {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+            margin: 32px 0;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th {
+            background: #f8fafc;
+            color: #374151;
+            padding: 20px 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .table td {
+            padding: 16px;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: top;
+        }
+
+        .table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table tr:hover {
+            background: #f8fafc;
+        }
+
+        .code-inline {
+            font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+            background: #f1f5f9;
+            color: #475569;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        /* 代码块 */
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 24px 0;
+            font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .code-header {
+            color: #94a3b8;
+            font-size: 12px;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* 配置层级可视化 */
+        .config-hierarchy {
+            display: flex;
+            justify-content: space-between;
+            margin: 48px 0;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .config-level {
+            flex: 1;
+            min-width: 180px;
+            text-align: center;
+        }
+
+        .config-bar {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 24px 16px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .config-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .config-bar:hover::before {
+            left: 100%;
+        }
+
+        .config-bar:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .config-bar.level-1 { height: 80px; display: flex; align-items: center; justify-content: center; }
+        .config-bar.level-2 { height: 100px; display: flex; align-items: center; justify-content: center; }
+        .config-bar.level-3 { height: 120px; display: flex; align-items: center; justify-content: center; }
+        .config-bar.level-4 { height: 100px; display: flex; align-items: center; justify-content: center; }
+        .config-bar.level-5 { height: 80px; display: flex; align-items: center; justify-content: center; }
+
+        .config-label {
+            color: #64748b;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* 信息框系统 */
+        .info-box {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-left: 4px solid #3b82f6;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 24px 0;
+        }
+
+        .info-box.warning {
+            background: #fefce8;
+            border-color: #fde047;
+            border-left-color: #eab308;
+        }
+
+        .info-box.success {
+            background: #f0fdf4;
+            border-color: #bbf7d0;
+            border-left-color: #22c55e;
+        }
+
+        .info-box-title {
+            font-weight: 600;
+            color: #1e40af;
+            margin-bottom: 8px;
+        }
+
+        .info-box.warning .info-box-title { color: #a16207; }
+        .info-box.success .info-box-title { color: #15803d; }
+
+        .info-box-content {
+            color: #1e3a8a;
+            line-height: 1.6;
+        }
+
+        .info-box.warning .info-box-content { color: #92400e; }
+        .info-box.success .info-box-content { color: #166534; }
+
+        /* 统计卡片 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            margin: 48px 0;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 32px 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* 弹窗系统 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 40px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+            animation: modalFadeIn 0.3s ease-out;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-close {
+            float: right;
+            font-size: 24px;
+            color: #94a3b8;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: #ef4444;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 24px;
+            clear: both;
+        }
+
+        /* 文档链接 */
+        .doc-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px 24px;
+            text-decoration: none;
+            color: #4f46e5;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 32px;
+        }
+
+        .doc-link:hover {
+            background: #4f46e5;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.25);
+        }
+
+        /* 返回顶部 */
+        .back-to-top {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(100px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        /* 标签页系统 */
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #e2e8f0;
+            margin-bottom: 32px;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            color: #64748b;
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab.active {
+            color: #4f46e5;
+            border-bottom-color: #4f46e5;
+        }
+
+        .tab:hover {
+            color: #4f46e5;
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hero { padding: 120px 0 80px; }
+            .section { padding: 60px 0; }
+            .section-card { padding: 40px 24px; }
+            .config-hierarchy { flex-direction: column; }
+            .config-bar { height: auto !important; min-height: 80px; }
+            .container { padding: 0 16px; }
+            .tabs { overflow-x: auto; }
+        }
+
+        @media (max-width: 480px) {
+            .section-card { padding: 32px 20px; }
+            .modal-content { padding: 24px; margin: 10% auto; }
+        }
+
+        /* 动画 */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 延迟动画 */
+        .fade-in:nth-child(1) { animation-delay: 0.1s; }
+        .fade-in:nth-child(2) { animation-delay: 0.2s; }
+        .fade-in:nth-child(3) { animation-delay: 0.3s; }
+        .fade-in:nth-child(4) { animation-delay: 0.4s; }
+        .fade-in:nth-child(5) { animation-delay: 0.5s; }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo">Claude Code</div>
+            <ul class="nav-links">
+                <li><a href="#cli">CLI命令</a></li>
+                <li><a href="#slash">斜杠命令</a></li>
+                <li><a href="#settings">Settings</a></li>
+                <li><a href="#memory">内存管理</a></li>
+                <li><a href="#mcp">MCP协议</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero区域 -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Claude Code 五大核心功能</h1>
+                <p class="subtitle">代理式编程的革命性突破</p>
+                <p class="description">
+                    深入探索Claude Code的CLI命令、斜杠命令、Settings设置、内存管理和MCP协议，
+                    掌握这款终端原生AI编程工具的精髓，开启高效的代理式开发之旅。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CLI命令 -->
+    <section id="cli" class="section">
+        <div class="container">
+            <div class="section-card fade-in">
+                <h2 class="section-title">🖥️ CLI命令</h2>
+                <p class="section-subtitle">终端原生的强大体验</p>
+
+                <h3 class="subsection-title">核心CLI命令</h3>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>命令</th>
+                                <th>描述</th>
+                                <th>示例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code class="code-inline">claude</code></td>
+                                <td>启动交互式 REPL</td>
+                                <td><code class="code-inline">claude</code></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">claude "query"</code></td>
+                                <td>使用初始提示启动 REPL</td>
+                                <td><code class="code-inline">claude "explain this project"</code></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">claude -p "query"</code></td>
+                                <td>通过 SDK 查询，然后退出</td>
+                                <td><code class="code-inline">claude -p "explain this function"</code></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">cat file | claude -p "query"</code></td>
+                                <td>处理管道内容</td>
+                                <td><code class="code-inline">cat logs.txt | claude -p "explain"</code></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">claude -c</code></td>
+                                <td>继续最近的对话</td>
+                                <td><code class="code-inline">claude -c</code></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">claude -r "session-id"</code></td>
+                                <td>通过会话ID恢复对话</td>
+                                <td><code class="code-inline">claude -r "abc123" "Finish this PR"</code></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">claude update</code></td>
+                                <td>更新到最新版本</td>
+                                <td><code class="code-inline">claude update</code></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">claude mcp</code></td>
+                                <td>配置MCP服务器</td>
+                                <td><code class="code-inline">claude mcp</code></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">claude config</code></td>
+                                <td>管理配置设置</td>
+                                <td><code class="code-inline">claude config set theme dark</code></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">claude doctor</code></td>
+                                <td>检查安装和配置</td>
+                                <td><code class="code-inline">claude doctor</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">CLI 标志选项</h3>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>标志</th>
+                                <th>描述</th>
+                                <th>示例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code class="code-inline">--model</code></td>
+                                <td>设置使用的模型</td>
+                                <td><code class="code-inline">claude --model claude-sonnet-4</code></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">--verbose</code></td>
+                                <td>启用详细日志记录</td>
+                                <td><code class="code-inline">claude --verbose</code></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">--permission-mode</code></td>
+                                <td>设置权限模式</td>
+                                <td><code class="code-inline">claude --permission-mode auto</code></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">--dangerously-skip-permissions</code></td>
+                                <td>跳过权限提示（谨慎使用）</td>
+                                <td><code class="code-inline">claude --dangerously-skip-permissions</code></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">--output-format</code></td>
+                                <td>指定输出格式</td>
+                                <td><code class="code-inline">claude -p "query" --output-format json</code></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">--max-turns</code></td>
+                                <td>限制代理轮次数</td>
+                                <td><code class="code-inline">claude -p --max-turns 3 "query"</code></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">--add-dir</code></td>
+                                <td>添加额外的工作目录</td>
+                                <td><code class="code-inline">claude --add-dir ../docs ../lib</code></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">--allowedTools</code></td>
+                                <td>允许的工具列表</td>
+                                <td><code class="code-inline">claude --allowedTools "Read" "Edit"</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="text-align: center;">
+                    <a href="https://docs.anthropic.com/zh-CN/docs/claude-code/cli-reference" 
+                       class="doc-link" target="_blank">
+                        📚 查看完整CLI文档
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 斜杠命令 -->
+    <section id="slash" class="section">
+        <div class="container">
+            <div class="section-card fade-in">
+                <h2 class="section-title">⚡ 斜杠命令</h2>
+                <p class="section-subtitle">高效操作的快捷键</p>
+
+                <div class="tabs">
+                    <button class="tab active" onclick="showTab('builtin')">内置斜杠命令</button>
+                    <button class="tab" onclick="showTab('custom')">自定义斜杠命令</button>
+                    <button class="tab" onclick="showTab('mcp-slash')">MCP斜杠命令</button>
+                </div>
+
+                <div id="builtin" class="tab-content active">
+                    <h3 class="subsection-title">内置斜杠命令列表</h3>
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>命令</th>
+                                    <th>分类</th>
+                                    <th>功能描述</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code class="code-inline">/clear</code></td>
+                                    <td>对话管理</td>
+                                    <td>清空当前对话历史</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="code-inline">/compact</code></td>
+                                    <td>对话管理</td>
+                                    <td>智能压缩对话历史</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="code-inline">/cost</code></td>
+                                    <td>成本管理</td>
+                                    <td>查看Token使用量和费用</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="code-inline">/init</code></td>
+                                    <td>项目管理</td>
+                                    <td>生成或更新CLAUDE.md文件</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="code-inline">/memory</code></td>
+                                    <td>内存管理</td>
+                                    <td>编辑内存文件</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="code-inline">/model</code></td>
+                                    <td>配置管理</td>
+                                    <td>切换Claude模型</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="code-inline">/config</code></td>
+                                    <td>配置管理</td>
+                                    <td>调整设置和偏好</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="code-inline">/permissions</code></td>
+                                    <td>权限管理</td>
+                                    <td>管理工具权限</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="code-inline">/vim</code></td>
+                                    <td>编辑器</td>
+                                    <td>启用Vim编辑模式</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="code-inline">/terminal-setup</code></td>
+                                    <td>终端配置</td>
+                                    <td>优化终端设置</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="code-inline">/help</code></td>
+                                    <td>帮助</td>
+                                    <td>显示帮助信息</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="custom" class="tab-content">
+                    <h3 class="subsection-title">自定义斜杠命令</h3>
+                    <div class="grid grid-3">
+                        <div class="feature-card fade-in">
+                            <div class="feature-icon">🛠️</div>
+                            <h3 class="feature-title">命令创建</h3>
+                            <p class="feature-text">在.claude/commands/目录下创建Markdown文件，封装团队专属工作流</p>
+                        </div>
+                        <div class="feature-card fade-in">
+                            <div class="feature-icon">🔄</div>
+                            <h3 class="feature-title">参数传递</h3>
+                            <p class="feature-text">使用$ARGUMENTS变量在自定义命令中处理用户输入参数</p>
+                        </div>
+                        <div class="feature-card fade-in">
+                            <div class="feature-icon">📚</div>
+                            <h3 class="feature-title">分层管理</h3>
+                            <p class="feature-text">项目级和全局级命令分层管理，满足不同场景需求</p>
+                        </div>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">自定义斜杠命令示例</div>
+                        <pre># 创建命令文件: .claude/commands/review.md
+
+请对$ARGUMENTS指定的文件执行代码审查：
+1. 检查TypeScript和React最佳实践
+2. 验证错误处理逻辑
+3. 确保无障碍设计标准
+4. 评估单元测试覆盖率
+
+# 使用示例：
+/project:review src/components/Button.tsx</pre>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-title">💡 自定义命令位置</div>
+                        <div class="info-box-content">
+                            <strong>项目级：</strong>.claude/commands/ (团队共享)<br>
+                            <strong>全局级：</strong>~/.claude/commands/ (个人使用)
+                        </div>
+                    </div>
+                </div>
+
+                <div id="mcp-slash" class="tab-content">
+                    <h3 class="subsection-title">MCP斜杠命令</h3>
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>命令</th>
+                                    <th>功能描述</th>
+                                    <th>使用示例</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code class="code-inline">/mcp</code></td>
+                                    <td>启动MCP配置向导</td>
+                                    <td><code class="code-inline">/mcp</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code class="code-inline">/mcp:add</code></td>
+                                    <td>添加新的MCP服务器</td>
+                                    <td><code class="code-inline">/mcp:add postgres-server</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code class="code-inline">/mcp:list</code></td>
+                                    <td>列出已配置的MCP服务器</td>
+                                    <td><code class="code-inline">/mcp:list</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code class="code-inline">/mcp:status</code></td>
+                                    <td>查看MCP服务器连接状态</td>
+                                    <td><code class="code-inline">/mcp:status</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code class="code-inline">/mcp:serve</code></td>
+                                    <td>将Claude Code作为MCP服务器运行</td>
+                                    <td><code class="code-inline">/mcp:serve</code></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">MCP斜杠命令使用示例</div>
+                        <pre># 添加GitHub MCP服务器
+/mcp:add github-server @modelcontextprotocol/server-github
+
+# 使用MCP工具查询GitHub
+> 请使用 @github 查询最近的提交记录
+
+# 使用数据库MCP服务器查询数据
+> 使用 @postgres 查询用户表中的活跃用户统计
+
+# 组合多个MCP服务器
+> 从 @github 获取PR信息，然后使用 @slack 发送通知</pre>
+                    </div>
+                </div>
+
+                <div style="text-align: center;">
+                    <a href="https://docs.anthropic.com/zh-CN/docs/claude-code/slash-commands" 
+                       class="doc-link" target="_blank">
+                        📚 查看斜杠命令文档
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Settings设置 -->
+    <section id="settings" class="section">
+        <div class="container">
+            <div class="section-card fade-in">
+                <h2 class="section-title">⚙️ Settings设置</h2>
+                <p class="section-subtitle">五层配置体系，精确控制AI行为</p>
+
+                <div class="info-box">
+                    <div class="info-box-title">🎯 什么是Settings设置？</div>
+                    <div class="info-box-content">
+                        Settings设置是Claude Code的核心配置系统，通过分层设置文件（settings.json）来控制AI代理如何与您的代码库交互。
+                        它决定了权限管理、工具访问、环境变量等关键行为，在自动化便利性和操作安全性之间找到最佳平衡点。
+                    </div>
+                </div>
+
+                <h3 class="subsection-title">Settings的核心作用</h3>
+                <div class="grid grid-3">
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">🛡️</div>
+                        <h3 class="feature-title">安全控制</h3>
+                        <p class="feature-text">通过精细的权限规则控制AI可以执行的操作。</p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">⚡</div>
+                        <h3 class="feature-title">性能优化</h3>
+                        <p class="feature-text">配置模型选择、清理周期、输出限制来优化响应质量。</p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">👥</div>
+                        <h3 class="feature-title">团队协作</h3>
+                        <p class="feature-text">项目级配置确保团队成员使用一致的AI行为标准。</p>
+                    </div>
+                </div>
+
+                <h3 class="subsection-title">五层配置文件体系</h3>
+                <div class="config-hierarchy">
+                    <div class="config-level">
+                        <div class="config-bar level-1" onclick="showConfigModal('enterprise')">
+                            <strong>1. 企业策略</strong><br>
+                            <small>系统级强制设置</small>
+                        </div>
+                        <div class="config-label">最高优先级</div>
+                    </div>
+                    <div class="config-level">
+                        <div class="config-bar level-2" onclick="showConfigModal('cmdline')">
+                            <strong>2. 命令行参数</strong><br>
+                            <small>临时覆盖设置</small>
+                        </div>
+                        <div class="config-label">单次有效</div>
+                    </div>
+                    <div class="config-level">
+                        <div class="config-bar level-3" onclick="showConfigModal('local')">
+                            <strong>3. 本地项目</strong><br>
+                            <small>.claude/settings.local.json</small>
+                        </div>
+                        <div class="config-label">个人项目配置</div>
+                    </div>
+                    <div class="config-level">
+                        <div class="config-bar level-4" onclick="showConfigModal('project')">
+                            <strong>4. 共享项目</strong><br>
+                            <small>.claude/settings.json</small>
+                        </div>
+                        <div class="config-label">团队共享</div>
+                    </div>
+                    <div class="config-level">
+                        <div class="config-bar level-5" onclick="showConfigModal('user')">
+                            <strong>5. 用户全局</strong><br>
+                            <small>~/.claude/settings.json</small>
+                        </div>
+                        <div class="config-label">最低优先级</div>
+                    </div>
+                </div>
+
+                <h3 class="subsection-title">可用设置选项</h3>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>设置项</th>
+                                <th>描述</th>
+                                <th>示例值</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code class="code-inline">permissions</code></td>
+                                <td>权限控制配置</td>
+                                <td>{"allow": [...], "deny": [...]}</td>
+                                <td><button onclick="showSettingModal('permissions')" style="background: #4f46e5; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer;">详情</button></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">env</code></td>
+                                <td>环境变量配置</td>
+                                <td>{"NODE_ENV": "production"}</td>
+                                <td><button onclick="showSettingModal('env')" style="background: #4f46e5; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer;">详情</button></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">model</code></td>
+                                <td>默认使用的模型</td>
+                                <td>"claude-3-5-sonnet-20241022"</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">cleanupPeriodDays</code></td>
+                                <td>聊天记录保留天数</td>
+                                <td>30</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">hooks</code></td>
+                                <td>工具执行前后的钩子</td>
+                                <td>{"PreToolUse": {...}}</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">forceLoginMethod</code></td>
+                                <td>强制登录方式</td>
+                                <td>"claudeai" 或 "console"</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">enableAllProjectMcpServers</code></td>
+                                <td>自动批准所有项目MCP服务器</td>
+                                <td>true / false</td>
+                                <td>-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">完整settings.json示例</div>
+                    <pre>{
+  "permissions": {
+    "allow": [
+      "Bash(npm run lint)",
+      "Bash(npm run test:*)",
+      "Read(~/.zshrc)",
+      "Edit(src/**/*.ts)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(curl:*)"
+    ],
+    "additionalDirectories": [
+      "../docs/",
+      "../shared/"
+    ],
+    "defaultMode": "acceptEdits"
+  },
+  "env": {
+    "NODE_ENV": "development",
+    "CLAUDE_CODE_ENABLE_TELEMETRY": "1"
+  },
+  "model": "claude-3-5-sonnet-20241022",
+  "cleanupPeriodDays": 30,
+  "hooks": {
+    "PreToolUse": {
+      "Bash": "echo 'Running command...'"
+    }
+  }
+}</pre>
+                </div>
+
+                <div style="text-align: center;">
+                    <a href="https://docs.anthropic.com/zh-CN/docs/claude-code/settings" 
+                       class="doc-link" target="_blank">
+                        📚 查看Settings配置文档
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 内存管理 -->
+    <section id="memory" class="section">
+        <div class="container">
+            <div class="section-card fade-in">
+                <h2 class="section-title">🧠 内存管理</h2>
+                <p class="section-subtitle">AI的项目记忆系统</p>
+
+                <div class="info-box">
+                    <div class="info-box-title">📝 什么是CLAUDE.md文件？</div>
+                    <div class="info-box-content">
+                        CLAUDE.md文件是Claude Code的"大脑"，它是一个特殊的Markdown文件，
+                        相当于给AI的项目说明书和行为指南。当Claude Code启动时，
+                        会自动读取这个文件，将其内容作为高优先级的上下文信息。
+                    </div>
+                </div>
+
+                <h3 class="subsection-title">内存文件类型与位置</h3>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>文件类型</th>
+                                <th>路径</th>
+                                <th>作用域</th>
+                                <th>Git状态</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>项目内存</strong></td>
+                                <td>./CLAUDE.md</td>
+                                <td>团队共享的项目宪法</td>
+                                <td>✅ 提交到Git</td>
+                            </tr>
+                            <tr>
+                                <td><strong>用户内存</strong></td>
+                                <td>~/.claude/CLAUDE.md</td>
+                                <td>个人全局偏好设置</td>
+                                <td>❌ 不提交</td>
+                            </tr>
+                            <tr>
+                                <td><strong>本地项目内存</strong></td>
+                                <td>./CLAUDE.local.md</td>
+                                <td>个人项目临时笔记</td>
+                                <td>⚠️ 已废弃</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box warning">
+                    <div class="info-box-title">⚠️ 重要更新</div>
+                    <div class="info-box-content">
+                        <strong>./CLAUDE.local.md 已被废弃：</strong>根据官方文档，
+                        本地项目内存文件 ./CLAUDE.local.md 已不再支持。
+                        现在推荐使用项目级和用户级的CLAUDE.md文件来管理项目记忆。
+                    </div>
+                </div>
+
+                <h3 class="subsection-title">内存管理核心功能</h3>
+                <div class="grid grid-4">
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">🔍</div>
+                        <h3 class="feature-title">查找内存</h3>
+                        <p class="feature-text">自动递归查找项目目录中的所有CLAUDE.md文件。</p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">➕</div>
+                        <h3 class="feature-title">添加内存</h3>
+                        <p class="feature-text">使用#命令快速添加新的记忆条目。</p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">📁</div>
+                        <h3 class="feature-title">文件导入</h3>
+                        <p class="feature-text">使用@语法导入其他文档作为模块化内存。</p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">🔄</div>
+                        <h3 class="feature-title">动态加载</h3>
+                        <p class="feature-text">子目录内存文件按需加载，优化token使用。</p>
+                    </div>
+                </div>
+
+                <h3 class="subsection-title">内存管理命令详解</h3>
+                <div class="grid grid-2">
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">🚀</div>
+                        <h3 class="feature-title">/init 命令</h3>
+                        <p class="feature-text">
+                            自动分析项目并生成或更新CLAUDE.md文件：<br>
+                            • 识别技术栈和架构<br>
+                            • 分析代码结构和模式<br>
+                            • 生成编码规范建议
+                        </p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">💾</div>
+                        <h3 class="feature-title">/memory 命令</h3>
+                        <p class="feature-text">
+                            打开默认编辑器编辑内存文件：<br>
+                            • 大段内容修改<br>
+                            • 结构化重组<br>
+                            • 批量更新规则
+                        </p>
+                    </div>
+                </div>
+
+                <div class="grid grid-2">
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">#</div>
+                        <h3 class="feature-title"># 快捷方式</h3>
+                        <p class="feature-text">
+                            快速添加记忆的最佳方式：<br>
+                            • # 刚发现构建需要NODE_ENV<br>
+                            • 提示选择保存位置<br>
+                            • 自动格式化并追加
+                        </p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">📋</div>
+                        <h3 class="feature-title">查看内存状态</h3>
+                        <p class="feature-text">
+                            显示当前加载的内存文件：<br>
+                            • 已加载的CLAUDE.md文件<br>
+                            • 内存使用情况<br>
+                            • 上下文信息统计
+                        </p>
+                    </div>
+                </div>
+
+                <h3 class="subsection-title">文件导入系统</h3>
+                <div class="info-box">
+                    <div class="info-box-title">💡 模块化内存管理</div>
+                    <div class="info-box-content">
+                        使用 @ 语法可以将大型内存文件拆分为多个模块，便于维护和管理：
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">模块化CLAUDE.md示例</div>
+                    <pre># 项目核心指令
+
+## 基本信息
+项目名称：MyApp
+技术栈：Next.js + TypeScript + Tailwind
+
+## 详细文档导入
+@docs/api-guidelines.md
+@docs/testing-strategy.md
+@docs/deployment-guide.md
+
+## 快速命令
+- npm run dev: 启动开发服务器
+- npm run test: 运行测试套件</pre>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">完整CLAUDE.md结构示例</div>
+                    <pre># 项目核心指令
+
+## 技术栈与架构
+- 框架：Next.js 14+ (App Router)
+- 语言：TypeScript (strict模式)
+- 样式：Tailwind CSS
+- 状态管理：Zustand
+- 测试：Jest + Testing Library
+
+## 常用命令
+- `npm run dev` - 启动开发服务器
+- `npm run test` - 运行测试
+- `npm run build` - 构建生产版本
+- `npm run lint` - 代码检查
+
+## 编码规范
+- 使用函数式组件和Hooks
+- 所有导出函数必须有JSDoc注释
+- 遵循Conventional Commits规范
+- 组件文件使用PascalCase命名
+
+## Git工作流
+- 主分支：main
+- 功能分支：feature/功能名称
+- 提交格式：feat: 添加用户登录功能</pre>
+                </div>
+
+                <div style="text-align: center;">
+                    <a href="https://docs.anthropic.com/zh-CN/docs/claude-code/memory-management" 
+                       class="doc-link" target="_blank">
+                        📚 查看内存管理文档
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MCP协议 -->
+    <section id="mcp" class="section">
+        <div class="container">
+            <div class="section-card fade-in">
+                <h2 class="section-title">🌐 MCP协议</h2>
+                <p class="section-subtitle">模型上下文协议 - 连接万物的AI接口</p>
+
+                <div class="info-box">
+                    <div class="info-box-title">🎯 什么是MCP协议？</div>
+                    <div class="info-box-content">
+                        Model Context Protocol (MCP) 是由Anthropic开发的开放标准，用于标准化AI应用程序如何向大型语言模型提供上下文。
+                        它就像AI的"USB-C接口"，让模型能够轻松连接到各种数据源和工具，如文件系统、数据库和API。
+                    </div>
+                </div>
+
+                <h3 class="subsection-title">MCP架构原理</h3>
+                <div style="text-align: center; margin: 40px 0;">
+                    <div style="display: inline-block; padding: 40px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border-radius: 20px;">
+                        <h3 style="margin: 0; font-size: 1.8rem;">客户端-主机-服务器架构</h3>
+                        <p style="margin: 16px 0 0 0; opacity: 0.9;">基于JSON-RPC 2.0的状态会话协议</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-3">
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">🖥️</div>
+                        <h3 class="feature-title">主机 (Host)</h3>
+                        <p class="feature-text">
+                            作为容器和协调器：<br>
+                            • 创建和管理多个客户端实例<br>
+                            • 控制连接权限和生命周期<br>
+                            • 执行安全策略和用户授权<br>
+                            • 协调AI/LLM集成和采样
+                        </p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">🔗</div>
+                        <h3 class="feature-title">客户端 (Client)</h3>
+                        <p class="feature-text">
+                            维护独立的服务器连接：<br>
+                            • 与特定服务器建立1对1会话<br>
+                            • 处理协议协商和能力交换<br>
+                            • 双向路由协议消息<br>
+                            • 管理订阅和通知
+                        </p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">⚙️</div>
+                        <h3 class="feature-title">服务器 (Server)</h3>
+                        <p class="feature-text">
+                            提供专门的上下文和功能：<br>
+                            • 通过MCP原语暴露资源、工具和提示<br>
+                            • 独立运行，专注特定职责<br>
+                            • 通过客户端接口请求采样<br>
+                            • 遵守安全约束
+                        </p>
+                    </div>
+                </div>
+
+                <h3 class="subsection-title">MCP三大核心功能</h3>
+                <div class="grid grid-3">
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">📝</div>
+                        <h3 class="feature-title">Prompts (提示)</h3>
+                        <p class="feature-text">
+                            预定义的模板或指令：<br>
+                            • 用户控制的交互模式<br>
+                            • 可通过斜杠命令触发<br>
+                            • 支持参数化定制<br>
+                            • 结构化消息格式
+                        </p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">📊</div>
+                        <h3 class="feature-title">Resources (资源)</h3>
+                        <p class="feature-text">
+                            结构化数据或内容：<br>
+                            • 应用程序驱动的上下文<br>
+                            • 通过URI唯一标识<br>
+                            • 支持订阅变更通知<br>
+                            • 文件、数据库模式等
+                        </p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">🛠️</div>
+                        <h3 class="feature-title">Tools (工具)</h3>
+                        <p class="feature-text">
+                            可执行的函数功能：<br>
+                            • 模型控制的动态调用<br>
+                            • 与外部系统交互<br>
+                            • 查询数据库、调用API<br>
+                            • 执行计算和操作
+                        </p>
+                    </div>
+                </div>
+
+                <h3 class="subsection-title">Claude Code中的MCP命令</h3>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>命令</th>
+                                <th>功能描述</th>
+                                <th>使用示例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code class="code-inline">claude mcp</code></td>
+                                <td>启动MCP配置向导</td>
+                                <td><code class="code-inline">claude mcp</code></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">claude mcp add</code></td>
+                                <td>添加新的MCP服务器</td>
+                                <td><code class="code-inline">claude mcp add postgres-server</code></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">claude mcp list</code></td>
+                                <td>列出已配置的MCP服务器</td>
+                                <td><code class="code-inline">claude mcp list</code></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">claude mcp status</code></td>
+                                <td>查看MCP服务器连接状态</td>
+                                <td><code class="code-inline">claude mcp status</code></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">claude mcp serve</code></td>
+                                <td>将Claude Code作为MCP服务器运行</td>
+                                <td><code class="code-inline">claude mcp serve</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">MCP服务器配置方式</h3>
+                <div class="grid grid-3">
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">🏢</div>
+                        <h3 class="feature-title">项目配置</h3>
+                        <p class="feature-text">
+                            在项目目录运行时可用：<br>
+                            • 文件位置：.mcp.json<br>
+                            • 团队共享配置<br>
+                            • 版本控制管理
+                        </p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">🌍</div>
+                        <h3 class="feature-title">全局配置</h3>
+                        <p class="feature-text">
+                            在所有项目中可用：<br>
+                            • 个人工具集<br>
+                            • 常用服务器<br>
+                            • 跨项目使用
+                        </p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">✅</div>
+                        <h3 class="feature-title">检入配置</h3>
+                        <p class="feature-text">
+                            .mcp.json文件：<br>
+                            • 所有团队成员可用<br>
+                            • 开箱即用体验<br>
+                            • 标准化工具链
+                        </p>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">MCP配置示例 (.mcp.json)</div>
+                    <pre>{
+  "mcpServers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "your-token"
+      }
+    },
+    "postgres": {
+      "command": "node",
+      "args": ["/path/to/postgres-mcp-server"],
+      "env": {
+        "DATABASE_URL": "postgresql://user:pass@host:port/db"
+      }
+    }
+  }
+}</pre>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">MCP工具使用示例</div>
+                    <pre># 使用GitHub MCP服务器查询代码仓库
+> 请使用 @github 查询main分支最近10次提交记录
+
+# 使用数据库MCP服务器查询数据
+> 使用 @postgres 查询用户表中的活跃用户统计
+
+# 组合多个MCP服务器
+> 从 @github 获取PR信息，然后使用 @slack 发送通知</pre>
+                </div>
+
+                <h3 class="subsection-title">MCP的优势与特点</h3>
+                <div class="grid grid-4">
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">🔧</div>
+                        <h3 class="feature-title">标准化通信</h3>
+                        <p class="feature-text">统一协议替代自定义API，确保一致的集成体验。</p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">🔍</div>
+                        <h3 class="feature-title">动态工具发现</h3>
+                        <p class="feature-text">AI自动检测和使用新工具，无需手动配置。</p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">🔒</div>
+                        <h3 class="feature-title">安全控制</h3>
+                        <p class="feature-text">内置身份认证和访问控制，保护数据交互。</p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">📈</div>
+                        <h3 class="feature-title">高性能架构</h3>
+                        <p class="feature-text">轻量级协议确保快速、实时通信。</p>
+                    </div>
+                </div>
+
+                <div style="text-align: center;">
+                    <a href="https://docs.anthropic.com/zh-CN/docs/claude-code/mcp" 
+                       class="doc-link" target="_blank">
+                        📚 查看MCP协议文档
+                    </a>
+                    <a href="https://modelcontextprotocol.io/" 
+                       class="doc-link" target="_blank" style="margin-left: 16px;">
+                        🌐 MCP官方网站
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 总结 -->
+    <section class="section">
+        <div class="container">
+            <div class="section-card fade-in">
+                <h2 class="section-title">🎯 总结</h2>
+                <p class="section-subtitle">开启代理式编程新时代</p>
+
+                <div class="grid grid-3">
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">🖥️</div>
+                        <h3 class="feature-title">CLI - 原生体验</h3>
+                        <p class="feature-text">终端原生设计，丰富的命令选项，无缝融入开发者工作流。</p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">⚡</div>
+                        <h3 class="feature-title">斜杠 - 高效操作</h3>
+                        <p class="feature-text">快捷命令体系，大幅提升操作效率。</p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">⚙️</div>
+                        <h3 class="feature-title">设置 - 精准控制</h3>
+                        <p class="feature-text">分层配置系统，平衡安全与便利。</p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">🧠</div>
+                        <h3 class="feature-title">内存 - 智能记忆</h3>
+                        <p class="feature-text">持久化上下文，让AI成为项目专家。</p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">🌐</div>
+                        <h3 class="feature-title">MCP - 无限扩展</h3>
+                        <p class="feature-text">开放协议连接万物，标准化集成，释放无限可能。</p>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 60px; padding: 48px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border-radius: 20px;">
+                    <h3 style="margin: 0 0 24px 0; font-size: 2rem;">🚀 立即开始Claude Code之旅</h3>
+                    <p style="margin: 0 0 32px 0; font-size: 1.1rem; opacity: 0.9;">
+                        从代码执行者到AI协调者，从重复劳动到创造性工作<br>
+                        这不仅是工具的升级，更是开发者价值的升华
+                    </p>
+                    <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                        <a href="https://docs.anthropic.com/zh-CN/docs/claude-code" 
+                           style="color: white; text-decoration: none; padding: 12px 24px; background: rgba(255,255,255,0.2); border-radius: 10px; font-weight: 600;" 
+                           target="_blank">中文文档</a>
+                        <a href="https://github.com/anthropics/claude-code" 
+                           style="color: white; text-decoration: none; padding: 12px 24px; background: rgba(255,255,255,0.2); border-radius: 10px; font-weight: 600;" 
+                           target="_blank">GitHub</a>
+                        <a href="https://modelcontextprotocol.io/" 
+                           style="color: white; text-decoration: none; padding: 12px 24px; background: rgba(255,255,255,0.2); border-radius: 10px; font-weight: 600;" 
+                           target="_blank">MCP官网</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 配置弹窗 -->
+    <div id="configModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h3 class="modal-title" id="modalTitle">配置详情</h3>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <!-- 设置详情弹窗 -->
+    <div id="settingModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h3 class="modal-title" id="settingModalTitle">设置详情</h3>
+            <div id="settingModalContent"></div>
+        </div>
+    </div>
+
+    <!-- 返回顶部按钮 -->
+    <button class="back-to-top" onclick="scrollToTop()">↑</button>
+
+    <script>
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // 返回顶部
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 显示/隐藏返回顶部按钮
+        window.addEventListener('scroll', () => {
+            const backToTop = document.querySelector('.back-to-top');
+            if (window.pageYOffset > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+
+        // 标签页切换
+        function showTab(tabName) {
+            // 隐藏所有标签页内容
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // 移除所有标签页的活动状态
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // 显示选中的标签页内容
+            document.getElementById(tabName).classList.add('active');
+            
+            // 激活对应的标签页
+            event.target.classList.add('active');
+        }
+
+        // 配置弹窗
+        function showConfigModal(type) {
+            const modal = document.getElementById('configModal');
+            const title = document.getElementById('modalTitle');
+            const content = document.getElementById('modalContent');
+            
+            const configData = {
+                enterprise: {
+                    title: '企业策略配置',
+                    content: `
+                        <h4>配置说明：</h4>
+                        <p>由系统管理员统一配置的强制性设置，个人用户无法覆盖。</p>
+                        
+                        <h4>配置文件位置：</h4>
+                        <ul>
+                            <li><strong>macOS:</strong> /Library/Application Support/ClaudeCode/managed-settings.json</li>
+                            <li><strong>Linux/WSL:</strong> /etc/claude-code/managed-settings.json</li>
+                            <li><strong>Windows:</strong> C:\\ProgramData\\ClaudeCode\\managed-settings.json</li>
+                        </ul>
+                        
+                        <h4>示例配置：</h4>
+                        <div class="code-block" style="margin: 16px 0;">
+                            <pre>{
+  "permissions": {
+    "allow": ["Read", "Write"],
+    "deny": ["Bash"]
+  },
+  "model": "claude-3-5-sonnet-20241022",
+  "maxTokens": 4096
+}</pre>
+                        </div>
+                    `
+                },
+                cmdline: {
+                    title: '命令行参数配置',
+                    content: `
+                        <h4>配置说明：</h4>
+                        <p>通过命令行参数传递的设置，仅对当前会话有效，优先级最高。</p>
+                        
+                        <h4>常用命令行参数：</h4>
+                        <div class="code-block" style="margin: 16px 0;">
+                            <pre># 设置模型
+claude --model claude-3-5-sonnet-20241022
+
+# 设置允许的工具
+claude --allowedTools "Read" "Write" "Edit"
+
+# 设置权限模式
+claude --permission-mode auto</pre>
+                        </div>
+                    `
+                },
+                local: {
+                    title: '本地项目配置',
+                    content: `
+                        <h4>配置说明：</h4>
+                        <p>本地项目特定的个人配置，不会提交到版本控制。</p>
+                        
+                        <h4>配置文件位置：</h4>
+                        <p><strong>.claude/settings.local.json</strong> (项目根目录)</p>
+                        
+                        <h4>示例配置：</h4>
+                        <div class="code-block" style="margin: 16px 0;">
+                            <pre>{
+  "env": {
+    "API_KEY": "local-dev-key",
+    "DEBUG": "true"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(npm run dev)",
+      "Edit(src/**/*.test.ts)"
+    ]
+  }
+}</pre>
+                        </div>
+                        
+                        <h4>注意事项：</h4>
+                        <ul>
+                            <li>文件会自动添加到.gitignore</li>
+                            <li>适合存放个人密钥和调试配置</li>
+                            <li>优先级高于共享项目配置</li>
+                        </ul>
+                    `
+                },
+                project: {
+                    title: '共享项目配置',
+                    content: `
+                        <h4>配置说明：</h4>
+                        <p>项目级别的配置，团队成员共享，存储在项目根目录。</p>
+                        
+                        <h4>配置文件位置：</h4>
+                        <p><strong>.claude/settings.json</strong> (项目根目录)</p>
+                        
+                        <h4>示例配置：</h4>
+                        <div class="code-block" style="margin: 16px 0;">
+                            <pre>{
+  "model": "claude-3-5-sonnet-20241022",
+  "permissions": {
+    "allow": [
+      "Bash(npm run test)",
+      "Bash(git status)",
+      "Edit(src/**/*.ts)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(sudo *)"
+    ]
+  },
+  "env": {
+    "NODE_ENV": "development"
+  }
+}</pre>
+                        </div>
+                        
+                        <h4>最佳实践：</h4>
+                        <ul>
+                            <li>提交到版本控制系统</li>
+                            <li>团队统一的权限策略</li>
+                            <li>避免包含敏感信息</li>
+                        </ul>
+                    `
+                },
+                user: {
+                    title: '用户全局配置',
+                    content: `
+                        <h4>配置说明：</h4>
+                        <p>用户个人的全局默认设置，应用于所有项目。</p>
+                        
+                        <h4>配置文件位置：</h4>
+                        <p><strong>~/.claude/settings.json</strong></p>
+                        
+                        <h4>示例配置：</h4>
+                        <div class="code-block" style="margin: 16px 0;">
+                            <pre>{
+  "model": "claude-3-5-sonnet-20241022",
+  "theme": "dark",
+  "verbose": false,
+  "autoUpdates": true,
+  "permissions": {
+    "defaultMode": "interactive"
+  }
+}</pre>
+                        </div>
+                        
+                        <h4>命令行配置：</h4>
+                        <div class="code-block" style="margin: 16px 0;">
+                            <pre># 通过CLI配置用户全局设置
+claude config set -g theme dark
+claude config set -g model claude-3-5-sonnet-20241022
+claude config list -g  # 查看全局配置</pre>
+                        </div>
+                    `
+                }
+            };
+            
+            const data = configData[type];
+            if (data) {
+                title.textContent = data.title;
+                content.innerHTML = data.content;
+                modal.style.display = 'block';
+            }
+        }
+
+        // 设置详情弹窗
+        function showSettingModal(setting) {
+            const modal = document.getElementById('settingModal');
+            const title = document.getElementById('settingModalTitle');
+            const content = document.getElementById('settingModalContent');
+            
+            const settingData = {
+                permissions: {
+                    title: '权限设置详解',
+                    content: `
+                        <h4>权限控制系统：</h4>
+                        <p>Claude Code使用精细的权限规则来控制AI可以执行的操作。</p>
+                        
+                        <h4>权限规则格式：</h4>
+                        <div class="code-block" style="margin: 16px 0;">
+                            <pre>{
+  "permissions": {
+    "allow": [
+      "Read",                    // 允许读取所有文件
+      "Edit(src/**/*.ts)",       // 允许编辑TypeScript文件
+      "Bash(git:*)",            // 允许所有git命令
+      "Bash(npm run test:*)"     // 允许测试相关npm脚本
+    ],
+    "deny": [
+      "Bash(rm -rf *)",         // 禁止删除命令
+      "Bash(sudo *)",           // 禁止sudo命令
+      "WebFetch"                // 禁止网络请求
+    ],
+    "additionalDirectories": [
+      "../docs/",               // 额外的工作目录
+      "../shared/"
+    ],
+    "defaultMode": "acceptEdits" // 默认权限模式
+  }
+}</pre>
+                        </div>
+                        
+                        <h4>权限模式：</h4>
+                        <ul>
+                            <li><strong>interactive:</strong> 每次操作都请求确认</li>
+                            <li><strong>acceptEdits:</strong> 自动允许文件编辑</li>
+                            <li><strong>plan:</strong> 只制定计划，不执行操作</li>
+                        </ul>
+                        
+                        <h4>工具权限列表：</h4>
+                        <ul>
+                            <li><strong>Bash:</strong> 执行shell命令</li>
+                            <li><strong>Edit:</strong> 编辑文件</li>
+                            <li><strong>Read:</strong> 读取文件</li>
+                            <li><strong>Write:</strong> 创建/覆写文件</li>
+                            <li><strong>WebFetch:</strong> 获取网络内容</li>
+                            <li><strong>WebSearch:</strong> 执行网络搜索</li>
+                        </ul>
+                    `
+                },
+                env: {
+                    title: '环境变量配置',
+                    content: `
+                        <h4>环境变量系统：</h4>
+                        <p>Claude Code支持丰富的环境变量来控制行为和集成外部服务。</p>
+                        
+                        <h4>认证相关：</h4>
+                        <ul>
+                            <li><strong>ANTHROPIC_API_KEY:</strong> API密钥</li>
+                            <li><strong>ANTHROPIC_AUTH_TOKEN:</strong> 自定义认证令牌</li>
+                            <li><strong>AWS_BEARER_TOKEN_BEDROCK:</strong> Bedrock API密钥</li>
+                        </ul>
+                        
+                        <h4>模型配置：</h4>
+                        <ul>
+                            <li><strong>ANTHROPIC_MODEL:</strong> 自定义模型名称</li>
+                            <li><strong>ANTHROPIC_SMALL_FAST_MODEL:</strong> 后台任务模型</li>
+                            <li><strong>CLAUDE_CODE_MAX_OUTPUT_TOKENS:</strong> 最大输出token数</li>
+                        </ul>
+                        
+                        <h4>Bash控制：</h4>
+                        <ul>
+                            <li><strong>BASH_DEFAULT_TIMEOUT_MS:</strong> 默认超时时间</li>
+                            <li><strong>BASH_MAX_TIMEOUT_MS:</strong> 最大超时时间</li>
+                            <li><strong>BASH_MAX_OUTPUT_LENGTH:</strong> 最大输出长度</li>
+                        </ul>
+                        
+                        <h4>系统控制：</h4>
+                        <ul>
+                            <li><strong>DISABLE_AUTOUPDATER:</strong> 禁用自动更新</li>
+                            <li><strong>DISABLE_TELEMETRY:</strong> 禁用遥测</li>
+                            <li><strong>DISABLE_ERROR_REPORTING:</strong> 禁用错误报告</li>
+                            <li><strong>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC:</strong> 禁用非必要网络流量</li>
+                        </ul>
+                        
+                        <h4>MCP相关：</h4>
+                        <ul>
+                            <li><strong>MCP_TIMEOUT:</strong> MCP服务器启动超时</li>
+                            <li><strong>MCP_TOOL_TIMEOUT:</strong> MCP工具执行超时</li>
+                            <li><strong>MAX_MCP_OUTPUT_TOKENS:</strong> MCP工具响应最大token数</li>
+                        </ul>
+                        
+                        <h4>配置示例：</h4>
+                        <div class="code-block" style="margin: 16px 0;">
+                            <pre>{
+  "env": {
+    "NODE_ENV": "development",
+    "ANTHROPIC_MODEL": "claude-3-5-sonnet-20241022",
+    "BASH_DEFAULT_TIMEOUT_MS": "30000",
+    "DISABLE_TELEMETRY": "1",
+    "MCP_TIMEOUT": "10000"
+  }
+}</pre>
+                        </div>
+                    `
+                }
+            };
+            
+            const data = settingData[setting];
+            if (data) {
+                title.textContent = data.title;
+                content.innerHTML = data.content;
+                modal.style.display = 'block';
+            }
+        }
+
+        // 关闭弹窗
+        document.addEventListener('DOMContentLoaded', function() {
+            const configModal = document.getElementById('configModal');
+            const settingModal = document.getElementById('settingModal');
+            const closeBtns = document.querySelectorAll('.modal-close');
+            
+            closeBtns.forEach(btn => {
+                btn.onclick = function() {
+                    configModal.style.display = 'none';
+                    settingModal.style.display = 'none';
+                }
+            });
+            
+            window.onclick = function(event) {
+                if (event.target === configModal) {
+                    configModal.style.display = 'none';
+                }
+                if (event.target === settingModal) {
+                    settingModal.style.display = 'none';
+                }
+            }
+        });
+
+        // 导航栏滚动效果
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.pageYOffset > 50) {
+                navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+                navbar.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.1)';
+            } else {
+                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+                navbar.style.boxShadow = 'none';
+            }
+        });
+
+        // 滚动动画
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html> 
