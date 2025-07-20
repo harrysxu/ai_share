@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings设置详解 | Claude Code</title>
+    <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="settings-styles.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="index.html" class="logo">Claude Code</a>
+            <ul class="nav-links">
+                <li><a href="cli.html">CLI命令</a></li>
+                <li><a href="slash.html">斜杠命令</a></li>
+                <li><a href="settings.html">Settings</a></li>
+                <li><a href="memory.html">内存管理</a></li>
+                <li><a href="mcp.html">MCP协议</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero区域 -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>⚙️ Settings设置</h1>
+                <p class="subtitle">五层配置体系，精确控制AI行为</p>
+                <p class="description">
+                    深入了解Claude Code的分层配置系统，掌握权限管理、环境变量、工具钩子等核心设置，
+                    在自动化便利性和操作安全性之间找到最佳平衡点。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Settings详解 -->
+    <section class="section">
+        <div class="container">
+            <div class="section-card fade-in">
+                <h2 class="section-title">Settings配置系统</h2>
+                <p class="section-subtitle">精确控制AI行为的核心配置体系</p>
+
+                <div class="info-box">
+                    <div class="info-box-title">🎯 什么是Settings设置？</div>
+                    <div class="info-box-content">
+                        Settings设置是Claude Code的核心配置系统，通过分层设置文件（settings.json）来控制AI代理如何与您的代码库交互。
+                        它决定了权限管理、工具访问、环境变量等关键行为，在自动化便利性和操作安全性之间找到最佳平衡点。
+                    </div>
+                </div>
+
+                <h3 class="subsection-title">Settings的核心作用</h3>
+                <div class="grid grid-3">
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">🛡️</div>
+                        <h3 class="feature-title">安全控制</h3>
+                        <p class="feature-text">通过精细的权限规则控制AI可以执行的操作。</p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">⚡</div>
+                        <h3 class="feature-title">性能优化</h3>
+                        <p class="feature-text">配置模型选择、清理周期、输出限制来优化响应质量。</p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">👥</div>
+                        <h3 class="feature-title">团队协作</h3>
+                        <p class="feature-text">项目级配置确保团队成员使用一致的AI行为标准。</p>
+                    </div>
+                </div>
+
+                <h3 class="subsection-title">五层配置文件体系</h3>
+                <div class="config-explanation">
+                    <h4>📋 配置优先级说明</h4>
+                    <p>Claude Code使用分层配置系统，高优先级的设置会覆盖低优先级的设置。从上到下优先级递减，越往上的配置越优先生效。</p>
+                </div>
+
+                <div class="config-hierarchy">
+                    <div class="config-level">
+                        <div class="priority-badge">优先级 1</div>
+                        <div class="config-bar level-1" onclick="showConfigModal('enterprise')">
+                            <strong>企业策略</strong><br>
+                            <small>managed-settings.json</small>
+                        </div>
+                        <div class="config-label">🔒 最高优先级</div>
+                    </div>
+                    <div class="config-arrow">→</div>
+                    <div class="config-level">
+                        <div class="priority-badge">优先级 2</div>
+                        <div class="config-bar level-2" onclick="showConfigModal('cmdline')">
+                            <strong>命令行参数</strong><br>
+                            <small>--flag arguments</small>
+                        </div>
+                        <div class="config-label">⚡ 临时覆盖</div>
+                    </div>
+                    <div class="config-arrow">→</div>
+                    <div class="config-level">
+                        <div class="priority-badge">优先级 3</div>
+                        <div class="config-bar level-3" onclick="showConfigModal('local')">
+                            <strong>本地项目设置</strong><br>
+                            <small>.claude/settings.local.json</small>
+                        </div>
+                        <div class="config-label">👤 个人配置</div>
+                    </div>
+                    <div class="config-arrow">→</div>
+                    <div class="config-level">
+                        <div class="priority-badge">优先级 4</div>
+                        <div class="config-bar level-4" onclick="showConfigModal('project')">
+                            <strong>共享项目设置</strong><br>
+                            <small>.claude/settings.json</small>
+                        </div>
+                        <div class="config-label">👥 团队共享</div>
+                    </div>
+                    <div class="config-arrow">→</div>
+                    <div class="config-level">
+                        <div class="priority-badge">优先级 5</div>
+                        <div class="config-bar level-5" onclick="showConfigModal('user')">
+                            <strong>用户全局设置</strong><br>
+                            <small>~/.claude/settings.json</small>
+                        </div>
+                        <div class="config-label">🌍 默认配置</div>
+                    </div>
+                </div>
+
+                <div class="table-container" style="margin-top: 32px;">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>优先级</th>
+                                <th>配置类型</th>
+                                <th>文件位置</th>
+                                <th>作用域</th>
+                                <th>Git状态</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="priority-row-1">
+                                <td><strong>1</strong></td>
+                                <td>企业策略</td>
+                                <td><code class="code-inline">/etc/claude-code/managed-settings.json</code></td>
+                                <td>系统级强制</td>
+                                <td><span class="git-status system">❌ 系统管理</span></td>
+                            </tr>
+                            <tr class="priority-row-2">
+                                <td><strong>2</strong></td>
+                                <td>命令行参数</td>
+                                <td><code class="code-inline">--model --permission-mode</code></td>
+                                <td>当前会话</td>
+                                <td><span class="git-status temporary">❌ 临时设置</span></td>
+                            </tr>
+                            <tr class="priority-row-3">
+                                <td><strong>3</strong></td>
+                                <td>本地项目</td>
+                                <td><code class="code-inline">.claude/settings.local.json</code></td>
+                                <td>个人项目偏好</td>
+                                <td><span class="git-status ignored">🚫 自动忽略</span></td>
+                            </tr>
+                            <tr class="priority-row-4">
+                                <td><strong>4</strong></td>
+                                <td>共享项目</td>
+                                <td><code class="code-inline">.claude/settings.json</code></td>
+                                <td>团队协作配置</td>
+                                <td><span class="git-status tracked">✅ 提交到Git</span></td>
+                            </tr>
+                            <tr class="priority-row-5">
+                                <td><strong>5</strong></td>
+                                <td>用户全局</td>
+                                <td><code class="code-inline">~/.claude/settings.json</code></td>
+                                <td>跨项目默认</td>
+                                <td><span class="git-status system">❌ 个人文件</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">可用设置选项</h3>
+                <div class="table-container settings-table">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>设置项</th>
+                                <th>描述</th>
+                                <th>示例值</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code class="code-inline">apiKeyHelper</code></td>
+                                <td>API密钥获取脚本</td>
+                                <td>"echo 'sk-**'"</td>
+                                <td><button onclick="showSettingModal('apiKeyHelper')" class="settings-detail-btn">详情</button></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">permissions</code></td>
+                                <td>权限控制配置</td>
+                                <td>{"allow": [...], "deny": [...]}</td>
+                                <td><button onclick="showSettingModal('permissions')" class="settings-detail-btn">详情</button></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">env</code></td>
+                                <td>环境变量配置</td>
+                                <td>{"NODE_ENV": "production"}</td>
+                                <td><button onclick="showSettingModal('env')" class="settings-detail-btn">详情</button></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">model</code></td>
+                                <td>默认使用的模型</td>
+                                <td>"claude-3-5-sonnet-20241022"</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">cleanupPeriodDays</code></td>
+                                <td>聊天记录保留天数</td>
+                                <td>30</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">hooks</code></td>
+                                <td>工具执行前后的钩子</td>
+                                <td>{"PreToolUse": {...}}</td>
+                                <td><button onclick="showSettingModal('hooks')" class="settings-detail-btn">详情</button></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">forceLoginMethod</code></td>
+                                <td>强制登录方式</td>
+                                <td>"claudeai" 或 "console"</td>
+                                <td><button onclick="showSettingModal('forceLoginMethod')" class="settings-detail-btn">详情</button></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">enableAllProjectMcpServers</code></td>
+                                <td>自动批准所有项目MCP服务器</td>
+                                <td>true / false</td>
+                                <td>-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">完整配置示例</h3>
+                <div class="config-example">
+                    <div class="code-header">完整settings.json示例</div>
+                    <pre>{
+  "permissions": {
+    "allow": [
+      "Bash(npm run lint)",
+      "Bash(npm run test:*)",
+      "Read(~/.zshrc)",
+      "Edit(src/**/*.ts)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(curl:*)"
+    ],
+    "additionalDirectories": [
+      "../docs/",
+      "../shared/"
+    ],
+    "defaultMode": "acceptEdits"
+  },
+  "env": {
+    "NODE_ENV": "development",
+    "CLAUDE_CODE_ENABLE_TELEMETRY": "1"
+  },
+  "model": "claude-3-5-sonnet-20241022",
+  "cleanupPeriodDays": 30,
+  "hooks": {
+    "PreToolUse": {
+      "Bash": "echo 'Running command...'"
+    }
+  }
+}</pre>
+                </div>
+
+                <div class="info-box success">
+                    <div class="info-box-title">💡 最佳实践建议</div>
+                    <div class="info-box-content">
+                        • 在团队项目中使用共享配置确保一致性<br>
+                        • 敏感信息放在本地配置中，避免泄露<br>
+                        • 使用权限白名单而非黑名单提高安全性<br>
+                        • 定期审查和更新配置规则
+                    </div>
+                </div>
+
+                <div style="text-align: center;">
+                    <a href="https://docs.anthropic.com/zh-CN/docs/claude-code/settings" 
+                       class="doc-link" target="_blank">
+                        📚 查看Settings配置文档
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 配置弹窗 -->
+    <div id="configModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">配置详情</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="modalContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 设置详情弹窗 -->
+    <div id="settingModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="settingModalTitle">设置详情</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="settingModalContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 返回顶部按钮 -->
+    <button class="back-to-top" onclick="scrollToTop()">↑</button>
+
+    <script src="common.js"></script>
+    <script src="settings-scripts.js"></script>
+</body>
+</html> 

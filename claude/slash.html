@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>斜杠命令详解 | Claude Code</title>
+    <link rel="stylesheet" href="common.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="index.html" class="logo">Claude Code</a>
+            <ul class="nav-links">
+                <li><a href="cli.html">CLI命令</a></li>
+                <li><a href="slash.html">斜杠命令</a></li>
+                <li><a href="settings.html">Settings</a></li>
+                <li><a href="memory.html">内存管理</a></li>
+                <li><a href="mcp.html">MCP协议</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero区域 -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>⚡ 斜杠命令</h1>
+                <p class="subtitle">高效操作的快捷键</p>
+                <p class="description">
+                    掌握Claude Code的斜杠命令体系，从内置命令到自定义工作流，
+                    再到MCP协议扩展，大幅提升开发效率。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 斜杠命令详解 -->
+    <section class="section">
+        <div class="container">
+            <div class="section-card fade-in">
+                <h2 class="section-title">斜杠命令体系</h2>
+                <p class="section-subtitle">三大类型的斜杠命令，构建完整的快捷操作生态</p>
+
+                <div class="tabs">
+                    <button class="tab active" onclick="showTab('builtin')">内置斜杠命令</button>
+                    <button class="tab" onclick="showTab('custom')">自定义斜杠命令</button>
+                    <button class="tab" onclick="showTab('mcp-slash')">MCP斜杠命令</button>
+                </div>
+
+                <div id="builtin" class="tab-content active">
+                    <h3 class="subsection-title">内置斜杠命令列表</h3>
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>命令</th>
+                                    <th>分类</th>
+                                    <th>功能描述</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code class="code-inline">/clear</code></td>
+                                    <td>对话管理</td>
+                                    <td>清空当前对话历史</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="code-inline">/compact</code></td>
+                                    <td>对话管理</td>
+                                    <td>智能压缩对话历史</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="code-inline">/cost</code></td>
+                                    <td>成本管理</td>
+                                    <td>查看Token使用量和费用</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="code-inline">/init</code></td>
+                                    <td>项目管理</td>
+                                    <td>生成或更新CLAUDE.md文件</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="code-inline">/memory</code></td>
+                                    <td>内存管理</td>
+                                    <td>编辑内存文件</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="code-inline">/model</code></td>
+                                    <td>配置管理</td>
+                                    <td>切换Claude模型</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="code-inline">/permissions</code></td>
+                                    <td>权限管理</td>
+                                    <td>管理工具权限</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="code-inline">/vim</code></td>
+                                    <td>编辑器</td>
+                                    <td>启用Vim编辑模式</td>
+                                </tr>
+                                <tr>
+                                    <td><code class="code-inline">/help</code></td>
+                                    <td>帮助</td>
+                                    <td>显示帮助信息</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="grid grid-3">
+                        <div class="feature-card fade-in">
+                            <div class="feature-icon">🗑️</div>
+                            <h3 class="feature-title">对话管理</h3>
+                            <p class="feature-text">
+                                <code>/clear</code> 清空历史，<code>/compact</code> 智能压缩，
+                                高效管理对话上下文。
+                            </p>
+                        </div>
+                        <div class="feature-card fade-in">
+                            <div class="feature-icon">🧠</div>
+                            <h3 class="feature-title">内存操作</h3>
+                            <p class="feature-text">
+                                <code>/init</code> 生成项目记忆，<code>/memory</code> 编辑内存文件，
+                                构建智能项目上下文。
+                            </p>
+                        </div>
+                        <div class="feature-card fade-in">
+                            <div class="feature-icon">⚙️</div>
+                            <h3 class="feature-title">系统配置</h3>
+                            <p class="feature-text">
+                                <code>/model</code> 切换模型，<code>/permissions</code> 管理权限，
+                                灵活调整AI行为。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="custom" class="tab-content">
+                    <h3 class="subsection-title">自定义斜杠命令</h3>
+                    <div class="grid grid-3">
+                        <div class="feature-card fade-in">
+                            <div class="feature-icon">🛠️</div>
+                            <h3 class="feature-title">命令创建</h3>
+                            <p class="feature-text">在.claude/commands/目录下创建Markdown文件，封装团队专属工作流</p>
+                        </div>
+                        <div class="feature-card fade-in">
+                            <div class="feature-icon">🔄</div>
+                            <h3 class="feature-title">参数传递</h3>
+                            <p class="feature-text">使用$ARGUMENTS变量在自定义命令中处理用户输入参数</p>
+                        </div>
+                        <div class="feature-card fade-in">
+                            <div class="feature-icon">📚</div>
+                            <h3 class="feature-title">分层管理</h3>
+                            <p class="feature-text">项目级和全局级命令分层管理，满足不同场景需求</p>
+                        </div>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">自定义斜杠命令示例</div>
+                        <pre># 创建命令文件: .claude/commands/review-java.md
+
+请对$ARGUMENTS指定的Java文件执行代码审查：
+1. 检查Java编码规范和最佳实践
+2. 验证异常处理和资源管理
+3. 检查设计模式应用和SOLID原则
+4. 评估性能优化和线程安全性
+5. 确保注释和文档完整性
+
+# 使用示例：
+/review-java src/main/java/com/example/UserService.java</pre>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-title">💡 自定义命令位置</div>
+                        <div class="info-box-content">
+                            <strong>项目级：</strong>.claude/commands/ (团队共享)<br>
+                            <strong>全局级：</strong>~/.claude/commands/ (个人使用)
+                        </div>
+                    </div>
+                </div>
+
+                <div id="mcp-slash" class="tab-content">
+                    <h3 class="subsection-title">MCP斜杠命令</h3>
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>命令</th>
+                                    <th>功能描述</th>
+                                    <th>使用示例</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code class="code-inline">/mcp</code></td>
+                                    <td>启动MCP配置向导</td>
+                                    <td><code class="code-inline">/mcp</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code class="code-inline">/mcp:add</code></td>
+                                    <td>添加新的MCP服务器</td>
+                                    <td><code class="code-inline">/mcp:add postgres-server</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code class="code-inline">/mcp:list</code></td>
+                                    <td>列出已配置的MCP服务器</td>
+                                    <td><code class="code-inline">/mcp:list</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code class="code-inline">/mcp:status</code></td>
+                                    <td>查看MCP服务器连接状态</td>
+                                    <td><code class="code-inline">/mcp:status</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code class="code-inline">/mcp:serve</code></td>
+                                    <td>将Claude Code作为MCP服务器运行</td>
+                                    <td><code class="code-inline">/mcp:serve</code></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">MCP斜杠命令使用示例</div>
+                        <pre># 添加GitHub MCP服务器
+/mcp:add github-server @modelcontextprotocol/server-github
+
+# 使用MCP工具查询GitHub
+> 请使用 @github 查询最近的提交记录
+
+# 使用数据库MCP服务器查询数据
+> 使用 @postgres 查询用户表中的活跃用户统计
+
+# 组合多个MCP服务器
+> 从 @github 获取PR信息，然后使用 @slack 发送通知</pre>
+                    </div>
+
+                    <div class="grid grid-2">
+                        <div class="feature-card fade-in">
+                            <div class="feature-icon">🔧</div>
+                            <h3 class="feature-title">服务器管理</h3>
+                            <p class="feature-text">
+                                通过MCP命令轻松添加、配置和管理各种外部服务器，
+                                扩展Claude Code的能力边界。
+                            </p>
+                        </div>
+                        <div class="feature-card fade-in">
+                            <div class="feature-icon">🌐</div>
+                            <h3 class="feature-title">生态集成</h3>
+                            <p class="feature-text">
+                                无缝集成GitHub、数据库、API等服务，
+                                打造个性化的AI开发环境。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center;">
+                    <a href="https://docs.anthropic.com/zh-CN/docs/claude-code/slash-commands" 
+                       class="doc-link" target="_blank">
+                        📚 查看斜杠命令文档
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 返回顶部按钮 -->
+    <button class="back-to-top" onclick="scrollToTop()">↑</button>
+
+    <script src="common.js"></script>
+</body>
+</html> 

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLI命令详解 | Claude Code</title>
+    <link rel="stylesheet" href="common.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="index.html" class="logo">Claude Code</a>
+            <ul class="nav-links">
+                <li><a href="cli.html">CLI命令</a></li>
+                <li><a href="slash.html">斜杠命令</a></li>
+                <li><a href="settings.html">Settings</a></li>
+                <li><a href="memory.html">内存管理</a></li>
+                <li><a href="mcp.html">MCP协议</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero区域 -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>🖥️ CLI命令</h1>
+                <p class="subtitle">终端原生的强大体验</p>
+                <p class="description">
+                    深入了解Claude Code的命令行界面，掌握丰富的命令选项和标志参数，
+                    充分发挥终端原生AI编程工具的强大功能。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CLI命令详解 -->
+    <section class="section">
+        <div class="container">
+            <div class="section-card fade-in">
+                <h2 class="section-title">核心CLI命令</h2>
+                <p class="section-subtitle">Claude Code提供的完整命令行工具集</p>
+
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>命令</th>
+                                <th>描述</th>
+                                <th>示例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code class="code-inline">claude</code></td>
+                                <td>启动交互式 REPL</td>
+                                <td><code class="code-inline">claude</code></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">claude "query"</code></td>
+                                <td>使用初始提示启动 REPL</td>
+                                <td><code class="code-inline">claude "explain this project"</code></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">claude -p "query"</code></td>
+                                <td>通过 SDK 查询，然后退出</td>
+                                <td><code class="code-inline">claude -p "explain this function"</code></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">cat file | claude -p "query"</code></td>
+                                <td>处理管道内容</td>
+                                <td><code class="code-inline">cat logs.txt | claude -p "explain"</code></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">claude -c</code></td>
+                                <td>继续最近的对话</td>
+                                <td><code class="code-inline">claude -c</code></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">claude -r "session-id"</code></td>
+                                <td>通过会话ID恢复对话</td>
+                                <td><code class="code-inline">claude -r "abc123" "Finish this PR"</code></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">claude update</code></td>
+                                <td>更新到最新版本</td>
+                                <td><code class="code-inline">claude update</code></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">claude mcp</code></td>
+                                <td>配置MCP服务器</td>
+                                <td><code class="code-inline">claude mcp</code></td>
+                            </tr>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">CLI 标志选项</h3>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>标志</th>
+                                <th>描述</th>
+                                <th>示例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code class="code-inline">--model</code></td>
+                                <td>
+                                    设置使用的模型
+                                    <span class="info-toggle">
+                                        <button class="info-icon" onclick="toggleInfo('model-info')">i</button>
+                                    </span>
+                                    <div id="model-info" class="info-content">
+                                        <h4>支持的模型</h4>
+                                        <div class="info-item">
+                                            <strong>Claude Opus 4</strong>
+                                            <div class="code">claude-opus-4-20250514</div>
+                                            <div class="desc">最强能力模型，适用于复杂推理和高级编程任务</div>
+                                        </div>
+                                        <div class="info-item">
+                                            <strong>Claude Sonnet 4</strong>
+                                            <div class="code">claude-sonnet-4-20250514</div>
+                                            <div class="desc">高性能平衡模型，兼顾智能与效率</div>
+                                        </div>
+                                        <div class="info-item">
+                                            <strong>Claude Sonnet 3.7</strong>
+                                            <div class="code">claude-3-7-sonnet-20250219</div>
+                                            <div class="desc">支持扩展思维的高性能模型</div>
+                                        </div>
+                                        <div class="info-item">
+                                            <strong>Claude Sonnet 3.5</strong>
+                                            <div class="code">claude-3-5-sonnet-20241022</div>
+                                            <div class="desc">通用智能模型，适合大多数开发任务</div>
+                                        </div>
+                                        <div class="info-item">
+                                            <strong>Claude Haiku 3.5</strong>
+                                            <div class="code">claude-3-5-haiku-20241022</div>
+                                            <div class="desc">高速响应模型，适合快速交互和轻量任务</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><code class="code-inline">claude --model claude-sonnet-4</code></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">--verbose</code></td>
+                                <td>启用详细日志记录</td>
+                                <td><code class="code-inline">claude --verbose</code></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">--permission-mode</code></td>
+                                <td>
+                                    设置权限模式
+                                    <span class="info-toggle">
+                                        <button class="info-icon" onclick="toggleInfo('permission-info')">i</button>
+                                    </span>
+                                    <div id="permission-info" class="info-content">
+                                        <h4>权限模式</h4>
+                                        <div class="info-item">
+                                            <strong>default</strong>
+                                            <div class="desc">标准行为，首次使用每个工具时提示权限</div>
+                                        </div>
+                                        <div class="info-item">
+                                            <strong>acceptEdits</strong>
+                                            <div class="desc">自动接受文件编辑权限，减少中断</div>
+                                        </div>
+                                        <div class="info-item">
+                                            <strong>plan</strong>
+                                            <div class="desc">计划模式，Claude可以分析但不能修改文件或执行命令</div>
+                                        </div>
+                                        <div class="info-item warning">
+                                            <strong>bypassPermissions</strong>
+                                            <div class="desc">⚠️ 跳过所有权限提示，需要安全环境，谨慎使用</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><code class="code-inline">claude --permission-mode plan</code></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">--dangerously-skip-permissions</code></td>
+                                <td>跳过权限提示（谨慎使用）</td>
+                                <td><code class="code-inline">claude --dangerously-skip-permissions</code></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">--output-format</code></td>
+                                <td>指定输出格式</td>
+                                <td><code class="code-inline">claude -p "query" --output-format json</code></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">--max-turns</code></td>
+                                <td>限制代理轮次数</td>
+                                <td><code class="code-inline">claude -p --max-turns 3 "query"</code></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">--add-dir</code></td>
+                                <td>添加额外的工作目录</td>
+                                <td><code class="code-inline">claude --add-dir ../docs ../lib</code></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">--allowedTools</code></td>
+                                <td>允许的工具列表</td>
+                                <td><code class="code-inline">claude --allowedTools "Read" "Edit"</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">实用示例</h3>
+                <div class="code-block">
+                    <div class="code-header">CLI命令实用示例</div>
+                    <pre># 基础交互
+claude                                    # 启动交互模式
+claude "Help me understand this codebase" # 带初始问题启动
+
+# 一次性查询
+claude -p "Explain this function"        # 快速查询
+cat README.md | claude -p "Summarize"    # 管道输入
+
+# 会话管理
+claude -c                               # 继续上次对话
+claude -r "session-abc123"              # 恢复指定会话
+
+# 配置和管理
+claude config set theme dark            # 设置主题
+claude config list                      # 查看配置
+claude mcp add github-server            # 添加MCP服务器
+claude doctor                           # 诊断环境
+
+# 高级选项
+claude --model claude-3-5-sonnet-20241022 "Analyze code"
+claude --permission-mode plan "Create a new feature"
+claude --max-turns 5 -p "Multi-step task"
+claude --add-dir ../shared ../docs "Review all code"</pre>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">💡 最佳实践</div>
+                    <div class="info-box-content">
+                        • 使用交互模式进行复杂的开发任务<br>
+                        • 利用一次性查询模式进行脚本自动化<br>
+                        • 通过管道充分利用现有工具链<br>
+                        • 合理设置权限模式确保安全性
+                    </div>
+                </div>
+
+                <div style="text-align: center;">
+                    <a href="https://docs.anthropic.com/zh-CN/docs/claude-code/cli-reference" 
+                       class="doc-link" target="_blank">
+                        📚 查看完整CLI文档
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 返回顶部按钮 -->
+    <button class="back-to-top" onclick="scrollToTop()">↑</button>
+
+    <script src="common.js"></script>
+    <script>
+        function toggleInfo(id) {
+            const content = document.getElementById(id);
+            const isShowing = content.classList.contains('show');
+            
+            // 隐藏其他所有展开的信息框
+            document.querySelectorAll('.info-content.show').forEach(el => {
+                el.classList.remove('show');
+            });
+            
+            // 切换当前信息框
+            if (!isShowing) {
+                content.classList.add('show');
+            }
+        }
+        
+        // 点击其他地方时关闭所有信息框
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.info-toggle')) {
+                document.querySelectorAll('.info-content.show').forEach(el => {
+                    el.classList.remove('show');
+                });
+            }
+        });
+    </script>
+</body>
+</html> 

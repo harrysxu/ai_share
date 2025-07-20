@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>内存管理详解 | Claude Code</title>
+    <link rel="stylesheet" href="common.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="index.html" class="logo">Claude Code</a>
+            <ul class="nav-links">
+                <li><a href="cli.html">CLI命令</a></li>
+                <li><a href="slash.html">斜杠命令</a></li>
+                <li><a href="settings.html">Settings</a></li>
+                <li><a href="memory.html">内存管理</a></li>
+                <li><a href="mcp.html">MCP协议</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero区域 -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>🧠 内存管理</h1>
+                <p class="subtitle">AI的项目记忆系统</p>
+                <p class="description">
+                    深入了解Claude Code的内存管理系统，掌握CLAUDE.md文件的创建和管理，
+                    构建智能的项目上下文，让AI成为真正的项目专家。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 内存管理详解 -->
+    <section class="section">
+        <div class="container">
+            <div class="section-card fade-in">
+                <h2 class="section-title">内存管理系统</h2>
+                <p class="section-subtitle">AI的项目记忆与上下文管理</p>
+
+                <div class="info-box">
+                    <div class="info-box-title">📝 什么是CLAUDE.md文件？</div>
+                    <div class="info-box-content">
+                        CLAUDE.md文件是Claude Code的"大脑"，它是一个特殊的Markdown文件，
+                        相当于给AI的项目说明书和行为指南。当Claude Code启动时，
+                        会自动读取这个文件，将其内容作为高优先级的上下文信息。
+                    </div>
+                </div>
+
+                <h3 class="subsection-title">内存文件类型与位置</h3>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>文件类型</th>
+                                <th>路径</th>
+                                <th>作用域</th>
+                                <th>Git状态</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>项目内存</strong></td>
+                                <td>./CLAUDE.md</td>
+                                <td>团队共享的项目宪法</td>
+                                <td>✅ 提交到Git</td>
+                            </tr>
+                            <tr>
+                                <td><strong>用户内存</strong></td>
+                                <td>~/.claude/CLAUDE.md</td>
+                                <td>个人全局偏好设置</td>
+                                <td>❌ 不提交</td>
+                            </tr>
+                            <tr>
+                                <td><strong>本地项目内存</strong></td>
+                                <td>./CLAUDE.local.md</td>
+                                <td>个人项目临时笔记</td>
+                                <td>⚠️ 已废弃</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box warning">
+                    <div class="info-box-title">⚠️ 重要更新</div>
+                    <div class="info-box-content">
+                        <strong>./CLAUDE.local.md 已被废弃：</strong>根据官方文档，
+                        本地项目内存文件 ./CLAUDE.local.md 已不再支持。
+                        现在推荐使用项目级和用户级的CLAUDE.md文件来管理项目记忆。
+                    </div>
+                </div>
+
+                <h3 class="subsection-title">内存管理核心功能</h3>
+                <div class="grid grid-4">
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">🔍</div>
+                        <h3 class="feature-title">查找内存</h3>
+                        <p class="feature-text">自动递归查找项目目录中的所有CLAUDE.md文件。</p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">➕</div>
+                        <h3 class="feature-title">添加内存</h3>
+                        <p class="feature-text">使用#命令快速添加新的记忆条目。</p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">📁</div>
+                        <h3 class="feature-title">文件导入</h3>
+                        <p class="feature-text">使用@语法导入其他文档作为模块化内存。</p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">🔄</div>
+                        <h3 class="feature-title">动态加载</h3>
+                        <p class="feature-text">子目录内存文件按需加载，优化token使用。</p>
+                    </div>
+                </div>
+
+                <h3 class="subsection-title">内存管理命令详解</h3>
+                <div class="grid grid-2">
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">🚀</div>
+                        <h3 class="feature-title">/init 命令</h3>
+                        <p class="feature-text">
+                            自动分析项目并生成或更新CLAUDE.md文件：<br>
+                            • 识别技术栈和架构<br>
+                            • 分析代码结构和模式<br>
+                            • 生成编码规范建议
+                        </p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">💾</div>
+                        <h3 class="feature-title">/memory 命令</h3>
+                        <p class="feature-text">
+                            打开默认编辑器编辑内存文件：<br>
+                            • 大段内容修改<br>
+                            • 结构化重组<br>
+                            • 批量更新规则
+                        </p>
+                    </div>
+                </div>
+
+                <div class="grid grid-2">
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">#</div>
+                        <h3 class="feature-title"># 快捷方式</h3>
+                        <p class="feature-text">
+                            快速添加记忆的最佳方式：<br>
+                            • # 刚发现构建需要NODE_ENV<br>
+                            • 提示选择保存位置<br>
+                            • 自动格式化并追加
+                        </p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">📊</div>
+                        <h3 class="feature-title">内存状态查看</h3>
+                        <p class="feature-text">
+                            显示当前加载的内存文件：<br>
+                            • 已加载的CLAUDE.md文件<br>
+                            • 内存使用情况<br>
+                            • 上下文信息统计
+                        </p>
+                    </div>
+                </div>
+
+                <h3 class="subsection-title">文件导入系统</h3>
+                <div class="info-box">
+                    <div class="info-box-title">💡 模块化内存管理</div>
+                    <div class="info-box-content">
+                        使用 @ 语法可以将大型内存文件拆分为多个模块，便于维护和管理：
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">模块化CLAUDE.md示例</div>
+                    <pre># 项目核心指令
+
+## 基本信息
+项目名称：MyApp
+技术栈：Next.js + TypeScript + Tailwind
+
+## 详细文档导入
+@docs/api-guidelines.md
+@docs/testing-strategy.md
+@docs/deployment-guide.md
+
+## 快速命令
+- npm run dev: 启动开发服务器
+- npm run test: 运行测试套件</pre>
+                </div>
+
+                <h3 class="subsection-title">完整CLAUDE.md结构示例</h3>
+                <div class="code-block">
+                    <div class="code-header">完整CLAUDE.md结构示例</div>
+                    <pre># 项目核心指令
+
+## 技术栈与架构
+- 框架：Next.js 14+ (App Router)
+- 语言：TypeScript (strict模式)
+- 样式：Tailwind CSS
+- 状态管理：Zustand
+- 测试：Jest + Testing Library
+
+## 常用命令
+- `npm run dev` - 启动开发服务器
+- `npm run test` - 运行测试
+- `npm run build` - 构建生产版本
+- `npm run lint` - 代码检查
+
+## 编码规范
+- 使用函数式组件和Hooks
+- 所有导出函数必须有JSDoc注释
+- 遵循Conventional Commits规范
+- 组件文件使用PascalCase命名
+
+## Git工作流
+- 主分支：main
+- 功能分支：feature/功能名称
+- 提交格式：feat: 添加用户登录功能
+
+## 项目结构
+```
+src/
+├── components/     # 可复用组件
+├── pages/         # 页面组件
+├── hooks/         # 自定义Hooks
+├── utils/         # 工具函数
+├── types/         # TypeScript类型定义
+└── styles/        # 样式文件
+```
+
+## 重要注意事项
+- 所有API调用都需要错误处理
+- 用户输入必须进行验证
+- 敏感信息不能硬编码
+- 组件需要支持无障碍访问</pre>
+                </div>
+
+                <h3 class="subsection-title">内存管理最佳实践</h3>
+                <div class="grid grid-3">
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">🎯</div>
+                        <h3 class="feature-title">内容组织</h3>
+                        <p class="feature-text">
+                            • 使用清晰的标题结构<br>
+                            • 按功能模块分组<br>
+                            • 保持信息的时效性<br>
+                            • 避免重复和冗余
+                        </p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">🔄</div>
+                        <h3 class="feature-title">维护策略</h3>
+                        <p class="feature-text">
+                            • 定期更新技术栈信息<br>
+                            • 及时记录重要决策<br>
+                            • 删除过时的规则<br>
+                            • 版本控制重要变更
+                        </p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">👥</div>
+                        <h3 class="feature-title">团队协作</h3>
+                        <p class="feature-text">
+                            • 团队共识的规范放在项目级<br>
+                            • 个人偏好放在用户级<br>
+                            • 使用模块化拆分大文件<br>
+                            • 定期团队审查和更新
+                        </p>
+                    </div>
+                </div>
+
+                <div class="info-box success">
+                    <div class="info-box-title">💡 内存管理技巧</div>
+                    <div class="info-box-content">
+                        • 使用 <code># 关键信息</code> 快速添加重要发现<br>
+                        • 通过 <code>/init</code> 让AI分析项目并生成初始内存<br>
+                        • 使用 <code>@文件路径</code> 导入详细文档<br>
+                        • 子目录的CLAUDE.md会在访问时动态加载
+                    </div>
+                </div>
+
+                <div style="text-align: center;">
+                    <a href="https://docs.anthropic.com/zh-CN/docs/claude-code/memory-management" 
+                       class="doc-link" target="_blank">
+                        📚 查看内存管理文档
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 返回顶部按钮 -->
+    <button class="back-to-top" onclick="scrollToTop()">↑</button>
+
+    <script src="common.js"></script>
+</body>
+</html> 

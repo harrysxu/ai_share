@@ -1,0 +1,152 @@
+/* Settings页面专用样式 */
+
+/* 配置层级可视化增强 */
+.config-hierarchy .config-level:hover .config-bar {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.config-hierarchy .config-level:hover .config-label {
+    color: #374151;
+    font-weight: 700;
+}
+
+/* 设置详情按钮样式 */
+.settings-detail-btn {
+    background: #4f46e5;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.settings-detail-btn:hover {
+    background: #4338ca;
+    transform: translateY(-1px);
+}
+
+/* 配置优先级表格行颜色 */
+.priority-row-1 { background: rgba(239, 68, 68, 0.05); }
+.priority-row-2 { background: rgba(245, 158, 11, 0.05); }
+.priority-row-3 { background: rgba(59, 130, 246, 0.05); }
+.priority-row-4 { background: rgba(16, 185, 129, 0.05); }
+.priority-row-5 { background: rgba(139, 92, 246, 0.05); }
+
+/* 设置表格样式增强 */
+.settings-table .table td:first-child {
+    font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+    font-weight: 600;
+    color: #4f46e5;
+}
+
+.settings-table .table tr:hover {
+    background: #f8fafc;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* 配置示例代码块特殊样式 */
+.config-example {
+    background: #0f172a;
+    color: #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+    font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    overflow-x: auto;
+    position: relative;
+    border-left: 4px solid #4f46e5;
+}
+
+.config-example::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #4f46e5, #7c3aed);
+}
+
+/* 配置层级说明卡片 */
+.config-explanation {
+    background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+    border: 1px solid #bae6fd;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 24px 0;
+}
+
+.config-explanation h4 {
+    color: #0369a1;
+    margin-bottom: 12px;
+    font-weight: 700;
+}
+
+.config-explanation p {
+    color: #0c4a6e;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Git状态指示器 */
+.git-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 12px;
+}
+
+.git-status.tracked {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.git-status.ignored {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.git-status.system {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.git-status.temporary {
+    background: #fce7f3;
+    color: #be185d;
+}
+
+/* 响应式优化 */
+@media (max-width: 768px) {
+    .config-hierarchy {
+        gap: 16px;
+    }
+    
+    .config-bar {
+        min-height: 70px;
+        padding: 16px 8px;
+    }
+    
+    .config-bar strong {
+        font-size: 14px;
+    }
+    
+    .config-bar small {
+        font-size: 11px;
+    }
+    
+    .priority-badge {
+        font-size: 11px;
+        padding: 3px 8px;
+    }
+} 

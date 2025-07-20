@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCP协议 | Claude Code 功能详解</title>
+    <link rel="stylesheet" href="common.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo"><a href="index.html" style="text-decoration: none; color: inherit;">Claude Code</a></div>
+            <ul class="nav-links">
+                <li><a href="cli.html">CLI命令</a></li>
+                <li><a href="slash.html">斜杠命令</a></li>
+                <li><a href="settings.html">Settings</a></li>
+                <li><a href="memory.html">内存管理</a></li>
+                <li><a href="mcp.html">MCP协议</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero区域 -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>🌐 MCP协议</h1>
+                <p class="subtitle">Claude Code的MCP功能实用指南</p>
+                <p class="description">
+                    掌握Claude Code中的MCP命令使用、作用域配置、导入方式以及实际应用案例，
+                    轻松扩展AI能力与外部工具的集成。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- MCP命令详解 -->
+    <section class="section">
+        <div class="container">
+            <div class="section-card fade-in">
+                <h2 class="section-title">🔧 MCP命令详解</h2>
+                <p class="section-subtitle">Claude Code中的MCP管理命令</p>
+
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>命令</th>
+                                <th>功能描述</th>
+                                <th>使用示例</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code class="code-inline">claude mcp</code></td>
+                                <td>启动MCP配置向导</td>
+                                <td><code class="code-inline">claude mcp</code></td>
+                                <td>交互式配置MCP服务器</td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">claude mcp add</code></td>
+                                <td>添加新的MCP服务器</td>
+                                <td><code class="code-inline">claude mcp add postgres-server</code></td>
+                                <td>快速添加预定义的MCP服务器</td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">claude mcp list</code></td>
+                                <td>列出已配置的MCP服务器</td>
+                                <td><code class="code-inline">claude mcp list</code></td>
+                                <td>查看当前可用的MCP服务器</td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">claude mcp status</code></td>
+                                <td>查看MCP服务器连接状态</td>
+                                <td><code class="code-inline">claude mcp status</code></td>
+                                <td>检查服务器运行状态和连接</td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">claude mcp serve</code></td>
+                                <td>将Claude Code作为MCP服务器运行</td>
+                                <td><code class="code-inline">claude mcp serve</code></td>
+                                <td>为其他客户端提供MCP服务</td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-inline">claude mcp remove</code></td>
+                                <td>移除MCP服务器配置</td>
+                                <td><code class="code-inline">claude mcp remove github</code></td>
+                                <td>删除指定的MCP服务器</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">💡 命令使用技巧</div>
+                    <div class="info-box-content">
+                        • 使用 <code>claude mcp</code> 启动向导进行首次配置<br>
+                        • 通过 <code>claude mcp add</code> 快速添加官方支持的服务器<br>
+                        • 定期运行 <code>claude mcp status</code> 检查服务器健康状态<br>
+                        • 使用 <code>claude mcp serve</code> 让其他工具连接到Claude Code
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MCP作用域 -->
+    <section class="section">
+        <div class="container">
+            <div class="section-card fade-in">
+                <h2 class="section-title">📍 MCP作用域</h2>
+                <p class="section-subtitle">MCP服务器的配置范围和生效规则</p>
+
+                <div class="grid grid-3">
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">🏢</div>
+                        <h3 class="feature-title">项目作用域</h3>
+                        <p class="feature-text">
+                            <strong>配置文件：</strong><code>.mcp.json</code><br>
+                            <strong>生效范围：</strong>当前项目目录<br>
+                            <strong>优先级：</strong>最高<br>
+                            <strong>用途：</strong>项目特定的工具和服务
+                        </p>
+                        <div class="code-block">
+                            <pre># 项目根目录
+.mcp.json
+package.json
+src/</pre>
+                        </div>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">🌍</div>
+                        <h3 class="feature-title">全局作用域</h3>
+                        <p class="feature-text">
+                            <strong>配置文件：</strong><code>~/.config/claude/mcp.json</code><br>
+                            <strong>生效范围：</strong>所有项目<br>
+                            <strong>优先级：</strong>中等<br>
+                            <strong>用途：</strong>通用工具和个人服务
+                        </p>
+                        <div class="code-block">
+                            <pre># 全局配置路径
+~/.config/claude/
+├── mcp.json
+└── settings.json</pre>
+                        </div>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">⚙️</div>
+                        <h3 class="feature-title">系统作用域</h3>
+                        <p class="feature-text">
+                            <strong>配置文件：</strong><code>/etc/claude/mcp.json</code><br>
+                            <strong>生效范围：</strong>系统全局<br>
+                            <strong>优先级：</strong>最低<br>
+                            <strong>用途：</strong>系统级服务和企业配置
+                        </p>
+                        <div class="code-block">
+                            <pre># 系统配置路径
+/etc/claude/
+├── mcp.json
+└── policies.json</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">🔄 作用域优先级规则</div>
+                    <div class="info-box-content">
+                        <strong>项目配置 > 全局配置 > 系统配置</strong><br><br>
+                        • 项目配置会覆盖全局和系统配置<br>
+                        • 同名服务器以高优先级配置为准<br>
+                        • 不同名称的服务器会合并使用<br>
+                        • 环境变量可以覆盖配置文件设置
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MCP导入方式 -->
+    <section class="section">
+        <div class="container">
+            <div class="section-card fade-in">
+                <h2 class="section-title">📥 MCP导入方式</h2>
+                <p class="section-subtitle">多种MCP服务器导入和配置方法</p>
+
+                <div class="grid grid-2">
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">🚀</div>
+                        <h3 class="feature-title">命令行导入</h3>
+                        <div class="command-showcase">
+                            <div class="command-group">
+                                <div class="command-title">基本语法命令</div>
+                                <div class="command-item">
+                                    <div class="command-text">claude mcp add &lt;name&gt; &lt;command&gt; [args...]</div>
+                                    <div class="command-description">添加新的MCP服务器配置</div>
+                                </div>
+                                <div class="command-item">
+                                    <div class="command-text">claude mcp add-json &lt;name&gt; &lt;json&gt;</div>
+                                    <div class="command-description">使用JSON格式添加服务器配置</div>
+                                </div>
+                                <div class="command-item">
+                                    <div class="command-text">claude mcp add-from-claude-desktop</div>
+                                    <div class="command-description">从Claude Desktop配置导入</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">📝</div>
+                        <h3 class="feature-title">手动配置导入</h3>
+                        <div class="json-config-block">
+                            <div class="json-header">编辑 .mcp.json 文件</div>
+                            <pre>{
+  "mcpServers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "your-token"
+      }
+    },
+    "postgres": {
+      "command": "node",
+      "args": ["/path/to/postgres-server.js"],
+      "env": {
+        "DATABASE_URL": "postgresql://localhost:5432/db"
+      }
+    }
+  }
+}</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Claude Code用作MCP -->
+    <section class="section">
+        <div class="container">
+            <div class="section-card fade-in">
+                <h2 class="section-title">🖥️ Claude Code用作MCP服务器</h2>
+                <p class="section-subtitle">将Claude Code作为MCP服务器为其他客户端提供服务</p>
+
+                <div class="grid grid-2">
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">🚀</div>
+                        <h3 class="feature-title">启动MCP服务</h3>
+                        <div class="command-showcase">
+                            <div class="command-group">
+                                <div class="command-title">MCP服务器启动命令</div>
+                                <div class="command-item">
+                                    <div class="command-text">claude mcp serve</div>
+                                    <div class="command-description">启动MCP服务器模式</div>
+                                </div>
+                                <div class="command-item">
+                                    <div class="command-text">claude mcp serve --port 8080</div>
+                                    <div class="command-description">指定端口启动服务器</div>
+                                </div>
+                                <div class="command-item">
+                                    <div class="command-text">claude mcp serve --config ./mcp-server.json</div>
+                                    <div class="command-description">使用指定配置文件启动</div>
+                                </div>
+                                <div class="command-item">
+                                    <div class="command-text">claude mcp serve --daemon</div>
+                                    <div class="command-description">在后台运行服务器</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">⚙️</div>
+                        <h3 class="feature-title">服务器配置</h3>
+                        <div class="json-config-block">
+                            <div class="json-header">mcp-server.json 配置示例</div>
+                            <pre>{
+  "server": {
+    "name": "claude-code-server",
+    "version": "1.0.0",
+    "description": "Claude Code MCP服务器"
+  },
+  "capabilities": {
+    "tools": true,
+    "resources": true,
+    "prompts": true
+  },
+  "security": {
+    "allowedOrigins": ["localhost", "*.example.com"],
+    "requireAuth": true
+  }
+}</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="subsection-title">可提供的能力</h3>
+                <div class="grid grid-3">
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">🛠️</div>
+                        <h3 class="feature-title">代码操作工具</h3>
+                        <p class="feature-text">
+                            • 文件读写操作<br>
+                            • 代码分析和重构<br>
+                            • 项目结构管理<br>
+                            • Git操作功能
+                        </p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">📊</div>
+                        <h3 class="feature-title">项目资源</h3>
+                        <p class="feature-text">
+                            • 项目文件内容<br>
+                            • 依赖关系图<br>
+                            • 配置文件信息<br>
+                            • 构建日志数据
+                        </p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">💡</div>
+                        <h3 class="feature-title">编程提示</h3>
+                        <p class="feature-text">
+                            • 代码审查模板<br>
+                            • 重构建议提示<br>
+                            • 调试指导提示<br>
+                            • 最佳实践模板
+                        </p>
+                    </div>
+                </div>
+
+                <div class="json-config-block">
+                    <div class="json-header">其他客户端连接 Claude Code</div>
+                    <pre># 其他工具连接到Claude Code MCP服务器
+{
+  "mcpServers": {
+    "claude-code": {
+      "command": "claude",
+      "args": ["mcp", "serve"],
+      "env": {
+        "CLAUDE_API_KEY": "your-api-key"
+      }
+    }
+  }
+}
+
+# 或通过网络连接
+{
+  "mcpServers": {
+    "claude-code": {
+      "transport": "tcp",
+      "host": "localhost",
+      "port": 8080
+    }
+  }
+}</pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 添加和使用实例 -->
+    <section class="section">
+        <div class="container">
+            <div class="section-card fade-in">
+                <h2 class="section-title">🎯 MCP添加和使用实例</h2>
+                <p class="section-subtitle">完整的MCP服务器配置和使用案例</p>
+
+                <h3 class="subsection-title">实例1：Excel MCP集成</h3>
+                <div class="grid grid-2">
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">📊</div>
+                        <h3 class="feature-title">添加配置</h3>
+                        <div class="command-showcase">
+                            <div class="command-group">
+                                <div class="command-title">添加Excel MCP服务器</div>
+                                <div class="command-item">
+                                    <div class="command-text">claude mcp add excel uvx excel-mcp-server stdio</div>
+                                    <div class="command-description">使用stdio传输协议启动Excel MCP服务器</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="json-config-block">
+                            <div class="json-header">Claude Code中配置Excel MCP</div>
+                            <pre>{
+  "mcpServers": {
+    "excel": {
+      "command": "uvx",
+      "args": ["excel-mcp-server", "stdio"]
+    }
+  }
+}</pre>
+                        </div>
+                        <div class="json-config-block">
+                            <div class="json-header">其他客户端配置（如Claude Desktop）</div>
+                            <pre>{
+  "mcpServers": {
+    "excel": {
+      "command": "uvx",
+      "args": ["excel-mcp-server", "stdio"]
+    }
+  }
+}</pre>
+                        </div>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">🚀</div>
+                        <h3 class="feature-title">使用示例</h3>
+                        <div class="command-showcase">
+                            <div class="command-group">
+                                <div class="command-title">Excel操作示例</div>
+                                <div class="command-item">
+                                    <div class="command-text">使用@excel创建一个新的工作簿，包含销售数据表</div>
+                                    <div class="command-description">创建Excel工作簿和工作表</div>
+                                </div>
+                                <div class="command-item">
+                                    <div class="command-text">@excel读取数据文件.xlsx中的用户数据并生成统计报告</div>
+                                    <div class="command-description">读取和分析Excel数据</div>
+                                </div>
+                                <div class="command-item">
+                                    <div class="command-text">使用@excel为销售表格添加图表和数据透视表</div>
+                                    <div class="command-description">创建图表和数据透视表</div>
+                                </div>
+                                <div class="command-item">
+                                    <div class="command-text">@excel应用条件格式化，高亮显示超过目标值的销售数据</div>
+                                    <div class="command-description">格式化和数据验证</div>
+                                </div>
+                                <div class="command-item">
+                                    <div class="command-text">使用@excel批量处理多个Excel文件，提取关键指标</div>
+                                    <div class="command-description">批量文件处理</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-box-title">📋 Excel MCP支持的功能</div>
+                            <div class="info-box-content">
+                                • 创建、读取、更新Excel工作簿和工作表<br>
+                                • 数据操作：公式、格式化、图表、数据透视表<br>
+                                • 表格操作：创建和管理Excel表格<br>
+                                • 数据验证和条件格式化<br>
+                                • 支持stdio、SSE、HTTP传输协议
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="subsection-title">实例2：Claude Code作为MCP服务器在Cursor中使用</h3>
+                <div class="grid grid-2">
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">🖥️</div>
+                        <h3 class="feature-title">启动Claude Code MCP服务器</h3>
+                        <div class="command-showcase">
+                            <div class="command-group">
+                                <div class="command-title">启动MCP服务器</div>
+                                <div class="command-item">
+                                    <div class="command-text">claude mcp serve</div>
+                                    <div class="command-description">启动Claude Code MCP服务器</div>
+                                </div>
+                                <div class="command-item">
+                                    <div class="command-text">claude mcp serve --port 8080</div>
+                                    <div class="command-description">指定端口启动服务器</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="json-config-block">
+                            <div class="json-header">Claude Code作为MCP服务器配置</div>
+                            <pre>{
+  "server": {
+    "name": "claude-code-server",
+    "version": "1.0.0",
+    "description": "Claude Code MCP服务器"
+  },
+  "capabilities": {
+    "tools": true,
+    "resources": true,
+    "prompts": true
+  }
+}</pre>
+                        </div>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">💻</div>
+                        <h3 class="feature-title">在Cursor中配置Claude Code MCP</h3>
+                        <div class="json-config-block">
+                            <div class="json-header">Cursor MCP配置文件</div>
+                            <pre># 在Cursor的设置中添加MCP配置
+# 路径：~/.cursor/mcp_servers.json
+
+{
+  "mcpServers": {
+    "claude-code": {
+      "command": "claude",
+      "args": ["mcp", "serve"],
+      "env": {
+        "CLAUDE_API_KEY": "sk-ant-oat01-745910d8e720b550f2fec01a233fdb86ba72aed42783419f1fd9651c9f426214"
+      }
+    }
+  }
+}</pre>
+                        </div>
+                        <div class="command-showcase">
+                            <div class="command-group">
+                                <div class="command-title">在Cursor中使用Claude Code MCP</div>
+                                <div class="command-item">
+                                    <div class="command-text">在Cursor中使用@claude-code分析当前项目结构</div>
+                                    <div class="command-description">项目结构分析</div>
+                                </div>
+                                <div class="command-item">
+                                    <div class="command-text">@claude-code帮我重构这个函数，提高代码质量</div>
+                                    <div class="command-description">代码重构和优化</div>
+                                </div>
+                                <div class="command-item">
+                                    <div class="command-text">使用@claude-code审查我的代码并提供改进建议</div>
+                                    <div class="command-description">代码审查</div>
+                                </div>
+                                <div class="command-item">
+                                    <div class="command-text">@claude-code生成项目的单元测试用例</div>
+                                    <div class="command-description">测试用例生成</div>
+                                </div>
+                                <div class="command-item">
+                                    <div class="command-text">使用@claude-code分析项目依赖关系并提供优化建议</div>
+                                    <div class="command-description">依赖分析</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">🔗 Claude Code MCP提供的能力</div>
+                    <div class="info-box-content">
+                        • <strong>代码操作工具：</strong>文件读写、代码分析、重构、Git操作<br>
+                        • <strong>项目资源：</strong>项目文件内容、依赖关系图、配置文件信息<br>
+                        • <strong>编程提示：</strong>代码审查模板、重构建议、调试指导、最佳实践<br>
+                        • <strong>与Cursor集成：</strong>在Cursor中直接使用Claude Code的强大功能
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">🎯 最佳实践建议</div>
+                    <div class="info-box-content">
+                        • <strong>环境隔离：</strong>开发、测试、生产环境使用不同的MCP配置<br>
+                        • <strong>权限控制：</strong>为每个MCP服务器配置最小必要权限<br>
+                        • <strong>监控日志：</strong>定期检查MCP服务器的运行状态和日志<br>
+                        • <strong>版本管理：</strong>将.mcp.json文件纳入版本控制<br>
+                        • <strong>文档记录：</strong>为团队记录各MCP服务器的用途和使用方法
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 返回顶部按钮 -->
+    <button class="back-to-top" onclick="scrollToTop()">↑</button>
+
+    <script src="common.js"></script>
+</body>
+</html> 

@@ -349,21 +349,20 @@
         .config-hierarchy {
             display: flex;
             justify-content: space-between;
-            margin: 48px 0;
-            gap: 16px;
+            margin: 32px 0;
+            gap: 12px;
             flex-wrap: wrap;
         }
 
         .config-level {
             flex: 1;
-            min-width: 180px;
+            min-width: 160px;
             text-align: center;
         }
 
         .config-bar {
-            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
-            padding: 24px 16px;
+            padding: 20px 12px;
             border-radius: 12px;
             margin-bottom: 12px;
             cursor: pointer;
@@ -371,6 +370,11 @@
             font-weight: 600;
             position: relative;
             overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            min-height: 90px;
         }
 
         .config-bar::before {
@@ -390,19 +394,58 @@
 
         .config-bar:hover {
             transform: translateY(-4px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
         }
 
-        .config-bar.level-1 { height: 80px; display: flex; align-items: center; justify-content: center; }
-        .config-bar.level-2 { height: 100px; display: flex; align-items: center; justify-content: center; }
-        .config-bar.level-3 { height: 120px; display: flex; align-items: center; justify-content: center; }
-        .config-bar.level-4 { height: 100px; display: flex; align-items: center; justify-content: center; }
-        .config-bar.level-5 { height: 80px; display: flex; align-items: center; justify-content: center; }
+        /* 不同层级的颜色主题 */
+        .config-bar.level-1 { 
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            border: 2px solid #fca5a5;
+        }
+        .config-bar.level-2 { 
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            border: 2px solid #fcd34d;
+        }
+        .config-bar.level-3 { 
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            border: 2px solid #93c5fd;
+        }
+        .config-bar.level-4 { 
+            background: linear-gradient(135deg, #10b981, #059669);
+            border: 2px solid #6ee7b7;
+        }
+        .config-bar.level-5 { 
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            border: 2px solid #c4b5fd;
+        }
 
         .config-label {
             color: #64748b;
-            font-size: 14px;
-            font-weight: 500;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .priority-badge {
+            background: #f1f5f9;
+            color: #475569;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 8px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+
+        .config-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #94a3b8;
+            margin: 0 8px;
+            min-width: 30px;
         }
 
         /* 信息框系统 */
@@ -483,7 +526,7 @@
             font-weight: 500;
         }
 
-        /* 弹窗系统 */
+        /* 现代弹窗系统 */
         .modal {
             display: none;
             position: fixed;
@@ -492,46 +535,275 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(4px);
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            animation: modalBackdropFadeIn 0.3s ease-out;
+        }
+
+        @keyframes modalBackdropFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .modal-content {
-            background: white;
-            margin: 5% auto;
-            padding: 40px;
-            border-radius: 16px;
+            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+            margin: 3% auto;
+            padding: 0;
+            border-radius: 24px;
             width: 90%;
-            max-width: 600px;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
-            animation: modalFadeIn 0.3s ease-out;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow: hidden;
+            box-shadow: 
+                0 32px 64px rgba(0, 0, 0, 0.12),
+                0 8px 24px rgba(0, 0, 0, 0.08),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+            animation: modalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 1px solid rgba(226, 232, 240, 0.8);
         }
 
-        @keyframes modalFadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes modalSlideIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(-40px) scale(0.96);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 32px 40px 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modal-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="modal-pattern" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23modal-pattern)"/></svg>');
         }
 
         .modal-close {
-            float: right;
-            font-size: 24px;
-            color: #94a3b8;
+            position: absolute;
+            top: 24px;
+            right: 32px;
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 20px;
             cursor: pointer;
-            transition: color 0.3s ease;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
         }
 
         .modal-close:hover {
-            color: #ef4444;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            transform: scale(1.1);
         }
 
         .modal-title {
-            font-size: 1.5rem;
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: white;
+            margin: 0;
+            position: relative;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .modal-title::before {
+            content: '';
+            width: 4px;
+            height: 28px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 2px;
+        }
+
+        .modal-body {
+            padding: 40px;
+            background: white;
+            max-height: calc(90vh - 120px);
+            overflow-y: auto;
+        }
+
+        .modal-body::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-body::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+
+        .modal-body::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .modal-body::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .modal-section {
+            margin-bottom: 32px;
+        }
+
+        .modal-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .modal-section h4 {
+            font-size: 1.1rem;
             font-weight: 700;
-            color: #1a202c;
-            margin-bottom: 24px;
-            clear: both;
+            color: #1e293b;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-section h4::before {
+            content: '';
+            width: 3px;
+            height: 18px;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            border-radius: 2px;
+        }
+
+        .modal-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .modal-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .modal-list li:last-child {
+            border-bottom: none;
+        }
+
+        .modal-list strong {
+            color: #4f46e5;
+            font-weight: 600;
+            min-width: 200px;
+            font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+        }
+
+        .modal-list span {
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        .modal-code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 20px 0;
+            font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .modal-code-block::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #4f46e5, #7c3aed);
+        }
+
+        .modal-code-header {
+            color: #94a3b8;
+            font-size: 12px;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+        }
+
+        .modal-tag {
+            display: inline-block;
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            color: #0369a1;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            margin: 4px 8px 4px 0;
+            border: 1px solid #bae6fd;
+        }
+
+        .modal-highlight {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            color: #92400e;
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .modal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .modal-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .modal-card:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+            transform: translateY(-2px);
+        }
+
+        .modal-card h5 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #374151;
+            margin: 0 0 8px 0;
+        }
+
+        .modal-card p {
+            font-size: 13px;
+            color: #6b7280;
+            margin: 0;
+            line-height: 1.5;
         }
 
         /* 文档链接 */
@@ -623,17 +895,72 @@
             display: block;
         }
 
-        /* 响应式设计 */
-        @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .hero { padding: 120px 0 80px; }
-            .section { padding: 60px 0; }
-            .section-card { padding: 40px 24px; }
-            .config-hierarchy { flex-direction: column; }
-            .config-bar { height: auto !important; min-height: 80px; }
-            .container { padding: 0 16px; }
-            .tabs { overflow-x: auto; }
-        }
+                 /* 响应式设计 */
+         @media (max-width: 768px) {
+             .nav-links { display: none; }
+             .hero { padding: 120px 0 80px; }
+             .section { padding: 60px 0; }
+             .section-card { padding: 40px 24px; }
+             .config-hierarchy { 
+                 flex-direction: column; 
+                 gap: 20px;
+             }
+             .config-bar { 
+                 height: auto !important; 
+                 min-height: 80px; 
+             }
+             .config-arrow { 
+                 transform: rotate(90deg); 
+                 margin: 0;
+             }
+             .priority-badge {
+                 margin-bottom: 12px;
+             }
+             .container { padding: 0 16px; }
+             .tabs { overflow-x: auto; }
+             
+             /* 弹窗响应式 */
+             .modal-content {
+                 width: 95%;
+                 margin: 5% auto;
+                 max-height: 95vh;
+             }
+             
+             .modal-header {
+                 padding: 24px 20px 20px;
+             }
+             
+             .modal-title {
+                 font-size: 1.5rem;
+             }
+             
+             .modal-close {
+                 top: 20px;
+                 right: 20px;
+                 width: 36px;
+                 height: 36px;
+             }
+             
+             .modal-body {
+                 padding: 24px 20px;
+             }
+             
+             .modal-grid {
+                 grid-template-columns: 1fr;
+             }
+             
+             .modal-list strong {
+                 min-width: auto;
+                 display: block;
+                 margin-bottom: 4px;
+             }
+             
+             .modal-list li {
+                 flex-direction: column;
+                 align-items: flex-start;
+                 gap: 4px;
+             }
+         }
 
         @media (max-width: 480px) {
             .section-card { padding: 32px 20px; }
@@ -787,7 +1114,7 @@
                             <tr>
                                 <td><code class="code-inline">--permission-mode</code></td>
                                 <td>设置权限模式</td>
-                                <td><code class="code-inline">claude --permission-mode auto</code></td>
+                                <td><code class="code-inline">claude --permission-mode plan</code></td>
                             </tr>
                             <tr>
                                 <td><code class="code-inline">--dangerously-skip-permissions</code></td>
@@ -884,11 +1211,6 @@
                                     <td>切换Claude模型</td>
                                 </tr>
                                 <tr>
-                                    <td><code class="code-inline">/config</code></td>
-                                    <td>配置管理</td>
-                                    <td>调整设置和偏好</td>
-                                </tr>
-                                <tr>
                                     <td><code class="code-inline">/permissions</code></td>
                                     <td>权限管理</td>
                                     <td>管理工具权限</td>
@@ -897,11 +1219,6 @@
                                     <td><code class="code-inline">/vim</code></td>
                                     <td>编辑器</td>
                                     <td>启用Vim编辑模式</td>
-                                </tr>
-                                <tr>
-                                    <td><code class="code-inline">/terminal-setup</code></td>
-                                    <td>终端配置</td>
-                                    <td>优化终端设置</td>
                                 </tr>
                                 <tr>
                                     <td><code class="code-inline">/help</code></td>
@@ -944,7 +1261,7 @@
 4. 评估单元测试覆盖率
 
 # 使用示例：
-/project:review src/components/Button.tsx</pre>
+/review src/components/Button.tsx</pre>
                     </div>
 
                     <div class="info-box">
@@ -1057,44 +1374,112 @@
                     </div>
                 </div>
 
-                <h3 class="subsection-title">五层配置文件体系</h3>
-                <div class="config-hierarchy">
-                    <div class="config-level">
-                        <div class="config-bar level-1" onclick="showConfigModal('enterprise')">
-                            <strong>1. 企业策略</strong><br>
-                            <small>系统级强制设置</small>
-                        </div>
-                        <div class="config-label">最高优先级</div>
-                    </div>
-                    <div class="config-level">
-                        <div class="config-bar level-2" onclick="showConfigModal('cmdline')">
-                            <strong>2. 命令行参数</strong><br>
-                            <small>临时覆盖设置</small>
-                        </div>
-                        <div class="config-label">单次有效</div>
-                    </div>
-                    <div class="config-level">
-                        <div class="config-bar level-3" onclick="showConfigModal('local')">
-                            <strong>3. 本地项目</strong><br>
-                            <small>.claude/settings.local.json</small>
-                        </div>
-                        <div class="config-label">个人项目配置</div>
-                    </div>
-                    <div class="config-level">
-                        <div class="config-bar level-4" onclick="showConfigModal('project')">
-                            <strong>4. 共享项目</strong><br>
-                            <small>.claude/settings.json</small>
-                        </div>
-                        <div class="config-label">团队共享</div>
-                    </div>
-                    <div class="config-level">
-                        <div class="config-bar level-5" onclick="showConfigModal('user')">
-                            <strong>5. 用户全局</strong><br>
-                            <small>~/.claude/settings.json</small>
-                        </div>
-                        <div class="config-label">最低优先级</div>
-                    </div>
-                </div>
+                                 <h3 class="subsection-title">五层配置文件体系</h3>
+                 <div class="info-box">
+                     <div class="info-box-title">📋 配置优先级说明</div>
+                     <div class="info-box-content">
+                         Claude Code使用分层配置系统，高优先级的设置会覆盖低优先级的设置。
+                         从上到下优先级递减，越往上的配置越优先生效。
+                     </div>
+                 </div>
+
+                 <div class="config-hierarchy">
+                     <div class="config-level">
+                         <div class="priority-badge">优先级 1</div>
+                         <div class="config-bar level-1" onclick="showConfigModal('enterprise')">
+                             <strong>企业策略</strong><br>
+                             <small>managed-settings.json</small>
+                         </div>
+                         <div class="config-label">🔒 最高优先级</div>
+                     </div>
+                     <div class="config-arrow">→</div>
+                     <div class="config-level">
+                         <div class="priority-badge">优先级 2</div>
+                         <div class="config-bar level-2" onclick="showConfigModal('cmdline')">
+                             <strong>命令行参数</strong><br>
+                             <small>--flag arguments</small>
+                         </div>
+                         <div class="config-label">⚡ 临时覆盖</div>
+                     </div>
+                     <div class="config-arrow">→</div>
+                     <div class="config-level">
+                         <div class="priority-badge">优先级 3</div>
+                         <div class="config-bar level-3" onclick="showConfigModal('local')">
+                             <strong>本地项目设置</strong><br>
+                             <small>.claude/settings.local.json</small>
+                         </div>
+                         <div class="config-label">👤 个人配置</div>
+                     </div>
+                     <div class="config-arrow">→</div>
+                     <div class="config-level">
+                         <div class="priority-badge">优先级 4</div>
+                         <div class="config-bar level-4" onclick="showConfigModal('project')">
+                             <strong>共享项目设置</strong><br>
+                             <small>.claude/settings.json</small>
+                         </div>
+                         <div class="config-label">👥 团队共享</div>
+                     </div>
+                     <div class="config-arrow">→</div>
+                     <div class="config-level">
+                         <div class="priority-badge">优先级 5</div>
+                         <div class="config-bar level-5" onclick="showConfigModal('user')">
+                             <strong>用户全局设置</strong><br>
+                             <small>~/.claude/settings.json</small>
+                         </div>
+                         <div class="config-label">🌍 默认配置</div>
+                     </div>
+                 </div>
+
+                 <div class="table-container" style="margin-top: 32px;">
+                     <table class="table">
+                         <thead>
+                             <tr>
+                                 <th>优先级</th>
+                                 <th>配置类型</th>
+                                 <th>文件位置</th>
+                                 <th>作用域</th>
+                                 <th>Git状态</th>
+                             </tr>
+                         </thead>
+                         <tbody>
+                             <tr style="background: rgba(239, 68, 68, 0.1);">
+                                 <td><strong>1</strong></td>
+                                 <td>企业策略</td>
+                                 <td><code class="code-inline">/etc/claude-code/managed-settings.json</code></td>
+                                 <td>系统级强制</td>
+                                 <td>❌ 系统管理</td>
+                             </tr>
+                             <tr style="background: rgba(245, 158, 11, 0.1);">
+                                 <td><strong>2</strong></td>
+                                 <td>命令行参数</td>
+                                 <td><code class="code-inline">--model --permission-mode</code></td>
+                                 <td>当前会话</td>
+                                 <td>❌ 临时设置</td>
+                             </tr>
+                             <tr style="background: rgba(59, 130, 246, 0.1);">
+                                 <td><strong>3</strong></td>
+                                 <td>本地项目</td>
+                                 <td><code class="code-inline">.claude/settings.local.json</code></td>
+                                 <td>个人项目偏好</td>
+                                 <td>🚫 自动忽略</td>
+                             </tr>
+                             <tr style="background: rgba(16, 185, 129, 0.1);">
+                                 <td><strong>4</strong></td>
+                                 <td>共享项目</td>
+                                 <td><code class="code-inline">.claude/settings.json</code></td>
+                                 <td>团队协作配置</td>
+                                 <td>✅ 提交到Git</td>
+                             </tr>
+                             <tr style="background: rgba(139, 92, 246, 0.1);">
+                                 <td><strong>5</strong></td>
+                                 <td>用户全局</td>
+                                 <td><code class="code-inline">~/.claude/settings.json</code></td>
+                                 <td>跨项目默认</td>
+                                 <td>❌ 个人文件</td>
+                             </tr>
+                         </tbody>
+                     </table>
+                 </div>
 
                 <h3 class="subsection-title">可用设置选项</h3>
                 <div class="table-container">
@@ -1108,6 +1493,12 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <tr>
+                                <td><code class="code-inline">apiKeyHelper</code></td>
+                                <td>API密钥获取脚本</td>
+                                <td>"echo 'sk-**'"</td>
+                                <td><button onclick="showSettingModal('apiKeyHelper')" style="background: #4f46e5; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer;">详情</button></td>
+                            </tr>
                             <tr>
                                 <td><code class="code-inline">permissions</code></td>
                                 <td>权限控制配置</td>
@@ -1136,13 +1527,13 @@
                                 <td><code class="code-inline">hooks</code></td>
                                 <td>工具执行前后的钩子</td>
                                 <td>{"PreToolUse": {...}}</td>
-                                <td>-</td>
+                                <td><button onclick="showSettingModal('hooks')" style="background: #4f46e5; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer;">详情</button></td>
                             </tr>
                             <tr>
                                 <td><code class="code-inline">forceLoginMethod</code></td>
                                 <td>强制登录方式</td>
                                 <td>"claudeai" 或 "console"</td>
-                                <td>-</td>
+                                <td><button onclick="showSettingModal('forceLoginMethod')" style="background: #4f46e5; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer;">详情</button></td>
                             </tr>
                             <tr>
                                 <td><code class="code-inline">enableAllProjectMcpServers</code></td>
@@ -1259,22 +1650,22 @@
 
                 <h3 class="subsection-title">内存管理核心功能</h3>
                 <div class="grid grid-4">
-                    <div class="feature-card fade-in">
+                    <div class="feature-card fade-in" onclick="showMemoryModal('find')" style="cursor: pointer;">
                         <div class="feature-icon">🔍</div>
                         <h3 class="feature-title">查找内存</h3>
                         <p class="feature-text">自动递归查找项目目录中的所有CLAUDE.md文件。</p>
                     </div>
-                    <div class="feature-card fade-in">
+                    <div class="feature-card fade-in" onclick="showMemoryModal('add')" style="cursor: pointer;">
                         <div class="feature-icon">➕</div>
                         <h3 class="feature-title">添加内存</h3>
                         <p class="feature-text">使用#命令快速添加新的记忆条目。</p>
                     </div>
-                    <div class="feature-card fade-in">
+                    <div class="feature-card fade-in" onclick="showMemoryModal('import')" style="cursor: pointer;">
                         <div class="feature-icon">📁</div>
                         <h3 class="feature-title">文件导入</h3>
                         <p class="feature-text">使用@语法导入其他文档作为模块化内存。</p>
                     </div>
-                    <div class="feature-card fade-in">
+                    <div class="feature-card fade-in" onclick="showMemoryModal('dynamic')" style="cursor: pointer;">
                         <div class="feature-icon">🔄</div>
                         <h3 class="feature-title">动态加载</h3>
                         <p class="feature-text">子目录内存文件按需加载，优化token使用。</p>
@@ -1316,7 +1707,7 @@
                             • 自动格式化并追加
                         </p>
                     </div>
-                    <div class="feature-card fade-in">
+                    <!-- <div class="feature-card fade-in">
                         <div class="feature-icon">📋</div>
                         <h3 class="feature-title">查看内存状态</h3>
                         <p class="feature-text">
@@ -1325,7 +1716,7 @@
                             • 内存使用情况<br>
                             • 上下文信息统计
                         </p>
-                    </div>
+                    </div> -->
                 </div>
 
                 <h3 class="subsection-title">文件导入系统</h3>
@@ -1692,23 +2083,44 @@
         </div>
     </section>
 
-    <!-- 配置弹窗 -->
-    <div id="configModal" class="modal">
-        <div class="modal-content">
-            <span class="modal-close">&times;</span>
-            <h3 class="modal-title" id="modalTitle">配置详情</h3>
-            <div id="modalContent"></div>
-        </div>
-    </div>
+         <!-- 配置弹窗 -->
+     <div id="configModal" class="modal">
+         <div class="modal-content">
+             <div class="modal-header">
+                 <h3 class="modal-title" id="modalTitle">配置详情</h3>
+                 <button class="modal-close">&times;</button>
+             </div>
+             <div class="modal-body">
+                 <div id="modalContent"></div>
+             </div>
+         </div>
+     </div>
 
-    <!-- 设置详情弹窗 -->
-    <div id="settingModal" class="modal">
-        <div class="modal-content">
-            <span class="modal-close">&times;</span>
-            <h3 class="modal-title" id="settingModalTitle">设置详情</h3>
-            <div id="settingModalContent"></div>
-        </div>
-    </div>
+     <!-- 设置详情弹窗 -->
+     <div id="settingModal" class="modal">
+         <div class="modal-content">
+             <div class="modal-header">
+                 <h3 class="modal-title" id="settingModalTitle">设置详情</h3>
+                 <button class="modal-close">&times;</button>
+             </div>
+             <div class="modal-body">
+                 <div id="settingModalContent"></div>
+             </div>
+         </div>
+     </div>
+
+     <!-- 内存管理功能弹窗 -->
+     <div id="memoryModal" class="modal">
+         <div class="modal-content">
+             <div class="modal-header">
+                 <h3 class="modal-title" id="memoryModalTitle">内存管理功能详解</h3>
+                 <button class="modal-close">&times;</button>
+             </div>
+             <div class="modal-body">
+                 <div id="memoryModalContent"></div>
+             </div>
+         </div>
+     </div>
 
     <!-- 返回顶部按钮 -->
     <button class="back-to-top" onclick="scrollToTop()">↑</button>
@@ -1769,32 +2181,53 @@
             const content = document.getElementById('modalContent');
             
             const configData = {
-                enterprise: {
-                    title: '企业策略配置',
-                    content: `
-                        <h4>配置说明：</h4>
-                        <p>由系统管理员统一配置的强制性设置，个人用户无法覆盖。</p>
-                        
-                        <h4>配置文件位置：</h4>
-                        <ul>
-                            <li><strong>macOS:</strong> /Library/Application Support/ClaudeCode/managed-settings.json</li>
-                            <li><strong>Linux/WSL:</strong> /etc/claude-code/managed-settings.json</li>
-                            <li><strong>Windows:</strong> C:\\ProgramData\\ClaudeCode\\managed-settings.json</li>
-                        </ul>
-                        
-                        <h4>示例配置：</h4>
-                        <div class="code-block" style="margin: 16px 0;">
-                            <pre>{
-  "permissions": {
-    "allow": ["Read", "Write"],
-    "deny": ["Bash"]
-  },
-  "model": "claude-3-5-sonnet-20241022",
-  "maxTokens": 4096
+                                 enterprise: {
+                     title: '企业策略配置',
+                     content: `
+                         <div class="modal-section">
+                             <h4>配置说明</h4>
+                             <p>由系统管理员统一配置的强制性设置，个人用户无法覆盖。这是最高优先级的配置层级，确保企业安全策略的执行。</p>
+                         </div>
+                         
+                         <div class="modal-section">
+                             <h4>配置文件位置</h4>
+                             <div class="modal-grid">
+                                 <div class="modal-card">
+                                     <h5>macOS</h5>
+                                     <p>/Library/Application Support/ClaudeCode/managed-settings.json</p>
+                                 </div>
+                                 <div class="modal-card">
+                                     <h5>Linux/WSL</h5>
+                                     <p>/etc/claude-code/managed-settings.json</p>
+                                 </div>
+                                 <div class="modal-card">
+                                     <h5>Windows</h5>
+                                     <p>C:\\ProgramData\\ClaudeCode\\managed-settings.json</p>
+                                 </div>
+                             </div>
+                         </div>
+                         
+                         <div class="modal-section">
+                             <h4>配置示例</h4>
+                             <div class="modal-code-block">
+                                 <div class="modal-code-header">managed-settings.json</div>
+                                 <pre>{
+   "permissions": {
+     "allow": ["Read", "Write"],
+     "deny": ["Bash", "WebFetch"]
+   },
+   "model": "claude-3-5-sonnet-20241022",
+   "maxTokens": 4096,
+   "forceLoginMethod": "console"
 }</pre>
-                        </div>
-                    `
-                },
+                             </div>
+                         </div>
+
+                         <div class="modal-highlight">
+                             <strong>注意：</strong>企业策略配置只能由系统管理员修改，用户无法通过其他方式覆盖这些设置。
+                         </div>
+                     `
+                 },
                 cmdline: {
                     title: '命令行参数配置',
                     content: `
@@ -1936,12 +2369,16 @@ claude config list -g  # 查看全局配置</pre>
                 permissions: {
                     title: '权限设置详解',
                     content: `
-                        <h4>权限控制系统：</h4>
-                        <p>Claude Code使用精细的权限规则来控制AI可以执行的操作。</p>
+                        <div class="modal-section">
+                            <h4>权限控制系统</h4>
+                            <p>Claude Code使用精细的权限规则来控制AI可以执行的操作，确保安全性和可控性。</p>
+                        </div>
                         
-                        <h4>权限规则格式：</h4>
-                        <div class="code-block" style="margin: 16px 0;">
-                            <pre>{
+                        <div class="modal-section">
+                            <h4>权限规则格式</h4>
+                            <div class="modal-code-block">
+                                <div class="modal-code-header">permissions 配置示例</div>
+                                <pre>{
   "permissions": {
     "allow": [
       "Read",                    // 允许读取所有文件
@@ -1954,86 +2391,321 @@ claude config list -g  # 查看全局配置</pre>
       "Bash(sudo *)",           // 禁止sudo命令
       "WebFetch"                // 禁止网络请求
     ],
-    "additionalDirectories": [
-      "../docs/",               // 额外的工作目录
-      "../shared/"
-    ],
-    "defaultMode": "acceptEdits" // 默认权限模式
+    "defaultMode": "interactive"
   }
 }</pre>
+                            </div>
                         </div>
                         
-                        <h4>权限模式：</h4>
-                        <ul>
-                            <li><strong>interactive:</strong> 每次操作都请求确认</li>
-                            <li><strong>acceptEdits:</strong> 自动允许文件编辑</li>
-                            <li><strong>plan:</strong> 只制定计划，不执行操作</li>
-                        </ul>
+                        <div class="modal-section">
+                            <h4>权限模式</h4>
+                            <div class="modal-grid">
+                                <div class="modal-card">
+                                    <h5>interactive</h5>
+                                    <p>每次操作都请求用户确认，最安全的模式</p>
+                                </div>
+                                <div class="modal-card">
+                                    <h5>acceptEdits</h5>
+                                    <p>自动允许文件编辑操作，但其他操作需要确认</p>
+                                </div>
+                                <div class="modal-card">
+                                    <h5>plan</h5>
+                                    <p>只制定计划，不执行任何实际操作</p>
+                                </div>
+                            </div>
+                        </div>
                         
-                        <h4>工具权限列表：</h4>
-                        <ul>
-                            <li><strong>Bash:</strong> 执行shell命令</li>
-                            <li><strong>Edit:</strong> 编辑文件</li>
-                            <li><strong>Read:</strong> 读取文件</li>
-                            <li><strong>Write:</strong> 创建/覆写文件</li>
-                            <li><strong>WebFetch:</strong> 获取网络内容</li>
-                            <li><strong>WebSearch:</strong> 执行网络搜索</li>
-                        </ul>
+                        <div class="modal-section">
+                            <h4>可用工具权限</h4>
+                            <ul class="modal-list">
+                                <li><strong>Bash:</strong> <span>执行shell命令，支持通配符模式匹配</span></li>
+                                <li><strong>Edit:</strong> <span>编辑现有文件内容</span></li>
+                                <li><strong>Read:</strong> <span>读取文件内容</span></li>
+                                <li><strong>Write:</strong> <span>创建新文件或覆写现有文件</span></li>
+                                <li><strong>WebFetch:</strong> <span>获取网络内容和资源</span></li>
+                                <li><strong>WebSearch:</strong> <span>执行网络搜索操作</span></li>
+                                <li><strong>MultiEdit:</strong> <span>对单个文件执行多重编辑</span></li>
+                                <li><strong>TodoWrite:</strong> <span>创建和管理任务列表</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="modal-highlight">
+                            <strong>安全建议：</strong>建议在生产环境中使用 deny 规则明确禁止危险操作，如系统删除、权限提升等命令。
+                        </div>
+                    `
+                },
+                apiKeyHelper: {
+                    title: 'API密钥获取脚本',
+                    content: `
+                        <div class="modal-section">
+                            <h4>功能说明</h4>
+                            <p>apiKeyHelper允许您配置一个自定义脚本来动态获取API密钥。这对于使用密钥管理工具或需要从安全存储中获取密钥的场景特别有用。</p>
+                        </div>
+                        
+                        <div class="modal-section">
+                            <h4>配置方式</h4>
+                            <div class="modal-code-block">
+                                <div class="modal-code-header">apiKeyHelper 配置示例</div>
+                                <pre>{
+  "apiKeyHelper": "security-cli get-api-key anthropic"
+}</pre>
+                            </div>
+                        </div>
+                        
+                        <div class="modal-section">
+                            <h4>常用场景</h4>
+                            <div class="modal-grid">
+                                <div class="modal-card">
+                                    <h5>环境变量读取</h5>
+                                    <p><code>"echo $ANTHROPIC_API_KEY"</code></p>
+                                </div>
+                                <div class="modal-card">
+                                    <h5>密钥管理工具</h5>
+                                    <p><code>"op read op://vault/anthropic/apikey"</code></p>
+                                </div>
+                                <div class="modal-card">
+                                    <h5>AWS Secrets Manager</h5>
+                                    <p><code>"aws secretsmanager get-secret-value --secret-id anthropic-key"</code></p>
+                                </div>
+                                <div class="modal-card">
+                                    <h5>Azure Key Vault</h5>
+                                    <p><code>"az keyvault secret show --vault-name vault --name api-key"</code></p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="modal-section">
+                            <h4>执行要求</h4>
+                            <ul class="modal-list">
+                                <li><strong>输出格式：</strong> <span>脚本必须将API密钥输出到stdout</span></li>
+                                <li><strong>错误处理：</strong> <span>如果脚本失败，Claude Code会回退到其他认证方式</span></li>
+                                <li><strong>执行权限：</strong> <span>确保脚本有执行权限且在PATH中可访问</span></li>
+                                <li><strong>安全性：</strong> <span>避免在脚本中硬编码密钥</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="modal-highlight">
+                            <strong>最佳实践：</strong>使用成熟的密钥管理工具（如1Password CLI、AWS CLI等）来确保密钥的安全存储和获取。
+                        </div>
+                    `
+                },
+                hooks: {
+                    title: '工具执行钩子',
+                    content: `
+                        <div class="modal-section">
+                            <h4>钩子系统</h4>
+                            <p>Hooks允许您在Claude Code执行工具前后运行自定义脚本，实现日志记录、安全检查、环境准备等功能。</p>
+                        </div>
+                        
+                        <div class="modal-section">
+                            <h4>可用钩子类型</h4>
+                            <div class="modal-grid">
+                                <div class="modal-card">
+                                    <h5>PreToolUse</h5>
+                                    <p>在工具执行之前运行，可用于环境准备、权限检查等</p>
+                                </div>
+                                <div class="modal-card">
+                                    <h5>PostToolUse</h5>
+                                    <p>在工具执行之后运行，可用于清理、日志记录等</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="modal-section">
+                            <h4>配置示例</h4>
+                            <div class="modal-code-block">
+                                <div class="modal-code-header">hooks 完整配置</div>
+                                <pre>{
+  "hooks": {
+    "PreToolUse": {
+      "Bash": "echo '[AUDIT] Executing bash command at $(date)'",
+      "Edit": "echo '[INFO] About to edit file: $FILE_PATH'",
+      "*": "echo '[TOOL] Using tool: $TOOL_NAME'"
+    },
+    "PostToolUse": {
+      "Bash": "echo '[AUDIT] Bash command completed'",
+      "Edit": "git add $FILE_PATH && echo '[GIT] File staged'",
+      "*": "echo '[TOOL] Tool $TOOL_NAME finished'"
+    }
+  }
+}</pre>
+                            </div>
+                        </div>
+                        
+                        <div class="modal-section">
+                            <h4>支持的工具类型</h4>
+                            <ul class="modal-list">
+                                <li><strong>Bash:</strong> <span>shell命令执行</span></li>
+                                <li><strong>Edit:</strong> <span>文件编辑操作</span></li>
+                                <li><strong>Read:</strong> <span>文件读取操作</span></li>
+                                <li><strong>Write:</strong> <span>文件写入操作</span></li>
+                                <li><strong>WebFetch:</strong> <span>网络请求</span></li>
+                                <li><strong>*:</strong> <span>通配符，匹配所有工具类型</span></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="modal-section">
+                            <h4>可用变量</h4>
+                            <ul class="modal-list">
+                                <li><strong>$TOOL_NAME:</strong> <span>当前执行的工具名称</span></li>
+                                <li><strong>$FILE_PATH:</strong> <span>操作的文件路径（Edit/Read/Write）</span></li>
+                                <li><strong>$COMMAND:</strong> <span>执行的命令内容（Bash）</span></li>
+                                <li><strong>$PROJECT_ROOT:</strong> <span>项目根目录路径</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="modal-highlight">
+                            <strong>注意：</strong>钩子脚本的执行时间会影响整体性能，建议保持脚本简洁高效。
+                        </div>
+                    `
+                },
+                forceLoginMethod: {
+                    title: '强制登录方式',
+                    content: `
+                        <div class="modal-section">
+                            <h4>登录方式控制</h4>
+                            <p>forceLoginMethod允许您强制指定Claude Code使用特定的登录认证方式，覆盖默认的自动检测逻辑。</p>
+                        </div>
+                        
+                        <div class="modal-section">
+                            <h4>可用登录方式</h4>
+                            <div class="modal-grid">
+                                <div class="modal-card">
+                                    <h5>claudeai</h5>
+                                    <p>使用Claude.ai网站的会话令牌进行认证</p>
+                                </div>
+                                <div class="modal-card">
+                                    <h5>console</h5>
+                                    <p>使用Anthropic Console的API密钥进行认证</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="modal-section">
+                            <h4>配置示例</h4>
+                            <div class="modal-code-block">
+                                <div class="modal-code-header">forceLoginMethod 配置</div>
+                                <pre>{
+  "forceLoginMethod": "console"
+}</pre>
+                            </div>
+                        </div>
+                        
+                        <div class="modal-section">
+                            <h4>使用场景</h4>
+                            <ul class="modal-list">
+                                <li><strong>企业环境：</strong> <span>强制使用console模式确保API密钥管理的一致性</span></li>
+                                <li><strong>自动化脚本：</strong> <span>确保在CI/CD环境中使用稳定的认证方式</span></li>
+                                <li><strong>团队协作：</strong> <span>统一团队成员的认证方式</span></li>
+                                <li><strong>故障排除：</strong> <span>当自动检测失败时手动指定认证方式</span></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="modal-section">
+                            <h4>认证方式对比</h4>
+                            <div class="modal-grid">
+                                <div class="modal-card">
+                                    <h5>Claude.ai 方式</h5>
+                                    <p><strong>优点：</strong>易于设置，使用现有会话<br>
+                                    <strong>缺点：</strong>会话可能过期，不适合自动化</p>
+                                </div>
+                                <div class="modal-card">
+                                    <h5>Console 方式</h5>
+                                    <p><strong>优点：</strong>稳定可靠，适合自动化<br>
+                                    <strong>缺点：</strong>需要API密钥管理</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-highlight">
+                            <strong>建议：</strong>在生产环境和自动化场景中使用console方式，在个人开发中可以使用claudeai方式以获得更便捷的体验。
+                        </div>
                     `
                 },
                 env: {
                     title: '环境变量配置',
                     content: `
-                        <h4>环境变量系统：</h4>
-                        <p>Claude Code支持丰富的环境变量来控制行为和集成外部服务。</p>
+                        <div class="modal-section">
+                            <h4>环境变量系统</h4>
+                            <p>Claude Code支持丰富的环境变量来控制行为和集成外部服务。可以在settings.json的env字段中配置。</p>
+                        </div>
                         
-                        <h4>认证相关：</h4>
-                        <ul>
-                            <li><strong>ANTHROPIC_API_KEY:</strong> API密钥</li>
-                            <li><strong>ANTHROPIC_AUTH_TOKEN:</strong> 自定义认证令牌</li>
-                            <li><strong>AWS_BEARER_TOKEN_BEDROCK:</strong> Bedrock API密钥</li>
-                        </ul>
+                        <div class="modal-section">
+                            <h4>认证相关</h4>
+                            <ul class="modal-list">
+                                <li><strong>ANTHROPIC_API_KEY:</strong> <span>API密钥，用于直接API访问</span></li>
+                                <li><strong>ANTHROPIC_AUTH_TOKEN:</strong> <span>自定义认证令牌，添加Bearer前缀</span></li>
+                                <li><strong>AWS_BEARER_TOKEN_BEDROCK:</strong> <span>Bedrock API密钥认证</span></li>
+                                <li><strong>ANTHROPIC_CUSTOM_HEADERS:</strong> <span>自定义请求头部信息</span></li>
+                            </ul>
+                        </div>
                         
-                        <h4>模型配置：</h4>
-                        <ul>
-                            <li><strong>ANTHROPIC_MODEL:</strong> 自定义模型名称</li>
-                            <li><strong>ANTHROPIC_SMALL_FAST_MODEL:</strong> 后台任务模型</li>
-                            <li><strong>CLAUDE_CODE_MAX_OUTPUT_TOKENS:</strong> 最大输出token数</li>
-                        </ul>
+                        <div class="modal-section">
+                            <h4>模型配置</h4>
+                            <ul class="modal-list">
+                                <li><strong>ANTHROPIC_MODEL:</strong> <span>自定义模型名称</span></li>
+                                <li><strong>ANTHROPIC_SMALL_FAST_MODEL:</strong> <span>用于后台任务的Haiku级模型</span></li>
+                                <li><strong>CLAUDE_CODE_MAX_OUTPUT_TOKENS:</strong> <span>设置最大输出token数量</span></li>
+                                <li><strong>MAX_THINKING_TOKENS:</strong> <span>强制设置模型思考token预算</span></li>
+                            </ul>
+                        </div>
                         
-                        <h4>Bash控制：</h4>
-                        <ul>
-                            <li><strong>BASH_DEFAULT_TIMEOUT_MS:</strong> 默认超时时间</li>
-                            <li><strong>BASH_MAX_TIMEOUT_MS:</strong> 最大超时时间</li>
-                            <li><strong>BASH_MAX_OUTPUT_LENGTH:</strong> 最大输出长度</li>
-                        </ul>
+                        <div class="modal-section">
+                            <h4>Bash控制</h4>
+                            <ul class="modal-list">
+                                <li><strong>BASH_DEFAULT_TIMEOUT_MS:</strong> <span>长时间运行bash命令的默认超时时间</span></li>
+                                <li><strong>BASH_MAX_TIMEOUT_MS:</strong> <span>模型可设置的最大超时时间</span></li>
+                                <li><strong>BASH_MAX_OUTPUT_LENGTH:</strong> <span>bash输出截断前的最大字符数</span></li>
+                                <li><strong>CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR:</strong> <span>每次bash命令后返回原工作目录</span></li>
+                            </ul>
+                        </div>
                         
-                        <h4>系统控制：</h4>
-                        <ul>
-                            <li><strong>DISABLE_AUTOUPDATER:</strong> 禁用自动更新</li>
-                            <li><strong>DISABLE_TELEMETRY:</strong> 禁用遥测</li>
-                            <li><strong>DISABLE_ERROR_REPORTING:</strong> 禁用错误报告</li>
-                            <li><strong>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC:</strong> 禁用非必要网络流量</li>
-                        </ul>
+                        <div class="modal-section">
+                            <h4>系统控制</h4>
+                            <div class="modal-grid">
+                                <div class="modal-card">
+                                    <h5>更新控制</h5>
+                                    <p><strong>DISABLE_AUTOUPDATER:</strong> 禁用自动更新功能</p>
+                                </div>
+                                <div class="modal-card">
+                                    <h5>隐私控制</h5>
+                                    <p><strong>DISABLE_TELEMETRY:</strong> 禁用Statsig遥测数据收集</p>
+                                </div>
+                                <div class="modal-card">
+                                    <h5>错误报告</h5>
+                                    <p><strong>DISABLE_ERROR_REPORTING:</strong> 禁用Sentry错误报告</p>
+                                </div>
+                                <div class="modal-card">
+                                    <h5>网络控制</h5>
+                                    <p><strong>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC:</strong> 禁用非必要网络流量</p>
+                                </div>
+                            </div>
+                        </div>
                         
-                        <h4>MCP相关：</h4>
-                        <ul>
-                            <li><strong>MCP_TIMEOUT:</strong> MCP服务器启动超时</li>
-                            <li><strong>MCP_TOOL_TIMEOUT:</strong> MCP工具执行超时</li>
-                            <li><strong>MAX_MCP_OUTPUT_TOKENS:</strong> MCP工具响应最大token数</li>
-                        </ul>
+                        <div class="modal-section">
+                            <h4>MCP相关</h4>
+                            <ul class="modal-list">
+                                <li><strong>MCP_TIMEOUT:</strong> <span>MCP服务器启动超时时间（毫秒）</span></li>
+                                <li><strong>MCP_TOOL_TIMEOUT:</strong> <span>MCP工具执行超时时间（毫秒）</span></li>
+                                <li><strong>MAX_MCP_OUTPUT_TOKENS:</strong> <span>MCP工具响应允许的最大token数（默认25000）</span></li>
+                            </ul>
+                        </div>
                         
-                        <h4>配置示例：</h4>
-                        <div class="code-block" style="margin: 16px 0;">
-                            <pre>{
+                        <div class="modal-section">
+                            <h4>配置示例</h4>
+                            <div class="modal-code-block">
+                                <div class="modal-code-header">env 配置示例</div>
+                                <pre>{
   "env": {
     "NODE_ENV": "development",
     "ANTHROPIC_MODEL": "claude-3-5-sonnet-20241022",
     "BASH_DEFAULT_TIMEOUT_MS": "30000",
     "DISABLE_TELEMETRY": "1",
-    "MCP_TIMEOUT": "10000"
+    "MCP_TIMEOUT": "10000",
+    "CLAUDE_CODE_DISABLE_TERMINAL_TITLE": "1"
   }
 }</pre>
+                            </div>
                         </div>
                     `
                 }
@@ -2047,28 +2719,36 @@ claude config list -g  # 查看全局配置</pre>
             }
         }
 
-        // 关闭弹窗
-        document.addEventListener('DOMContentLoaded', function() {
-            const configModal = document.getElementById('configModal');
-            const settingModal = document.getElementById('settingModal');
-            const closeBtns = document.querySelectorAll('.modal-close');
-            
-            closeBtns.forEach(btn => {
-                btn.onclick = function() {
-                    configModal.style.display = 'none';
-                    settingModal.style.display = 'none';
-                }
-            });
-            
-            window.onclick = function(event) {
-                if (event.target === configModal) {
-                    configModal.style.display = 'none';
-                }
-                if (event.target === settingModal) {
-                    settingModal.style.display = 'none';
-                }
-            }
-        });
+                 // 关闭弹窗
+         document.addEventListener('DOMContentLoaded', function() {
+             const configModal = document.getElementById('configModal');
+             const settingModal = document.getElementById('settingModal');
+             const closeBtns = document.querySelectorAll('.modal-close');
+             
+             closeBtns.forEach(btn => {
+                 btn.onclick = function() {
+                     configModal.style.display = 'none';
+                     settingModal.style.display = 'none';
+                 }
+             });
+             
+             window.onclick = function(event) {
+                 if (event.target === configModal) {
+                     configModal.style.display = 'none';
+                 }
+                 if (event.target === settingModal) {
+                     settingModal.style.display = 'none';
+                 }
+             }
+
+             // 添加键盘ESC关闭功能
+             document.addEventListener('keydown', function(event) {
+                 if (event.key === 'Escape') {
+                     configModal.style.display = 'none';
+                     settingModal.style.display = 'none';
+                 }
+             });
+         });
 
         // 导航栏滚动效果
         window.addEventListener('scroll', () => {
