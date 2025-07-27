@@ -72,12 +72,6 @@
                                 <td>查看当前可用的MCP服务器</td>
                             </tr>
                             <tr>
-                                <td><code class="code-inline">claude mcp status</code></td>
-                                <td>查看MCP服务器连接状态</td>
-                                <td><code class="code-inline">claude mcp status</code></td>
-                                <td>检查服务器运行状态和连接</td>
-                            </tr>
-                            <tr>
                                 <td><code class="code-inline">claude mcp serve</code></td>
                                 <td>将Claude Code作为MCP服务器运行</td>
                                 <td><code class="code-inline">claude mcp serve</code></td>
@@ -255,42 +249,7 @@ src/</pre>
                                     <div class="command-text">claude mcp serve</div>
                                     <div class="command-description">启动MCP服务器模式</div>
                                 </div>
-                                <div class="command-item">
-                                    <div class="command-text">claude mcp serve --port 8080</div>
-                                    <div class="command-description">指定端口启动服务器</div>
-                                </div>
-                                <div class="command-item">
-                                    <div class="command-text">claude mcp serve --config ./mcp-server.json</div>
-                                    <div class="command-description">使用指定配置文件启动</div>
-                                </div>
-                                <div class="command-item">
-                                    <div class="command-text">claude mcp serve --daemon</div>
-                                    <div class="command-description">在后台运行服务器</div>
-                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="feature-card fade-in">
-                        <div class="feature-icon">⚙️</div>
-                        <h3 class="feature-title">服务器配置</h3>
-                        <div class="json-config-block">
-                            <div class="json-header">mcp-server.json 配置示例</div>
-                            <pre>{
-  "server": {
-    "name": "claude-code-server",
-    "version": "1.0.0",
-    "description": "Claude Code MCP服务器"
-  },
-  "capabilities": {
-    "tools": true,
-    "resources": true,
-    "prompts": true
-  },
-  "security": {
-    "allowedOrigins": ["localhost", "*.example.com"],
-    "requireAuth": true
-  }
-}</pre>
                         </div>
                     </div>
                 </div>
@@ -456,26 +415,7 @@ src/</pre>
                                     <div class="command-text">claude mcp serve</div>
                                     <div class="command-description">启动Claude Code MCP服务器</div>
                                 </div>
-                                <div class="command-item">
-                                    <div class="command-text">claude mcp serve --port 8080</div>
-                                    <div class="command-description">指定端口启动服务器</div>
-                                </div>
                             </div>
-                        </div>
-                        <div class="json-config-block">
-                            <div class="json-header">Claude Code作为MCP服务器配置</div>
-                            <pre>{
-  "server": {
-    "name": "claude-code-server",
-    "version": "1.0.0",
-    "description": "Claude Code MCP服务器"
-  },
-  "capabilities": {
-    "tools": true,
-    "resources": true,
-    "prompts": true
-  }
-}</pre>
                         </div>
                     </div>
                     <div class="feature-card fade-in">
