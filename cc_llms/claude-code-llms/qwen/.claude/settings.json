@@ -1,0 +1,7 @@
+{
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://dashscope.aliyuncs.com/api/v2/apps/claude-code-proxy",
+    "ANTHROPIC_AUTH_TOKEN": "sk-45e75cb21bdb4b0cae636958276f99d0"
+  },
+  "model": "qwen3-coder-plus-2025-07-22"
+}

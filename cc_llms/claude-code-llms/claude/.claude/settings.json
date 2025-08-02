@@ -1,0 +1,8 @@
+{
+  "apiKeyHelper": "echo 'sk-ant-oat01-b2ab703361c6841bd27284ab5700f008a06a5796de82fc22b2523243696c69a8'",
+  "env": {
+    "ANTHROPIC_API_KEY": "sk-ant-oat01-b2ab703361c6841bd27284ab5700f008a06a5796de82fc22b2523243696c69a8",
+    "ANTHROPIC_BASE_URL": "https://gaccode.com/claudecode"
+  },
+  "model": "claude-sonnet-4-20250514"
+}

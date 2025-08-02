@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Code 多模型适配对比 - AI编程助手深度评测</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .section {
+            background: white;
+            margin-bottom: 30px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #3498db;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title::before {
+            content: "🚀";
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .comparison-table tr:hover {
+            background-color: #e3f2fd;
+            transform: scale(1.01);
+            transition: all 0.3s ease;
+        }
+
+        .model-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 5px solid #3498db;
+        }
+
+        .model-name {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .model-icon {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .claude-icon { background: #ff6b35; }
+        .kimi-icon { background: #4ecdc4; }
+        .glm-icon { background: #45b7d1; }
+        .qwen-icon { background: #f39c12; }
+
+        .config-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .config-card {
+            background: #1e1e1e;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .config-header {
+            padding: 15px;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            font-size: 1.1em;
+        }
+
+        .config-content {
+            padding: 20px;
+        }
+
+        .config-code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 13px;
+            line-height: 1.4;
+            overflow-x: auto;
+            white-space: pre;
+        }
+
+        .highlight-key {
+            color: #66d9ef;
+        }
+
+        .highlight-string {
+            color: #a6e22e;
+        }
+
+        .highlight-value {
+            color: #fd971f;
+        }
+
+        .case-study {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .case-study h3 {
+            font-size: 1.6em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .requirements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .requirement-item {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .requirement-item h4 {
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .tech-tag {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            backdrop-filter: blur(5px);
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            padding: 20px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .bilibili-link {
+            display: inline-block;
+            background: #ff6699;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .bilibili-link:hover {
+            background: #ff4477;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255,102,153,0.4);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .config-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-table {
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Claude Code 多模型适配深度对比</h1>
+            <p>探索AI编程助手的无限可能 | 四大主流LLM性能评测</p>
+        </div>
+
+        <!-- 模型对比概览 -->
+        <div class="section">
+            <h2 class="section-title">模型对比概览</h2>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>模型</th>
+                        <th>开发商</th>
+                        <th>主要优势</th>
+                        <th>适用场景</th>
+                        <th>成本效益</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Claude Sonnet 4</strong></td>
+                        <td>Anthropic (代理)</td>
+                        <td>原生体验、完整功能</td>
+                        <td>全场景编程开发</td>
+                        <td>中等</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Kimi K2</strong></td>
+                        <td>月之暗面</td>
+                        <td>极高性价比、开源属性</td>
+                        <td>成本敏感型开发</td>
+                        <td>★★★★★</td>
+                    </tr>
+                    <tr>
+                        <td><strong>GLM-4.5</strong></td>
+                        <td>智谱AI</td>
+                        <td>无缝结合、性能优越</td>
+                        <td>企业级应用开发</td>
+                        <td>★★★★</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Qwen3-Coder-Plus</strong></td>
+                        <td>阿里云</td>
+                        <td>企业级稳定、云厂商支持</td>
+                        <td>大型项目、团队协作</td>
+                        <td>★★★</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 配置案例展示 -->
+        <div class="section">
+            <h2 class="section-title">配置案例展示</h2>
+            <p style="margin-bottom: 20px; color: #666;">通过修改 Claude Code 的 settings.json 文件，可以无缝切换不同的LLM后端模型：</p>
+            
+            <div class="config-container">
+                <!-- Claude 配置 -->
+                <div class="config-card">
+                    <div class="config-header claude-icon" style="background: linear-gradient(135deg, #ff6b35, #f7931e);">
+                        <div class="model-icon claude-icon">C</div>
+                        Claude Sonnet 4
+                    </div>
+                    <div class="config-content">
+                        <pre class="config-code">{
+  <span class="highlight-key">"apiKeyHelper"</span>: <span class="highlight-string">"echo 'sk-2cBEzLDL4tEM84EbV8xIS5PKYs1GoRlRVtv2onq3zCVkoRyT'"</span>,
+  <span class="highlight-key">"env"</span>: {
+    <span class="highlight-key">"ANTHROPIC_API_KEY"</span>: <span class="highlight-string">"sk-2cBEzLDL4tEM84EbV8xIS5PKYs1GoRlRVtv2onq3zCVkoRyT"</span>,
+    <span class="highlight-key">"ANTHROPIC_BASE_URL"</span>: <span class="highlight-string">"https://code.ppchat.vip"</span>
+  },
+  <span class="highlight-key">"model"</span>: <span class="highlight-string">"claude-sonnet-4-20250514"</span>
+}</pre>
+                    </div>
+                </div>
+
+                <!-- Kimi 配置 -->
+                <div class="config-card">
+                    <div class="config-header" style="background: linear-gradient(135deg, #4ecdc4, #44a08d);">
+                        <div class="model-icon kimi-icon">K</div>
+                        Kimi K2
+                    </div>
+                    <div class="config-content">
+                        <pre class="config-code">{
+  <span class="highlight-key">"env"</span>: {
+    <span class="highlight-key">"ANTHROPIC_API_KEY"</span>: <span class="highlight-string">"sk-6vGmnjcieIpdPQlWPzdGNHWlBwbTn2CCmlTqokxNQly324vR"</span>,
+    <span class="highlight-key">"ANTHROPIC_BASE_URL"</span>: <span class="highlight-string">"https://api.moonshot.cn/anthropic"</span>
+  },
+  <span class="highlight-key">"model"</span>: <span class="highlight-string">"kimi-k2-0711-preview"</span>,
+  <span class="highlight-key">"apiKeyHelper"</span>: <span class="highlight-string">"echo 'sk-6vGmnjcieIpdPQlWPzdGNHWlBwbTn2CCmlTqokxNQly324vR'"</span>
+}</pre>
+                    </div>
+                </div>
+
+                <!-- GLM 配置 -->
+                <div class="config-card">
+                    <div class="config-header" style="background: linear-gradient(135deg, #45b7d1, #3498db);">
+                        <div class="model-icon glm-icon">G</div>
+                        GLM-4.5
+                    </div>
+                    <div class="config-content">
+                        <pre class="config-code">{
+  <span class="highlight-key">"env"</span>: {
+    <span class="highlight-key">"ANTHROPIC_BASE_URL"</span>: <span class="highlight-string">"https://open.bigmodel.cn/api/anthropic"</span>,
+    <span class="highlight-key">"ANTHROPIC_AUTH_TOKEN"</span>: <span class="highlight-string">"4112040171ca4158b4c2661c73da0a27.VjHV0SoLsaj4LO4c"</span>
+  },
+  <span class="highlight-key">"model"</span>: <span class="highlight-string">"glm-4.5"</span>
+}</pre>
+                    </div>
+                </div>
+
+                <!-- Qwen 配置 -->
+                <div class="config-card">
+                    <div class="config-header" style="background: linear-gradient(135deg, #f39c12, #e67e22);">
+                        <div class="model-icon qwen-icon">Q</div>
+                        Qwen3-Coder-Plus
+                    </div>
+                    <div class="config-content">
+                        <pre class="config-code">{
+  <span class="highlight-key">"env"</span>: {
+    <span class="highlight-key">"ANTHROPIC_BASE_URL"</span>: <span class="highlight-string">"https://dashscope.aliyuncs.com/api/v2/apps/claude-code-proxy"</span>,
+    <span class="highlight-key">"ANTHROPIC_AUTH_TOKEN"</span>: <span class="highlight-string">"sk-45e75cb21bdb4b0cae636958276f99d0"</span>
+  },
+  <span class="highlight-key">"model"</span>: <span class="highlight-string">"qwen3-coder-plus"</span>
+}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 实战对比案例 -->
+        <div class="case-study">
+            <h3>🎮 实战对比案例：贪吃蛇网页游戏开发</h3>
+            <p style="text-align: center; margin-bottom: 30px; opacity: 0.9;">
+                使用四种不同的LLM配置Claude Code，同时开发相同的贪吃蛇游戏需求，对比各模型的编程能力、代码质量和开发效率
+            </p>
+            
+            <div class="requirements-grid">
+                <div class="requirement-item">
+                    <h4>🎨 界面设计</h4>
+                    <ul>
+                        <li>科技风格：深色背景 + 霓虹色彩</li>
+                        <li>蛇身和食物带发光效果</li>
+                        <li>UI布局：游戏区域居中，侧边控制面板</li>
+                        <li>动画效果：平滑移动，粒子特效</li>
+                    </ul>
+                </div>
+                
+                <div class="requirement-item">
+                    <h4>🎮 核心功能</h4>
+                    <ul>
+                        <li>经典贪吃蛇规则</li>
+                        <li>键盘控制：方向键或WASD</li>
+                        <li>避免撞墙撞身</li>
+                        <li>实时分数显示</li>
+                    </ul>
+                </div>
+                
+                <div class="requirement-item">
+                    <h4>🚀 特色功能</h4>
+                    <ul>
+                        <li>速度调控：滑动条手动调节（1-10级）</li>
+                        <li>模式切换：手动 ⇄ AI自动寻路</li>
+                        <li>动态加速：每吃10个食物提升速度</li>
+                        <li>本地最高分记录</li>
+                    </ul>
+                </div>
+                
+                <div class="requirement-item">
+                    <h4>🔧 技术要求</h4>
+                    <ul>
+                        <li>纯前端：HTML5 + CSS3 + JavaScript</li>
+                        <li>Canvas 2D渲染</li>
+                        <li>LocalStorage数据存储</li>
+                        <li>现代浏览器离线运行</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="tech-stack">
+                <span class="tech-tag">HTML5</span>
+                <span class="tech-tag">CSS3</span>
+                <span class="tech-tag">JavaScript</span>
+                <span class="tech-tag">Canvas 2D</span>
+                <span class="tech-tag">LocalStorage</span>
+                <span class="tech-tag">AI寻路算法</span>
+                <span class="tech-tag">粒子特效</span>
+            </div>
+
+            <div style="margin-top: 30px; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 10px; text-align: center;">
+                <h4 style="color: #ffd700; margin-bottom: 15px;">📊 评测维度</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                    <div>✅ <strong>代码质量</strong><br><small>结构清晰度、注释完整性</small></div>
+                    <div>⚡ <strong>开发效率</strong><br><small>完成时间、迭代速度</small></div>
+                    <div>🎯 <strong>功能实现</strong><br><small>需求满足度、特色功能</small></div>
+                    <div>🎨 <strong>视觉效果</strong><br><small>界面美观度、动画流畅性</small></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 页面底部 -->
+        <div class="footer">
+            <h3>🎬 跟随视频一起探索AI编程的未来</h3>
+            <p>通过实际对比，发现最适合你的Claude Code + LLM组合</p>
+            <a href="#" class="bilibili-link">📺 观看完整视频教程</a>
+            <div style="margin-top: 20px; font-size: 0.9em; opacity: 0.7;">
+                <p>💡 提示：所有配置文件中的API密钥仅为演示用途，实际使用时请替换为您自己的密钥</p>
+                <p>🔗 更多AI工具分享，请关注UP主的B站频道</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 添加一些交互效果
+        document.addEventListener('DOMContentLoaded', function() {
+            // 配置卡片悬停效果
+            const configCards = document.querySelectorAll('.config-card');
+            configCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                    this.style.transition = 'all 0.3s ease';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+
+            // 表格行悬停效果增强
+            const tableRows = document.querySelectorAll('.comparison-table tbody tr');
+            tableRows.forEach(row => {
+                row.addEventListener('mouseenter', function() {
+                    this.style.backgroundColor = '#e8f4f8';
+                    this.style.borderLeft = '4px solid #3498db';
+                });
+                
+                row.addEventListener('mouseleave', function() {
+                    this.style.backgroundColor = '';
+                    this.style.borderLeft = '';
+                });
+            });
+
+            // 平滑滚动效果
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

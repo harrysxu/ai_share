@@ -1,0 +1,8 @@
+{
+  "env": {
+    "ANTHROPIC_API_KEY": "sk-6vGmnjcieIpdPQlWPzdGNHWlBwbTn2CCmlTqokxNQly324vR",
+    "ANTHROPIC_BASE_URL": "https://api.moonshot.cn/anthropic"
+  },
+  "model": "kimi-k2-turbo-preview",
+  "apiKeyHelper": "echo 'sk-6vGmnjcieIpdPQlWPzdGNHWlBwbTn2CCmlTqokxNQly324vR'"
+}
