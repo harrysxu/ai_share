@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Snake Game</title>
+    <style>
+        :root {
+            --bg-color: #0d0f12;
+            --neon-green: #39ff14;
+            --neon-blue: #00c2ff;
+            --text-color: #e0e0e0;
+            --border-color: #2a2a2a;
+            --glow-shadow: 0 0 5px var(--neon-blue), 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue);
+        }
+
+        body {
+            font-family: 'Orbitron', sans-serif; /* A suitably techy font */
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            gap: 20px;
+            background: rgba(10, 10, 10, 0.5);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 0 30px rgba(0, 194, 255, 0.2);
+        }
+
+        .game-container {
+            position: relative;
+        }
+
+        #gameCanvas {
+            background-color: #000;
+            border: 2px solid var(--neon-blue);
+            box-shadow: var(--glow-shadow);
+            border-radius: 10px;
+        }
+        
+        #gameOverlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--neon-green);
+            font-size: 2em;
+            text-shadow: 0 0 10px var(--neon-green);
+            background-color: rgba(0,0,0,0.5);
+            visibility: hidden; /* Hidden by default */
+        }
+        
+        .controls {
+            width: 200px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .control-group {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 1.2em;
+            color: var(--neon-blue);
+            text-shadow: 0 0 5px var(--neon-blue);
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: transparent;
+            color: var(--neon-green);
+            border: 1px solid var(--neon-green);
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: var(--neon-green);
+            color: var(--bg-color);
+            box-shadow: 0 0 15px var(--neon-green);
+        }
+
+        .toggle-switch {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .status-bar {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.8em;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        #model-info {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.7em;
+            color: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+    <!-- Using a Google Font for the techy feel -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+    <div class="game-container">
+        <canvas id="gameCanvas" width="400" height="400"></canvas>
+        <div id="gameOverlay">GAME OVER</div>
+    </div>
+    <div class="controls">
+        <div class="control-group">
+            <h2>Status</h2>
+            <div>Score: <span id="score">0</span></div>
+            <div>High Score: <span id="highScore">0</span></div>
+        </div>
+        <div class="control-group">
+            <h2>Controls</h2>
+            <button id="startBtn">Start Game</button>
+            <button id="pauseBtn">Pause</button>
+            <button id="restartBtn">Restart</button>
+        </div>
+        <div class="control-group">
+            <h2>Settings</h2>
+            <div class="toggle-switch">
+                <label for="aiMode">AI Mode</label>
+                <input type="checkbox" id="aiMode">
+            </div>
+            <div>
+                <label for="speed">Speed: <span id="speedValue">5</span></label>
+                <input type="range" id="speed" min="1" max="10" value="5">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="model-info">Powered by Claude</div>
+
+<script>
+    // DOM Elements
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const scoreEl = document.getElementById('score');
+    const highScoreEl = document.getElementById('highScore');
+    const gameOverlay = document.getElementById('gameOverlay');
+
+    // Game constants
+    const gridSize = 20;
+    const canvasSize = canvas.width;
+    const tileCount = canvasSize / gridSize;
+
+    // Game state
+    let snake, food, direction, score, gameOver, gameLoopInterval;
+    let speed = 5;
+    let highScore = 0;
+    let isAiMode = false;
+
+
+    // Initialize game state
+    function init() {
+        snake = [{ x: 10, y: 10 }];
+        food = {};
+        placeFood();
+        direction = { x: 0, y: 0 }; // Not moving initially
+        score = 0;
+        highScore = localStorage.getItem('snakeHighScore') || 0;
+        gameOver = false;
+        
+        scoreEl.innerText = score;
+        highScoreEl.innerText = highScore;
+        gameOverlay.style.visibility = 'hidden';
+        draw();
+    }
+
+    // Place food at a random location
+    function placeFood() {
+        food = {
+            x: Math.floor(Math.random() * tileCount),
+            y: Math.floor(Math.random() * tileCount)
+        };
+        // Ensure food doesn't spawn on the snake
+        for (let segment of snake) {
+            if (segment.x === food.x && segment.y === food.y) {
+                placeFood();
+                return; // Use return to avoid continuing the loop
+            }
+        }
+    }
+
+    // Drawing functions
+    function draw() {
+        // Clear canvas with a trail effect
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+        ctx.fillRect(0, 0, canvasSize, canvasSize);
+
+        // Draw snake with glow
+        ctx.fillStyle = 'var(--neon-green)';
+        ctx.shadowColor = 'var(--neon-green)';
+        ctx.shadowBlur = 10;
+        for (const segment of snake) {
+            ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize, gridSize);
+        }
+
+        // Draw food with glow
+        ctx.fillStyle = 'var(--neon-blue)';
+        ctx.shadowColor = 'var(--neon-blue)';
+        ctx.shadowBlur = 15;
+        ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize, gridSize);
+
+        // Reset shadow
+        ctx.shadowBlur = 0;
+    }
+
+    // AI Logic using Breadth-First Search (BFS)
+    function findPath() {
+        const head = snake[0];
+        const queue = [[head]];
+        const visited = new Set([`${head.x},${head.y}`]);
+        
+        // Create a representation of the snake body for collision checking.
+        // The actual tail segment is excluded because it will move out of the way.
+        const snakeBody = new Set(snake.map(seg => `${seg.x},${seg.y}`));
+        if (snake.length > 1) {
+            const tail = snake[snake.length - 1];
+            snakeBody.delete(`${tail.x},${tail.y}`);
+        }
+
+
+        while (queue.length > 0) {
+            const path = queue.shift();
+            const current = path[path.length - 1];
+
+            if (current.x === food.x && current.y === food.y) {
+                return path; // Found the food
+            }
+
+            const neighbors = [
+                { x: current.x, y: current.y - 1 }, // Up
+                { x: current.x, y: current.y + 1 }, // Down
+                { x: current.x - 1, y: current.y }, // Left
+                { x: current.x + 1, y: current.y }  // Right
+            ];
+
+            // Sort neighbors to explore more promising directions first
+            neighbors.sort((a, b) => {
+                const distA = Math.abs(a.x - food.x) + Math.abs(a.y - food.y);
+                const distB = Math.abs(b.x - food.x) + Math.abs(b.y - food.y);
+                return distA - distB;
+            });
+
+            for (const neighbor of neighbors) {
+                const posStr = `${neighbor.x},${neighbor.y}`;
+                if (
+                    neighbor.x >= 0 && neighbor.x < tileCount &&
+                    neighbor.y >= 0 && neighbor.y < tileCount &&
+                    !snakeBody.has(posStr) &&
+                    !visited.has(posStr)
+                ) {
+                    visited.add(posStr);
+                    const newPath = [...path, neighbor];
+                    queue.push(newPath);
+                }
+            }
+        }
+        return null; // No path found
+    }
+
+    function updateAiDirection() {
+        const path = findPath();
+        if (path && path.length > 1) {
+            const nextStep = path[1];
+            const head = snake[0];
+            direction = { x: nextStep.x - head.x, y: nextStep.y - head.y };
+        } else {
+            // Fallback strategy if no path is found
+            const head = snake[0];
+            const possibleMoves = [
+                {x: 0, y: -1}, {x: 0, y: 1}, {x: -1, y: 0}, {x: 1, y: 0}
+            ].filter(d => {
+                const nextX = head.x + d.x;
+                const nextY = head.y + d.y;
+                let isSafe = true;
+                // Wall check
+                if (nextX < 0 || nextX >= tileCount || nextY < 0 || nextY >= tileCount) {
+                    isSafe = false;
+                }
+                // Self check
+                for(const segment of snake) {
+                    if (nextX === segment.x && nextY === segment.y) {
+                        isSafe = false;
+                        break;
+                    }
+                }
+                return isSafe;
+            });
+
+            if (possibleMoves.length > 0) {
+                // Prefer to continue in the same direction if safe
+                const sameDirectionMove = possibleMoves.find(d => d.x === direction.x && d.y === direction.y);
+                direction = sameDirectionMove || possibleMoves[0];
+            }
+            // If no moves, the snake is trapped and will collide on the next update.
+        }
+    }
+
+    // Update game state
+    function update() {
+        if (gameOver) return;
+
+        if (isAiMode) {
+            // In AI mode, if the snake is moving or just starting, calculate the next move
+            if (direction.x !== 0 || direction.y !== 0 || snake.length === 1) {
+                 updateAiDirection();
+            }
+        }
+
+        const head = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
+
+        // Wall collision check
+        if (head.x < 0 || head.x >= tileCount || head.y < 0 || head.y >= tileCount) {
+            endGame();
+            return;
+        }
+
+        // Self collision check
+        for (let i = 1; i < snake.length; i++) {
+            if (head.x === snake[i].x && head.y === snake[i].y) {
+                endGame();
+                return;
+            }
+        }
+
+        snake.unshift(head);
+
+        // Food collision check
+        if (head.x === food.x && head.y === food.y) {
+            score++;
+            scoreEl.innerText = score;
+            // Dynamic speed increase
+            if (score > 0 && score % 10 === 0) {
+                let speedInput = document.getElementById('speed');
+                if (speedInput.value < 10) {
+                    speedInput.value++;
+                    speed = parseInt(speedInput.value, 10);
+                    document.getElementById('speedValue').innerText = speed;
+                    restartGameLoop();
+                }
+            }
+            placeFood();
+        } else {
+            snake.pop();
+        }
+
+        draw();
+    }
+    
+    function endGame() {
+        gameOver = true;
+        clearInterval(gameLoopInterval);
+        gameOverlay.style.visibility = 'visible';
+        if (score > highScore) {
+            highScore = score;
+            localStorage.setItem('snakeHighScore', highScore);
+            highScoreEl.innerText = highScore;
+        }
+    }
+
+    // Game loop and controls
+    let isPaused = false;
+
+    function startGame() {
+        if (gameLoopInterval) clearInterval(gameLoopInterval);
+        // Prevent starting if the game is over
+        if (gameOver) {
+            init(); // Reset the game if it was over
+        }
+        isPaused = false;
+        document.getElementById('pauseBtn').innerText = 'Pause';
+        gameLoopInterval = setInterval(update, 1000 / speed);
+    }
+    
+    function pauseGame() {
+        if (gameOver) return;
+        if (isPaused) {
+            isPaused = false;
+            document.getElementById('pauseBtn').innerText = 'Pause';
+            startGame();
+        } else {
+            isPaused = true;
+            document.getElementById('pauseBtn').innerText = 'Resume';
+            clearInterval(gameLoopInterval);
+        }
+    }
+
+    function restartGame() {
+        clearInterval(gameLoopInterval);
+        init();
+        startGame();
+    }
+    
+    function restartGameLoop() {
+        if (!isPaused && !gameOver) {
+            clearInterval(gameLoopInterval);
+            gameLoopInterval = setInterval(update, 1000 / speed);
+        }
+    }
+    
+    // Keyboard controls
+    function handleKeyPress(e) {
+        const key = e.key;
+        let newDirection = { ...direction };
+
+        switch(key) {
+            case 'ArrowUp':
+            case 'w':
+                if (direction.y === 0) newDirection = { x: 0, y: -1 };
+                break;
+            case 'ArrowDown':
+            case 's':
+                if (direction.y === 0) newDirection = { x: 0, y: 1 };
+                break;
+            case 'ArrowLeft':
+            case 'a':
+                if (direction.x === 0) newDirection = { x: -1, y: 0 };
+                break;
+            case 'ArrowRight':
+            case 'd':
+                if (direction.x === 0) newDirection = { x: 1, y: 0 };
+                break;
+            case ' ': // Spacebar for pause/resume
+                 e.preventDefault(); // prevent page scrolling
+                 pauseGame();
+                 break;
+        }
+        
+        // Start game on first keypress if it hasn't started
+        if (direction.x === 0 && direction.y === 0 && (newDirection.x !== 0 || newDirection.y !== 0)) {
+           startGame();
+        }
+
+        direction = newDirection;
+    }
+    
+    // Event Listeners
+    document.addEventListener('keydown', handleKeyPress);
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('startBtn').addEventListener('click', startGame);
+        document.getElementById('pauseBtn').addEventListener('click', pauseGame);
+        document.getElementById('restartBtn').addEventListener('click', restartGame);
+        
+        window.addEventListener('blur', () => {
+           if (!isPaused && !gameOver) pauseGame();
+        });
+
+        document.getElementById('speed').addEventListener('input', (e) => {
+            speed = parseInt(e.target.value, 10);
+            document.getElementById('speedValue').innerText = speed;
+            restartGameLoop();
+        });
+
+        document.getElementById('aiMode').addEventListener('change', (e) => {
+            isAiMode = e.target.checked;
+            document.activeElement.blur(); // Unfocus the checkbox
+
+            // If game hasn't started and AI mode is on, start it.
+            if (isAiMode && direction.x === 0 && direction.y === 0 && !gameOver) {
+               startGame();
+            }
+        });
+    });
+
+    // Call init to set up the initial state
+    init();
+</script>
+
+</body>
+</html>
