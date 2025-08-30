@@ -1,0 +1,1642 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Sub-Agents 深度解析 | AI工具分享</title>
+    <meta name="description" content="Claude Sub-Agents完整指南 - 从单一助手到专家团队的AI革命">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #0066ff;
+            --secondary-color: #667eea;
+            --accent-color: #764ba2;
+            --bg-color: #0a0e27;
+            --surface-color: #1a1f3a;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a9c0;
+            --border-color: #2a2f4a;
+            --success-color: #00d2ff;
+            --warning-color: #ff6b6b;
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #0066ff 0%, #00d2ff 100%);
+            --gradient-3: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* 背景动画 */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, var(--primary-color) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, var(--secondary-color) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 80%, var(--accent-color) 0%, transparent 50%);
+            animation: bgMove 20s ease-in-out infinite;
+        }
+
+        @keyframes bgMove {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(1deg); }
+            66% { transform: translateY(20px) rotate(-1deg); }
+        }
+
+        /* 导航栏 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 2rem;
+            background: rgba(26, 31, 58, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+
+
+        /* 主要内容区域 */
+        .main-content {
+            margin-top: 80px;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* 标题区域 */
+        .hero-section {
+            text-align: center;
+            padding: 4rem 0;
+            background: var(--gradient-1);
+            margin: 2rem 0;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"><animate attributeName="r" values="2;3;2" dur="3s" repeatCount="indefinite"/></circle><circle cx="80" cy="20" r="1" fill="rgba(255,255,255,0.1)"><animate attributeName="r" values="1;2;1" dur="2s" repeatCount="indefinite"/></circle><circle cx="50" cy="80" r="1.5" fill="rgba(255,255,255,0.1)"><animate attributeName="r" values="1.5;2.5;1.5" dur="4s" repeatCount="indefinite"/></circle></svg>') repeat;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+
+
+        /* 卡片样式 */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .card {
+            background: var(--surface-color);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-1);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+
+
+        .card-icon {
+            font-size: 3rem;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .card-description {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* 功能展示区域 */
+        .features-section {
+            margin: 4rem 0;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin: 2rem 0;
+            padding: 2rem;
+            background: var(--surface-color);
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+
+
+        .feature-icon {
+            font-size: 2.5rem;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gradient-1);
+            border-radius: 50%;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .feature-content h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .feature-content p {
+            color: var(--text-secondary);
+        }
+
+        /* 代码展示 */
+        .code-showcase {
+            background: #1e1e2e;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .code-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .code-dot.red { background: #ff5f56; }
+        .code-dot.yellow { background: #ffbd2e; }
+        .code-dot.green { background: #27ca3f; }
+
+        .code-title {
+            margin-left: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .code-content {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #e6edf3;
+        }
+
+        .code-content .keyword { color: #ff7b72; }
+        .code-content .string { color: #a5d6ff; }
+        .code-content .comment { color: #8b949e; font-style: italic; }
+
+        /* 案例展示 */
+        .case-studies {
+            margin: 4rem 0;
+        }
+
+        .case-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .case-card {
+            background: var(--surface-color);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+
+
+        .case-number {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+        }
+
+        .case-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .case-description {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .case-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tag {
+            padding: 0.3rem 0.8rem;
+            background: rgba(102, 126, 234, 0.2);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--secondary-color);
+        }
+
+        /* 工具栏 */
+        .tools-section {
+            background: var(--surface-color);
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            margin: 4rem 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .tool-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+
+
+        .tool-icon {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .tool-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* 页脚 */
+        .footer {
+            background: var(--surface-color);
+            padding: 3rem 2rem 2rem;
+            margin-top: 4rem;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-1);
+            border-radius: 50%;
+            color: white;
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+
+
+        .copyright {
+            color: var(--text-secondary);
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .feature-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .main-content {
+                padding: 1rem;
+            }
+        }
+
+        /* 滚动条样式 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gradient-1);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gradient-2);
+        }
+
+        /* 动画类 */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .slide-in-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.6s ease;
+        }
+
+        .slide-in-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .slide-in-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.6s ease;
+        }
+
+        .slide-in-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo">
+                <i class="fas fa-robot"></i> Claude Sub-Agents
+            </div>
+            <ul class="nav-links">
+                <li><a href="#overview">概览</a></li>
+                <li><a href="#configuration">配置详解</a></li>
+                <li><a href="#problems">核心问题</a></li>
+                <li><a href="#features">功能特性</a></li>
+                <li><a href="#cases">应用案例</a></li>
+                <li><a href="#limitations">挑战限制</a></li>
+                <li><a href="#tools">开源工具</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 主内容 -->
+    <main class="main-content">
+        <div class="container">
+            <!-- 英雄区域 -->
+            <section class="hero-section">
+                <div class="hero-content">
+                    <h1 class="hero-title">Claude Sub-Agents</h1>
+                    <p class="hero-subtitle">从单一助手到专家团队的AI革命 🚀</p>
+                    <a href="#overview" class="cta-button">
+                        <i class="fas fa-play"></i>
+                        开始探索
+                    </a>
+                </div>
+            </section>
+
+            <!-- 概览区域 -->
+            <section id="overview" class="fade-in">
+                <h2 class="section-title">什么是 Sub-Agents？</h2>
+                <div class="cards-grid">
+                    <div class="card slide-in-left">
+                        <div class="card-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3 class="card-title">专业化分工</h3>
+                        <p class="card-description">
+                            就像一个高效的开发团队，每个Sub-Agent都有自己的专业领域。有的专攻前端，有的精通后端，还有的专门负责代码审查。再也不用一个人包打天下了！
+                        </p>
+                    </div>
+                    
+                    <div class="card fade-in">
+                        <div class="card-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3 class="card-title">上下文隔离</h3>
+                        <p class="card-description">
+                            每个Agent都有自己的"工作空间"，不会被其他任务的细节干扰。主对话保持整洁，专注于高层决策，就像CEO只需要看报告摘要一样。
+                        </p>
+                    </div>
+                    
+                    <div class="card slide-in-right">
+                        <div class="card-icon">
+                            <i class="fas fa-recycle"></i>
+                        </div>
+                        <h3 class="card-title">可复用资产</h3>
+                        <p class="card-description">
+                            一次创建，处处使用。优秀的Sub-Agent可以在团队间共享，甚至开源给社区。将最佳实践固化为可执行的智能工具！
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 文件位置和格式配置 -->
+            <section id="configuration" class="fade-in" style="margin: 4rem 0;">
+                <h2 class="section-title">Sub-Agent配置详解</h2>
+                <p style="text-align: center; color: var(--text-secondary); margin-bottom: 3rem; font-size: 1.1rem;">
+                    掌握配置文件的存储位置和格式规范，是使用Sub-Agents的基础 📁
+                </p>
+                
+                <!-- 文件位置部分 -->
+                <div style="margin-bottom: 3rem;">
+                    <h3 style="color: var(--text-primary); margin-bottom: 2rem; font-size: 1.8rem;">
+                        <i class="fas fa-folder-open" style="color: var(--primary-color);"></i> 文件存储位置
+                    </h3>
+                    
+                    <div style="background: var(--surface-color); padding: 2rem; border-radius: 15px; border: 1px solid var(--border-color); margin-bottom: 2rem;">
+                        <p style="color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.6;">
+                            Sub-agents以Markdown文件形式存储，支持两种存储位置，遵循明确的优先级规则：
+                        </p>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                            <!-- 项目级代理 -->
+                            <div class="card" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(102, 126, 234, 0.05) 100%); border-left: 4px solid var(--primary-color);">
+                                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                                    <div style="font-size: 2rem; color: var(--primary-color);">
+                                        <i class="fas fa-project-diagram"></i>
+                                    </div>
+                                    <h4 style="color: var(--primary-color); margin: 0;">项目级代理</h4>
+                                </div>
+                                <div style="background: rgba(26, 31, 58, 0.5); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; font-family: 'JetBrains Mono', monospace;">
+                                    <code style="color: var(--success-color);">.claude/agents/</code>
+                                </div>
+                                <ul style="color: var(--text-secondary); margin: 0; padding-left: 1.5rem;">
+                                    <li><strong style="color: var(--text-primary);">作用域：</strong>仅在当前项目中可用</li>
+                                    <li><strong style="color: var(--text-primary);">优先级：</strong>最高</li>
+                                    <li><strong style="color: var(--text-primary);">版本控制：</strong>可随项目代码一起管理</li>
+                                    <li><strong style="color: var(--text-primary);">适用场景：</strong>项目特定的专业代理</li>
+                                </ul>
+                            </div>
+                            
+                            <!-- 用户级代理 -->
+                            <div class="card" style="background: linear-gradient(135deg, rgba(0, 210, 255, 0.1) 0%, rgba(0, 210, 255, 0.05) 100%); border-left: 4px solid var(--success-color);">
+                                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                                    <div style="font-size: 2rem; color: var(--success-color);">
+                                        <i class="fas fa-user-cog"></i>
+                                    </div>
+                                    <h4 style="color: var(--success-color); margin: 0;">用户级代理</h4>
+                                </div>
+                                <div style="background: rgba(26, 31, 58, 0.5); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; font-family: 'JetBrains Mono', monospace;">
+                                    <code style="color: var(--success-color);">~/.claude/agents/</code>
+                                </div>
+                                <ul style="color: var(--text-secondary); margin: 0; padding-left: 1.5rem;">
+                                    <li><strong style="color: var(--text-primary);">作用域：</strong>所有项目中都可用</li>
+                                    <li><strong style="color: var(--text-primary);">优先级：</strong>低于项目级代理</li>
+                                    <li><strong style="color: var(--text-primary);">版本控制：</strong>个人全局配置</li>
+                                    <li><strong style="color: var(--text-primary);">适用场景：</strong>通用的常用代理</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div style="background: rgba(255, 193, 7, 0.1); border: 1px solid rgba(255, 193, 7, 0.3); border-radius: 8px; padding: 1rem; margin-top: 1.5rem;">
+                            <p style="color: #ffc107; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-info-circle"></i>
+                                <strong>优先级规则：</strong>当同名代理在两个位置都存在时，项目级代理(.claude/agents/)会覆盖用户级代理(~/.claude/agents/)
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 文件格式部分 -->
+                <div>
+                    <h3 style="color: var(--text-primary); margin-bottom: 2rem; font-size: 1.8rem;">
+                        <i class="fas fa-file-code" style="color: var(--secondary-color);"></i> 文件格式规范
+                    </h3>
+                    
+                    <div style="background: var(--surface-color); padding: 2rem; border-radius: 15px; border: 1px solid var(--border-color);">
+                        <p style="color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.6;">
+                            每个Sub-agent都定义在一个Markdown文件中，采用标准的YAML frontmatter + 内容主体的结构：
+                        </p>
+                        
+                        <!-- 代码示例 -->
+                        <div class="code-showcase" style="margin-bottom: 2rem;">
+                            <div class="code-header">
+                                <div class="code-dot red"></div>
+                                <div class="code-dot yellow"></div>
+                                <div class="code-dot green"></div>
+                                <span class="code-title">your-sub-agent-name.md</span>
+                            </div>
+                            <div class="code-content">
+                                <span class="comment">---</span><br>
+                                <span class="keyword">name:</span> <span class="string">your-sub-agent-name</span><br>
+                                <span class="keyword">description:</span> <span class="string">Description of when this subagent should be invoked</span><br>
+                                <span class="keyword">tools:</span> <span class="string">tool1, tool2, tool3</span> <span class="comment"># Optional - inherits all tools if omitted</span><br>
+                                <span class="comment">---</span>
+                                <br><br>
+                                Your subagent's system prompt goes here. This can be multiple paragraphs<br>
+                                and should clearly define the subagent's role, capabilities, and approach<br>
+                                to solving problems.<br>
+                                <br>
+                                Include specific instructions, best practices, and any constraints<br>
+                                the subagent should follow.
+                            </div>
+                        </div>
+                        
+                        <!-- 配置字段说明 -->
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse; background: rgba(26, 31, 58, 0.5); border-radius: 8px; overflow: hidden;">
+                                <thead>
+                                    <tr style="background: var(--gradient-1);">
+                                        <th style="padding: 1rem; text-align: left; color: white; font-weight: 600;">字段</th>
+                                        <th style="padding: 1rem; text-align: left; color: white; font-weight: 600;">必需</th>
+                                        <th style="padding: 1rem; text-align: left; color: white; font-weight: 600;">说明</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="border-bottom: 1px solid var(--border-color);">
+                                        <td style="padding: 1rem; color: var(--success-color); font-family: 'JetBrains Mono', monospace;">name</td>
+                                        <td style="padding: 1rem; color: var(--text-primary);">是</td>
+                                        <td style="padding: 1rem; color: var(--text-secondary);">唯一标识符，使用小写字母和连字符</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--border-color);">
+                                        <td style="padding: 1rem; color: var(--success-color); font-family: 'JetBrains Mono', monospace;">description</td>
+                                        <td style="padding: 1rem; color: var(--text-primary);">是</td>
+                                        <td style="padding: 1rem; color: var(--text-secondary);">自然语言描述，AI根据此字段进行自动委派</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--border-color);">
+                                        <td style="padding: 1rem; color: var(--success-color); font-family: 'JetBrains Mono', monospace;">tools</td>
+                                        <td style="padding: 1rem; color: var(--text-secondary);">否</td>
+                                        <td style="padding: 1rem; color: var(--text-secondary);">逗号分隔的工具列表，省略则继承所有工具</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--border-color);">
+                                        <td style="padding: 1rem; color: var(--success-color); font-family: 'JetBrains Mono', monospace;">model</td>
+                                        <td style="padding: 1rem; color: var(--text-secondary);">否</td>
+                                        <td style="padding: 1rem; color: var(--text-secondary);">指定模型(haiku/sonnet/opus)，用于性能优化</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 1rem; color: var(--success-color); font-family: 'JetBrains Mono', monospace;">color</td>
+                                        <td style="padding: 1rem; color: var(--text-secondary);">否</td>
+                                        <td style="padding: 1rem; color: var(--text-secondary);">终端显示颜色，便于区分不同代理输出</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div style="background: rgba(0, 210, 255, 0.1); border: 1px solid rgba(0, 210, 255, 0.3); border-radius: 8px; padding: 1rem; margin-top: 1.5rem;">
+                            <p style="color: var(--success-color); margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-lightbulb"></i>
+                                <strong>最佳实践：</strong>description字段是自动委派的关键，建议使用"MUST BE USED"或"PROACTIVELY"等强提示词来提高触发准确性
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 核心问题解决 -->
+            <section id="problems" class="fade-in" style="margin: 4rem 0;">
+                <h2 class="section-title">Sub-Agents解决了什么核心问题？</h2>
+                <p style="text-align: center; color: var(--text-secondary); margin-bottom: 3rem; font-size: 1.1rem;">
+                    从单一AI助手到专家团队，Sub-Agents革命性地解决了AI编程中的五大痛点 🎯
+                </p>
+                
+                <div style="display: grid; grid-template-columns: 1fr; gap: 2rem; max-width: 1000px; margin: 0 auto;">
+                    <!-- 问题1：上下文污染 -->
+                    <div class="feature-item slide-in-left" style="background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(255, 107, 107, 0.05) 100%); border-left: 4px solid #ff6b6b;">
+                        <div class="feature-icon" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h3 style="color: #ff6b6b;">🧠 上下文污染与认知过载</h3>
+                            <p><strong>问题：</strong>传统AI助手在长时间对话中，上下文窗口会被大量无关信息填满，导致"认知颠簸"和"指令漂移"，AI开始忘记核心任务或产生混乱的输出。</p>
+                            <p><strong>解决：</strong>每个Sub-Agent拥有独立的"干净"上下文窗口，专注于单一任务，避免信息污染，确保输出质量和准确性。</p>
+                        </div>
+                    </div>
+
+                    <!-- 问题2：专业化深度不足 -->
+                    <div class="feature-item slide-in-right" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(102, 126, 234, 0.05) 100%); border-left: 4px solid var(--secondary-color);">
+                        <div class="feature-icon" style="background: var(--gradient-1);">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h3 style="color: var(--secondary-color);">🎓 缺乏专业化深度</h3>
+                            <p><strong>问题：</strong>通用AI助手试图"包打天下"，但在特定领域（如安全审查、性能优化、数据库设计）难以达到专家级水平，输出质量参差不齐。</p>
+                            <p><strong>解决：</strong>为每个专业领域创建高度专注的AI专家，通过精心设计的系统提示和工具配置，实现真正的"术业有专攻"。</p>
+                        </div>
+                    </div>
+
+                    <!-- 问题3：安全权限失控 -->
+                    <div class="feature-item slide-in-left" style="background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 193, 7, 0.05) 100%); border-left: 4px solid #ffc107;">
+                        <div class="feature-icon" style="background: linear-gradient(135deg, #ffc107 0%, #ff8f00 100%);">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h3 style="color: #ffc107;">🛡️ 安全性与权限控制缺失</h3>
+                            <p><strong>问题：</strong>单一AI助手拥有所有工具权限，存在安全风险。一个代码审查任务不应该有删除文件或执行危险命令的能力。</p>
+                            <p><strong>解决：</strong>Sub-Agents实现精细化权限控制，每个Agent只能访问完成其任务所必需的最小工具集，遵循"最小权限原则"。</p>
+                        </div>
+                    </div>
+
+                    <!-- 问题4：可扩展性瓶颈 -->
+                    <div class="feature-item slide-in-right" style="background: linear-gradient(135deg, rgba(118, 75, 162, 0.1) 0%, rgba(118, 75, 162, 0.05) 100%); border-left: 4px solid var(--accent-color);">
+                        <div class="feature-icon" style="background: var(--gradient-3);">
+                            <i class="fas fa-expand-arrows-alt"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h3 style="color: var(--accent-color);">📈 可扩展性瓶颈</h3>
+                            <p><strong>问题：</strong>单一上下文窗口有物理限制，复杂任务会快速消耗token，导致对话"失忆"或需要频繁重启会话，严重影响工作连续性。</p>
+                            <p><strong>解决：</strong>通过上下文隔离，实现"感知上的无限上下文"。主对话保持轻量，复杂任务在独立空间处理，理论上支持无限长的开发会话。</p>
+                        </div>
+                    </div>
+
+                    <!-- 问题5：标准化与复用难题 -->
+                    <div class="feature-item slide-in-left" style="background: linear-gradient(135deg, rgba(0, 210, 255, 0.1) 0%, rgba(0, 210, 255, 0.05) 100%); border-left: 4px solid var(--success-color);">
+                        <div class="feature-icon" style="background: var(--gradient-2);">
+                            <i class="fas fa-sync-alt"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h3 style="color: var(--success-color);">🔄 团队标准化与知识复用困难</h3>
+                            <p><strong>问题：</strong>个人的提示工程技巧难以标准化和共享，团队成员的AI使用水平参差不齐，无法保证一致的代码质量和开发流程。</p>
+                            <p><strong>解决：</strong>Sub-Agents配置文件可版本控制、团队共享，将最佳实践固化为可执行的数字资产，实现"AI专家团队"的标准化部署。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 总结卡片 -->
+                <div style="background: var(--surface-color); padding: 2.5rem; border-radius: 15px; margin-top: 3rem; border: 1px solid var(--border-color); text-align: center;">
+                    <h3 style="color: var(--text-primary); margin-bottom: 1.5rem; font-size: 1.5rem;">
+                        <i class="fas fa-lightbulb" style="color: #ffc107; margin-right: 0.5rem;"></i>
+                        核心洞察
+                    </h3>
+                    <p style="color: var(--text-secondary); font-size: 1.1rem; line-height: 1.7; max-width: 800px; margin: 0 auto;">
+                        Sub-Agents不只是功能升级，而是<strong style="color: var(--primary-color);">编程思维的范式转变</strong>。
+                        它将"单打独斗"的AI助手转变为"专业协作"的AI团队，
+                        从根本上解决了复杂软件开发中的<strong style="color: var(--secondary-color);">上下文管理</strong>、
+                        <strong style="color: var(--accent-color);">专业化深度</strong>和<strong style="color: var(--success-color);">团队协作</strong>三大核心挑战。
+                    </p>
+                </div>
+            </section>
+
+            <!-- 三种模式展示 -->
+            <section class="case-studies fade-in">
+                <h2 class="section-title">三大应用模式</h2>
+                <div class="case-grid">
+                    <div class="case-card slide-in-left">
+                        <div class="case-number">1</div>
+                        <h3 class="case-title">按需专家模式</h3>
+                        <p class="case-description">
+                            就像有一个专家库，需要什么专家就叫什么专家。API设计师、前端工程师、测试专家...想要谁就有谁！
+                        </p>
+                        <div class="case-tags">
+                            <span class="tag">灵活性</span>
+                            <span class="tag">即插即用</span>
+                            <span class="tag">VoltAgent</span>
+                        </div>
+                    </div>
+                    
+                    <div class="case-card fade-in">
+                        <div class="case-number">2</div>
+                        <h3 class="case-title">自动化流水线</h3>
+                        <p class="case-description">
+                            预定义的开发流程，从需求分析到代码部署，一条龙服务。就像工厂流水线，每个环节都有专门的"工人"。
+                        </p>
+                        <div class="case-tags">
+                            <span class="tag">自动化</span>
+                            <span class="tag">一致性</span>
+                            <span class="tag">质量门禁</span>
+                        </div>
+                    </div>
+                    
+                    <div class="case-card slide-in-right">
+                        <div class="case-number">3</div>
+                        <h3 class="case-title">分层研究团队</h3>
+                        <p class="case-description">
+                            构建层级化的AI团队，有项目经理、有专家、有执行者。就像真实的公司组织架构，但全是AI！
+                        </p>
+                        <div class="case-tags">
+                            <span class="tag">层级管理</span>
+                            <span class="tag">复杂任务</span>
+                            <span class="tag">协同工作</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 完整演示案例 -->
+            <section class="fade-in">
+                <h2 class="section-title">完整演示案例：Web投票应用开发</h2>
+                <p style="text-align: center; color: var(--text-secondary); margin-bottom: 3rem;">
+                    从API设计到前端实现，体验Sub-Agents团队协作的完整流程 🚀
+                </p>
+
+                <!-- Agent配置展示 -->
+                <div style="margin-bottom: 3rem;">
+                    <h3 style="color: var(--text-primary); margin-bottom: 2rem; font-size: 1.5rem;">
+                        <i class="fas fa-cog"></i> 团队成员配置
+                    </h3>
+                    
+                    <!-- API设计师配置 -->
+                    <div class="code-showcase">
+                        <div class="code-header">
+                            <div class="code-dot red"></div>
+                            <div class="code-dot yellow"></div>
+                            <div class="code-dot green"></div>
+                            <span class="code-title">.claude/agents/api-designer.md</span>
+                        </div>
+                        <div class="code-content">
+                            <span class="comment">---</span><br>
+                            <span class="keyword">name:</span> <span class="string">api-designer</span><br>
+                            <span class="keyword">description:</span> <span class="string">MUST BE USED for designing REST API endpoints, data structures, and API specifications. Expert in API architecture and best practices.</span><br>
+                            <span class="keyword">tools:</span> <span class="string">Read, Write, Edit</span><br>
+                            <span class="comment">---</span>
+                            <br>
+                            你是一名资深的API架构师，专精于设计清晰、规范且高效的RESTful API。<br>
+                            <br>
+                            <span class="keyword">核心职责：</span><br>
+                            1. 分析业务需求，设计合适的API端点结构<br>
+                            2. 定义清晰的请求/响应数据格式<br>
+                            3. 确保API遵循REST设计原则和HTTP状态码规范<br>
+                            4. 提供完整的API文档，包括示例请求和响应<br>
+                            <br>
+                            <span class="keyword">设计原则：</span><br>
+                            - 使用标准的HTTP方法（GET、POST、PUT、DELETE）<br>
+                            - 采用资源导向的URL设计<br>
+                            - 返回标准的HTTP状态码<br>
+                            - 提供清晰的错误信息格式<br>
+                            <br>
+                            <span class="keyword">输出格式：</span><br>
+                            以Markdown格式提供API规格说明，包含：<br>
+                            - 端点列表和描述<br>
+                            - 请求/响应格式<br>
+                            - 错误处理<br>
+                            - 使用示例<br>
+                            <br>
+                            请基于用户需求设计API规格，确保易于理解和实现。
+                        </div>
+                    </div>
+
+                    <!-- 后端开发配置 -->
+                    <div class="code-showcase" style="margin-top: 2rem;">
+                        <div class="code-header">
+                            <div class="code-dot red"></div>
+                            <div class="code-dot yellow"></div>
+                            <div class="code-dot green"></div>
+                            <span class="code-title">.claude/agents/backend-developer.md</span>
+                        </div>
+                        <div class="code-content">
+                            <span class="comment">---</span><br>
+                            <span class="keyword">name:</span> <span class="string">backend-developer</span><br>
+                            <span class="keyword">description:</span> <span class="string">Expert Flask/Python backend developer specialized in implementing REST APIs, database operations, and server-side logic.</span><br>
+                            <span class="keyword">tools:</span> <span class="string">Read, Write, Edit, Bash</span><br>
+                            <span class="comment">---</span>
+                            <br>
+                            你是一名精通Python和Flask框架的后端开发工程师，专注于构建高质量、可维护的服务端应用。<br>
+                            <br>
+                            <span class="keyword">技术专长：</span><br>
+                            - Python 3.8+ 和 Flask 框架<br>
+                            - RESTful API 实现<br>
+                            - 数据库设计和ORM操作<br>
+                            - 错误处理和日志记录<br>
+                            - 跨域请求处理(CORS)<br>
+                            <br>
+                            <span class="keyword">开发标准：</span><br>
+                            1. <span class="keyword">代码质量</span>：遵循PEP 8编码规范，使用类型注解<br>
+                            2. <span class="keyword">错误处理</span>：实现完善的异常捕获和用户友好的错误信息<br>
+                            3. <span class="keyword">安全性</span>：防止SQL注入、XSS等常见安全问题<br>
+                            4. <span class="keyword">性能</span>：考虑数据库查询优化和缓存策略<br>
+                            5. <span class="keyword">可维护性</span>：模块化设计，清晰的代码结构<br>
+                            <br>
+                            请根据提供的API规格，实现完整且可运行的Flask应用。
+                        </div>
+                    </div>
+
+                    <!-- 前端开发配置 -->
+                    <div class="code-showcase" style="margin-top: 2rem;">
+                        <div class="code-header">
+                            <div class="code-dot red"></div>
+                            <div class="code-dot yellow"></div>
+                            <div class="code-dot green"></div>
+                            <span class="code-title">.claude/agents/frontend-developer.md</span>
+                        </div>
+                        <div class="code-content">
+                            <span class="comment">---</span><br>
+                            <span class="keyword">name:</span> <span class="string">frontend-developer</span><br>
+                            <span class="keyword">description:</span> <span class="string">Expert frontend developer specializing in modern JavaScript, HTML5, CSS3, and responsive web design with focus on user experience.</span><br>
+                            <span class="keyword">tools:</span> <span class="string">Read, Write, Edit</span><br>
+                            <span class="comment">---</span>
+                            <br>
+                            你是一名专业的前端开发工程师，精通现代Web技术，专注于创建优秀的用户界面和体验。<br>
+                            <br>
+                            <span class="keyword">技术栈：</span><br>
+                            - HTML5、CSS3、现代JavaScript (ES6+)<br>
+                            - 响应式设计和移动端优化<br>
+                            - 异步编程和Fetch API<br>
+                            - CSS Grid/Flexbox布局<br>
+                            - 浏览器兼容性处理<br>
+                            <br>
+                            <span class="keyword">设计原则：</span><br>
+                            1. <span class="keyword">用户体验优先</span>：直观易用的界面设计<br>
+                            2. <span class="keyword">响应式设计</span>：适配各种屏幕尺寸<br>
+                            3. <span class="keyword">性能优化</span>：最小化资源加载，优化渲染性能<br>
+                            4. <span class="keyword">可访问性</span>：遵循Web可访问性标准<br>
+                            5. <span class="keyword">代码质量</span>：模块化、可维护的前端代码<br>
+                            <br>
+                            请创建完整的前端代码，确保与后端API无缝集成。
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 使用示例展示 -->
+                <div style="margin-bottom: 3rem;">
+                    <h3 style="color: var(--text-primary); margin-bottom: 2rem; font-size: 1.5rem;">
+                        <i class="fas fa-play-circle"></i> 完整项目开发提示词
+                    </h3>
+                    
+                    <div class="code-showcase" style="background: linear-gradient(135deg, #1a1f3a 0%, #2a2f4a 100%); border: 2px solid var(--primary-color);">
+                        <div class="code-header">
+                            <div class="code-dot red"></div>
+                            <div class="code-dot yellow"></div>
+                            <div class="code-dot green"></div>
+                            <span class="code-title">复制此提示词，一键启动Sub-Agents团队开发</span>
+                        </div>
+                        <div class="code-content" style="line-height: 1.8; font-size: 1rem;">
+<span class="comment"># 📋 项目需求</span><br>
+开发一个简单的web投票系统<br>
+<br>
+<span class="comment"># 🎯 功能要求</span><br>
+这个应用需要实现以下功能：<br>
+1. 显示投票问题和选项<br>
+2. 接受用户的投票<br>
+3. 展示每个选项的当前票数<br>
+<br>
+<span class="comment"># 🛠️ 技术栈</span><br>
+<span class="keyword">后端：</span><span class="string">Python + Flask应用</span><br>
+<span class="keyword">前端：</span><span class="string">HTML + CSS + JavaScript</span><br>
+<span class="keyword">存储：</span><span class="string">不需要数据库，内存存储</span><br>
+<br>
+<span class="comment"># 🚀 开发流程</span><br>
+<span class="keyword">1. 请 api-designer 智能体</span>为我设计一个简单的Web投票应用的REST API端点。<br>
+&nbsp;&nbsp;&nbsp;<span class="string">要求：请以清晰的Markdown格式提供API规格说明,API规格说明文档要求详细，包括地址和出入参的详细规定，保证前后端agent能够根据文档开发出前后端代码。</span><br>
+<br>
+<span class="keyword">2. 使用上一步生成的API规格说明,请 backend-developer 智能体</span>为我编写一个完整的Flask应用，文件名为 app.py。<br>
+<br>
+<span class="keyword">3. 使用第一步生成的API规格说明,请 frontend-developer 智能体</span>创建与Flask后端交互的前端文件。<br>
+&nbsp;&nbsp;&nbsp;<span class="string">要求：创建 templates/index.html, static/style.css, 和 static/script.js。</span><br>
+<br>
+<span class="keyword">4. 使用第一步生成的API规格说明，请主智能体</span>完成前后端测试和修复工作，保证前后端能够正常的调用工作。
+                        </div>
+                    </div>
+                    
+                    <!-- 复制按钮 -->
+                    <div style="text-align: center; margin-top: 1.5rem;">
+                        <button onclick="copyPrompt()" style="
+                            background: var(--gradient-1);
+                            color: white;
+                            border: none;
+                            padding: 1rem 2rem;
+                            border-radius: 25px;
+                            font-size: 1rem;
+                            font-weight: 600;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+                        " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                            <i class="fas fa-copy"></i> 复制完整提示词
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 执行流程 -->
+                <div style="background: var(--surface-color); padding: 2rem; border-radius: 15px; border: 1px solid var(--border-color);">
+                    <h3 style="color: var(--text-primary); margin-bottom: 1.5rem; font-size: 1.3rem;">
+                        <i class="fas fa-route"></i> 完整执行流程
+                    </h3>
+                    <div class="feature-item" style="margin: 1rem 0; padding: 1rem;">
+                        <div class="feature-icon" style="width: 50px; height: 50px; font-size: 1.5rem;">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h4>输入提示词 → Agent自动识别 → 专家响应 → 高质量输出</h4>
+                            <p style="color: var(--text-secondary); margin-top: 0.5rem;">
+                                只需要按顺序输入这三个提示词，就能从零开始构建一个完整的Web投票应用！每个Agent都会专注于自己的领域，确保输出的专业性和质量。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 开源工具推荐 -->
+            <section id="tools" class="tools-section fade-in">
+                <h2 class="section-title">社区开源项目详解</h2>
+                <p style="text-align: center; color: var(--text-secondary); margin-bottom: 3rem;">
+                    强大的社区力量，让Sub-Agents生态更加丰富！点击链接直达GitHub仓库 🔗
+                </p>
+                
+                <!-- 项目详细介绍 -->
+                <div style="display: grid; grid-template-columns: 1fr; gap: 2rem; margin-bottom: 3rem;">
+                    
+                    <!-- VoltAgent项目 -->
+                    <div class="card" style="padding: 2.5rem;">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                            <div style="font-size: 3rem; background: var(--gradient-1); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+                                <i class="fas fa-crown"></i>
+                            </div>
+                            <div>
+                                <h3 style="margin: 0; color: var(--text-primary); font-size: 1.5rem;">VoltAgent/awesome-claude-code-subagents</h3>
+                                <div style="display: flex; align-items: center; gap: 1rem; margin-top: 0.5rem;">
+                                    <span style="background: var(--gradient-1); color: white; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.8rem;">⭐ 1600+ Stars</span>
+                                    <a href="https://github.com/VoltAgent/awesome-claude-code-subagents" target="_blank" style="color: var(--primary-color); text-decoration: none;">
+                                        <i class="fab fa-github"></i> 访问仓库
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <p style="color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.6;">
+                            <strong>🏆 市场领导者</strong> - 最大的生产就绪Sub-Agents集合，包含110+个专业代理。覆盖全栈开发、DevOps、数据科学、商业运营等多个领域。所有代理都经过生产环境验证，支持MCP工具集成。
+                        </p>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                            <div style="background: rgba(102, 126, 234, 0.1); padding: 1rem; border-radius: 8px;">
+                                <strong style="color: var(--primary-color);">🎯 核心特色</strong><br>
+                                <span style="color: var(--text-secondary); font-size: 0.9rem;">分类清晰、即插即用、社区维护</span>
+                            </div>
+                            <div style="background: rgba(102, 126, 234, 0.1); padding: 1rem; border-radius: 8px;">
+                                <strong style="color: var(--primary-color);">🛠️ 涵盖领域</strong><br>
+                                <span style="color: var(--text-secondary); font-size: 0.9rem;">前端、后端、AI、安全、基础设施</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- lst97项目 -->
+                    <div class="card" style="padding: 2.5rem;">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                            <div style="font-size: 3rem; background: var(--gradient-2); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+                                <i class="fas fa-sitemap"></i>
+                            </div>
+                            <div>
+                                <h3 style="margin: 0; color: var(--text-primary); font-size: 1.5rem;">lst97/claude-code-sub-agents</h3>
+                                <div style="display: flex; align-items: center; gap: 1rem; margin-top: 0.5rem;">
+                                    <span style="background: var(--gradient-2); color: white; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.8rem;">⭐ 800+ Stars</span>
+                                    <a href="https://github.com/lst97/claude-code-sub-agents" target="_blank" style="color: var(--primary-color); text-decoration: none;">
+                                        <i class="fab fa-github"></i> 访问仓库
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <p style="color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.6;">
+                            <strong>🔄 SDLC虚拟团队</strong> - 专注于软件开发生命周期的完整工作流。提供详细的编排模式和最佳实践，包括顺序工作流、并行工作流和验证工作流。适合需要标准化开发流程的团队。
+                        </p>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                            <div style="background: rgba(0, 210, 255, 0.1); padding: 1rem; border-radius: 8px;">
+                                <strong style="color: var(--success-color);">📋 工作流导向</strong><br>
+                                <span style="color: var(--text-secondary); font-size: 0.9rem;">规划→开发→测试→部署</span>
+                            </div>
+                            <div style="background: rgba(0, 210, 255, 0.1); padding: 1rem; border-radius: 8px;">
+                                <strong style="color: var(--success-color);">🎯 编排模式</strong><br>
+                                <span style="color: var(--text-secondary); font-size: 0.9rem;">顺序、并行、验证流程</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- webdevtodayjason项目 -->
+                    <div class="card" style="padding: 2.5rem;">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                            <div style="font-size: 3rem; background: var(--gradient-3); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+                                <i class="fas fa-terminal"></i>
+                            </div>
+                            <div>
+                                <h3 style="margin: 0; color: var(--text-primary); font-size: 1.5rem;">webdevtodayjason/sub-agents</h3>
+                                <div style="display: flex; align-items: center; gap: 1rem; margin-top: 0.5rem;">
+                                    <span style="background: var(--gradient-3); color: white; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.8rem;">⭐ 100+ Stars</span>
+                                    <a href="https://github.com/webdevtodayjason/sub-agents" target="_blank" style="color: var(--primary-color); text-decoration: none;">
+                                        <i class="fab fa-github"></i> 访问仓库
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <p style="color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.6;">
+                            <strong>⚡ CLI管理利器</strong> - 强大的命令行工具，提供类似npm的Agent管理体验。支持init、install、run、create等命令，还有Web仪表盘监控功能。让Agent管理变得像包管理一样简单！
+                        </p>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                            <div style="background: rgba(118, 75, 162, 0.1); padding: 1rem; border-radius: 8px;">
+                                <strong style="color: var(--accent-color);">🚀 CLI工具</strong><br>
+                                <span style="color: var(--text-secondary); font-size: 0.9rem;">命令行管理、自动化部署</span>
+                            </div>
+                            <div style="background: rgba(118, 75, 162, 0.1); padding: 1rem; border-radius: 8px;">
+                                <strong style="color: var(--accent-color);">📊 监控面板</strong><br>
+                                <span style="color: var(--text-secondary); font-size: 0.9rem;">实时状态、性能指标</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 其他优秀项目 -->
+                    <div class="card" style="padding: 2.5rem;">
+                        <h3 style="color: var(--text-primary); margin-bottom: 1.5rem; font-size: 1.3rem;">
+                            <i class="fas fa-star"></i> 其他优秀项目
+                        </h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                            <div style="border-left: 3px solid var(--primary-color); padding-left: 1rem;">
+                                <h4 style="color: var(--text-primary); margin: 0 0 0.5rem 0;">0xfurai/claude-code-subagents</h4>
+                                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">精细化专家集合，提供针对特定技术栈的深度优化Agent，支持成本优化配置</p>
+                                <a href="https://github.com/0xfurai/claude-code-subagents" target="_blank" style="color: var(--primary-color); text-decoration: none; font-size: 0.9rem;">
+                                    <i class="fab fa-github"></i> 访问仓库 ⭐ 160+ Stars
+                                </a>
+                            </div>
+                            
+                            <div style="border-left: 3px solid var(--secondary-color); padding-left: 1rem;">
+                                <h4 style="color: var(--text-primary); margin: 0 0 0.5rem 0;">charles-adedotun/claude-code-sub-agents</h4>
+                                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">自动化质量门禁系统，内置安全扫描和合规审查功能</p>
+                                <a href="https://github.com/charles-adedotun/claude-code-sub-agents" target="_blank" style="color: var(--secondary-color); text-decoration: none; font-size: 0.9rem;">
+                                    <i class="fab fa-github"></i> 访问仓库 ⭐ 新兴项目
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 快速开始指南 -->
+                <div style="background: var(--surface-color); padding: 2rem; border-radius: 15px; border: 1px solid var(--border-color);">
+                    <h3 style="color: var(--text-primary); margin-bottom: 1.5rem; font-size: 1.3rem;">
+                        <i class="fas fa-rocket"></i> 如何使用这些项目？
+                    </h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; color: var(--primary-color); margin-bottom: 1rem;">
+                                <i class="fas fa-download"></i>
+                            </div>
+                            <h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">1. 克隆仓库</h4>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem;">git clone 仓库到本地目录</p>
+                        </div>
+                        
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; color: var(--secondary-color); margin-bottom: 1rem;">
+                                <i class="fas fa-copy"></i>
+                            </div>
+                            <h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">2. 复制配置</h4>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem;">将.md文件复制到.claude/agents/</p>
+                        </div>
+                        
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; color: var(--accent-color); margin-bottom: 1rem;">
+                                <i class="fas fa-play"></i>
+                            </div>
+                            <h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">3. 开始使用</h4>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem;">在Claude Code中调用Agent</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 挑战与限制 -->
+            <section id="limitations" class="fade-in" style="margin: 4rem 0;">
+                <h2 class="section-title">需要注意的挑战与限制 ⚠️</h2>
+                <p style="text-align: center; color: var(--text-secondary); margin-bottom: 3rem; font-size: 1.1rem;">
+                    技术无完美，了解局限性才能更好地驾驭Sub-Agents 🎯
+                </p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem;">
+                    <!-- 限制1：白板问题 -->
+                    <div class="card" style="background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(255, 107, 107, 0.05) 100%); border-left: 4px solid #ff6b6b;">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                            <div style="font-size: 2.5rem; color: #ff6b6b;">
+                                <i class="fas fa-memory"></i>
+                            </div>
+                            <h3 style="color: #ff6b6b; margin: 0;">🧠 "白板问题"</h3>
+                        </div>
+                        <p style="color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.6;">
+                            <strong style="color: var(--text-primary);">核心问题：</strong>每个Sub-Agent启动时都是"失忆"状态，无法访问主对话的历史记录和上下文信息。
+                        </p>
+                        <p style="color: var(--text-secondary); line-height: 1.6;">
+                            <strong style="color: var(--text-primary);">影响：</strong>需要开发者手动传递上下文，或通过文件方式进行信息共享，增加了使用复杂度。
+                        </p>
+                    </div>
+
+                    <!-- 限制2：性能和延迟 -->
+                    <div class="card" style="background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 193, 7, 0.05) 100%); border-left: 4px solid #ffc107;">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                            <div style="font-size: 2.5rem; color: #ffc107;">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <h3 style="color: #ffc107; margin: 0;">⏰ 性能与延迟</h3>
+                        </div>
+                        <p style="color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.6;">
+                            <strong style="color: var(--text-primary);">核心问题：</strong>Sub-Agents启动时需要重新收集上下文，可能增加任务执行的延迟时间。
+                        </p>
+                        <p style="color: var(--text-secondary); line-height: 1.6;">
+                            <strong style="color: var(--text-primary);">影响：</strong>复杂工作流可能消耗大量Token，执行时间较长，需要平衡效率和成本。
+                        </p>
+                    </div>
+
+                    <!-- 限制3：配置复杂性 -->
+                    <div class="card" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(102, 126, 234, 0.05) 100%); border-left: 4px solid var(--secondary-color);">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                            <div style="font-size: 2.5rem; color: var(--secondary-color);">
+                                <i class="fas fa-cogs"></i>
+                            </div>
+                            <h3 style="color: var(--secondary-color); margin: 0;">⚙️ 配置学习曲线</h3>
+                        </div>
+                        <p style="color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.6;">
+                            <strong style="color: var(--text-primary);">核心问题：</strong>设计高质量的Sub-Agent需要深入理解提示工程、权限控制和工作流编排。
+                        </p>
+                        <p style="color: var(--text-secondary); line-height: 1.6;">
+                            <strong style="color: var(--text-primary);">影响：</strong>初学者可能需要大量实践才能创建出真正有效的专业化Agent。
+                        </p>
+                    </div>
+
+                    <!-- 限制4：调试困难 -->
+                    <div class="card" style="background: linear-gradient(135deg, rgba(118, 75, 162, 0.1) 0%, rgba(118, 75, 162, 0.05) 100%); border-left: 4px solid var(--accent-color);">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                            <div style="font-size: 2.5rem; color: var(--accent-color);">
+                                <i class="fas fa-bug"></i>
+                            </div>
+                            <h3 style="color: var(--accent-color); margin: 0;">🐛 调试复杂性</h3>
+                        </div>
+                        <p style="color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.6;">
+                            <strong style="color: var(--text-primary);">核心问题：</strong>多Agent工作流出错时，很难确定是哪个环节出了问题，调试变得复杂。
+                        </p>
+                        <p style="color: var(--text-secondary); line-height: 1.6;">
+                            <strong style="color: var(--text-primary);">影响：</strong>需要更多的日志记录和中间检查点来定位问题所在。
+                        </p>
+                    </div>
+
+                    <!-- 限制5：自动委派不可控 -->
+                    <div class="card" style="background: linear-gradient(135deg, rgba(233, 30, 99, 0.1) 0%, rgba(233, 30, 99, 0.05) 100%); border-left: 4px solid #e91e63;">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                            <div style="font-size: 2.5rem; color: #e91e63;">
+                                <i class="fas fa-random"></i>
+                            </div>
+                            <h3 style="color: #e91e63; margin: 0;">🎲 自动委派的不确定性</h3>
+                        </div>
+                        <p style="color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.6;">
+                            <strong style="color: var(--text-primary);">核心问题：</strong>AI自动选择Agent时可能出现判断错误，选择了不合适的专家。
+                        </p>
+                        <p style="color: var(--text-secondary); line-height: 1.6;">
+                            <strong style="color: var(--text-primary);">影响：</strong>可能需要手动干预或重新设计Agent的description来提高准确性。
+                        </p>
+                    </div>
+
+                    <!-- 限制6：系统提示覆盖bug -->
+                    <div class="card" style="background: linear-gradient(135deg, rgba(156, 39, 176, 0.1) 0%, rgba(156, 39, 176, 0.05) 100%); border-left: 4px solid #9c27b0;">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                            <div style="font-size: 2.5rem; color: #9c27b0;">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <h3 style="color: #9c27b0; margin: 0;">⚠️ 系统已知Bug</h3>
+                        </div>
+                        <p style="color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.6;">
+                            <strong style="color: var(--text-primary);">核心问题：</strong>Claude Code存在"名称覆盖"问题，内置推断系统可能覆盖自定义的系统提示。
+                        </p>
+                        <p style="color: var(--text-secondary); line-height: 1.6;">
+                            <strong style="color: var(--text-primary);">解决方案：</strong>避免使用过于描述性的Agent名称，如用"code-checker-alpha"替代"code-reviewer"。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 最佳实践建议 -->
+                <div style="background: var(--surface-color); padding: 2.5rem; border-radius: 15px; margin-top: 3rem; border: 1px solid var(--border-color);">
+                    <h3 style="color: var(--text-primary); margin-bottom: 1.5rem; font-size: 1.5rem; text-align: center;">
+                        <i class="fas fa-lightbulb" style="color: #ffc107; margin-right: 0.5rem;"></i>
+                        克服限制的最佳策略
+                    </h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; color: var(--primary-color); margin-bottom: 1rem;">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">文件化沟通</h4>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem;">使用PLAN.md等文件在Agent间传递上下文，避免"白板问题"</p>
+                        </div>
+                        
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; color: var(--secondary-color); margin-bottom: 1rem;">
+                                <i class="fas fa-layer-group"></i>
+                            </div>
+                            <h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">逐步构建</h4>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem;">从简单Agent开始，逐步建立复杂工作流，降低学习成本</p>
+                        </div>
+                        
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; color: var(--accent-color); margin-bottom: 1rem;">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">显式控制</h4>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem;">关键任务使用显式Agent调用，避免自动委派的不确定性</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <h3 style="margin-bottom: 1rem; background: var(--gradient-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                开启AI协作新时代
+            </h3>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+                Sub-Agents不只是工具，更是编程思维的革命。<br>
+                从单打独斗到团队协作，让AI成为你最强的开发伙伴！
+            </p>
+            
+            <div class="social-links">
+                <a href="#" class="social-link" title="GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="#" class="social-link" title="Bilibili">
+                    <i class="fas fa-play"></i>
+                </a>
+                <a href="#" class="social-link" title="WeChat">
+                    <i class="fab fa-weixin"></i>
+                </a>
+                <a href="#" class="social-link" title="Email">
+                    <i class="fas fa-envelope"></i>
+                </a>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2024 Claude Sub-Agents 分享. 用 ❤️ 和 🤖 制作</p>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem;">
+                    感谢Anthropic创造了如此强大的工具，感谢开源社区的无私奉献！
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 滚动动画
+        function observeElements() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right').forEach(el => {
+                observer.observe(el);
+            });
+        }
+
+        // 平滑滚动
+        function initSmoothScroll() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        }
+
+        // 导航栏滚动效果
+        function initNavbarScroll() {
+            const navbar = document.querySelector('.navbar');
+            let lastScrollY = window.scrollY;
+
+            window.addEventListener('scroll', () => {
+                const currentScrollY = window.scrollY;
+                
+                if (currentScrollY > 100) {
+                    navbar.style.background = 'rgba(26, 31, 58, 0.98)';
+                    navbar.style.backdropFilter = 'blur(20px)';
+                } else {
+                    navbar.style.background = 'rgba(26, 31, 58, 0.95)';
+                    navbar.style.backdropFilter = 'blur(10px)';
+                }
+                
+                lastScrollY = currentScrollY;
+            });
+        }
+
+        // 鼠标跟随效果已移除
+
+        // 代码高亮效果（已移除打字动画）
+        function initCodeHighlight() {
+            // 静态显示，无需动画
+            console.log('Code highlighting initialized');
+        }
+
+        // 初始化所有功能
+        document.addEventListener('DOMContentLoaded', () => {
+            observeElements();
+            initSmoothScroll();
+            initNavbarScroll();
+            initCodeHighlight();
+            
+            // 为CTA按钮添加波纹效果
+            document.querySelectorAll('.cta-button, .social-link').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    const ripple = document.createElement('span');
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+                    
+                    ripple.style.cssText = `
+                        position: absolute;
+                        border-radius: 50%;
+                        background: rgba(255, 255, 255, 0.6);
+                        transform: scale(0);
+                        animation: ripple 0.6s linear;
+                        width: ${size}px;
+                        height: ${size}px;
+                        left: ${x}px;
+                        top: ${y}px;
+                        pointer-events: none;
+                    `;
+                    
+                    this.style.position = 'relative';
+                    this.style.overflow = 'hidden';
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+            
+            // 添加波纹动画样式
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes ripple {
+                    to {
+                        transform: scale(4);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+
+        // 复制提示词功能
+        function copyPrompt() {
+            const promptText = `# 📋 项目需求
+开发一个简单的web投票系统
+
+# 🎯 功能要求
+这个应用需要实现以下功能：
+1. 显示投票问题和选项
+2. 接受用户的投票
+3. 展示每个选项的当前票数
+
+# 🛠️ 技术栈
+后端：Python + Flask应用
+前端：HTML + CSS + JavaScript
+存储：不需要数据库，内存存储
+
+# 🚀 开发流程
+1. 请 api-designer 智能体为我设计一个简单的Web投票应用的REST API端点。
+   要求：请以清晰的Markdown格式提供API规格说明,API规格说明文档要求详细，包括地址和出入参的详细规定，保证前后端agent能够根据文档开发出前后端代码。
+
+2. 使用上一步生成的API规格说明,请 backend-developer 智能体为我编写一个完整的Flask应用，文件名为 app.py。
+
+3. 使用第一步生成的API规格说明,请 frontend-developer 智能体创建与Flask后端交互的前端文件。
+   要求：创建 templates/index.html, static/style.css, 和 static/script.js。
+
+4. 使用第一步生成的API规格说明，请主智能体完成前后端测试和修复工作，保证前后端能够正常的调用工作。`;
+
+            navigator.clipboard.writeText(promptText).then(() => {
+                // 成功提示
+                const button = event.target.closest('button');
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check"></i> 已复制到剪贴板！';
+                button.style.background = 'linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%)';
+                
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.style.background = 'var(--gradient-1)';
+                }, 2000);
+            }).catch(() => {
+                // 降级处理：选择文本
+                const textArea = document.createElement('textarea');
+                textArea.value = promptText;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                const button = event.target.closest('button');
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check"></i> 已复制！';
+                button.style.background = 'linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%)';
+                
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.style.background = 'var(--gradient-1)';
+                }, 2000);
+            });
+        }
+
+        // 添加一些彩蛋
+        let clickCount = 0;
+        document.querySelector('.logo').addEventListener('click', () => {
+            clickCount++;
+            if (clickCount === 5) {
+                alert('🎉 恭喜发现彩蛋！你是第 ' + Math.floor(Math.random() * 1000 + 1) + ' 个发现这个秘密的人！');
+                clickCount = 0;
+            }
+        });
+    </script>
+</body>
+</html>
