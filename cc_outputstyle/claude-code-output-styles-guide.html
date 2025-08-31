@@ -1,0 +1,1502 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Code Output Styles 完全指南 | B站UP主分享</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #0066ff;
+            --secondary-color: #667eea;
+            --accent-color: #764ba2;
+            --bg-color: #0a0e27;
+            --surface-color: #1a1f3a;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a9c0;
+            --border-color: #2a2f4a;
+            --success-color: #00d2ff;
+            --warning-color: #ff6b6b;
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #0066ff 0%, #00d2ff 100%);
+            --gradient-3: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* 背景动画 */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, var(--primary-color) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, var(--secondary-color) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 80%, var(--accent-color) 0%, transparent 50%);
+            animation: bgMove 20s ease-in-out infinite;
+        }
+
+        @keyframes bgMove {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(1deg); }
+            66% { transform: translateY(20px) rotate(-1deg); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .main-content {
+            margin-top: 80px;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            padding: 4rem 0;
+            background: var(--gradient-1);
+            margin: 2rem 0;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"><animate attributeName="r" values="2;3;2" dur="3s" repeatCount="indefinite"/></circle><circle cx="80" cy="20" r="1" fill="rgba(255,255,255,0.1)"><animate attributeName="r" values="1;2;1" dur="2s" repeatCount="indefinite"/></circle><circle cx="50" cy="80" r="1.5" fill="rgba(255,255,255,0.1)"><animate attributeName="r" values="1.5;2.5;1.5" dur="4s" repeatCount="indefinite"/></circle></svg>') repeat;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        .bilibili-tag {
+            display: inline-block;
+            background: #ff6b96;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 20px;
+            animation: fadeInUp 1s ease-out 0.6s both;
+        }
+
+        .content-section {
+            background: var(--surface-color);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 30px;
+            animation: slideInUp 0.8s ease-out;
+        }
+
+        .content-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-1);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #fff 0%, #a0a9c0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .bilibili-tag {
+            display: inline-block;
+            background: var(--gradient-2);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(0, 102, 255, 0.3);
+        }
+
+        .code-showcase {
+            background: #1e1e2e;
+            padding: 0;
+            border-radius: 15px;
+            margin: 2rem 0;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .highlight-box {
+            background: var(--gradient-1);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .highlight-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        .code-block {
+            background: #1e1e2e;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .code-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .code-dot.red { background: #ff5f56; }
+        .code-dot.yellow { background: #ffbd2e; }
+        .code-dot.green { background: #27ca3f; }
+
+        .code-title {
+            margin-left: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .code-content {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #e6edf3;
+            padding: 1.5rem;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .main-content {
+                margin-top: 60px;
+                padding: 1rem;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .content-section {
+                padding: 1.5rem;
+            }
+
+            .feature-card {
+                padding: 1.5rem;
+            }
+        }
+
+        .code-block::before {
+            content: '📋 点击复制';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: #4299e1;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+
+
+        .code-block.copied::before {
+            content: '✅ 已复制!';
+            background: #48bb78;
+        }
+
+        .code-block {
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        .code-block .keyword {
+            color: #f56565;
+            font-weight: bold;
+        }
+
+        .code-block .command {
+            color: #4299e1;
+            font-weight: bold;
+        }
+
+        .code-block .string {
+            color: #68d391;
+        }
+
+        .code-block .comment {
+            color: #a0aec0;
+            font-style: italic;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--surface-color);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .comparison-table th {
+            background: var(--gradient-1);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .comparison-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .feature-card {
+            background: var(--surface-color);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-1);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+
+
+        .feature-icon {
+            font-size: 3rem;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .step-timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .step-timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #667eea;
+        }
+
+        .step-item {
+            position: relative;
+            padding: 20px 0;
+            padding-left: 40px;
+        }
+
+        .step-item::before {
+            content: attr(data-step);
+            position: absolute;
+            left: -8px;
+            top: 20px;
+            width: 30px;
+            height: 30px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 2rem;
+            background: rgba(26, 31, 58, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.hidden {
+            transform: translateY(-100%);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+
+
+        .footer {
+            background: var(--surface-color);
+            padding: 3rem 2rem 2rem;
+            margin-top: 4rem;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-1);
+            border-radius: 50%;
+            color: white;
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+
+
+        .copyright {
+            color: var(--text-secondary);
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .scroll-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--gradient-1);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .scroll-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .content-section {
+                padding: 25px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .emoji {
+            font-size: 1.2em;
+            margin-right: 8px;
+        }
+
+        /* 动画类 */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .slide-in-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.6s ease;
+        }
+
+        .slide-in-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .slide-in-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.6s ease;
+        }
+
+        .slide-in-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* 滚动条样式 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gradient-1);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gradient-2);
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            z-index: 9999;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    <div class="progress-bar" id="progressBar"></div>
+    
+    <nav class="navbar" id="navbar">
+        <div class="nav-content">
+            <div class="logo">
+                <i class="fas fa-robot"></i> Claude Code
+            </div>
+            <ul class="nav-links">
+                <li><a href="#overview">概述</a></li>
+                <li><a href="#features">功能特性</a></li>
+                <li><a href="#comparison">对比分析</a></li>
+                <li><a href="#usage">使用指南</a></li>
+                <li><a href="#examples">案例展示</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <section class="header">
+                <div class="hero-content">
+                    <h1 class="hero-title">🎯 Claude Code Output Styles</h1>
+                    <p class="hero-subtitle">解锁AI编程助手的无限可能 - 从软件工程师到全能专家</p>
+                    <div class="bilibili-tag">🎬 B站UP主专业分享</div>
+                </div>
+            </section>
+
+        <section class="content-section fade-in" id="overview">
+            <h2 class="section-title"><span class="emoji">🔍</span>什么是 Output Styles？</h2>
+            
+            <div class="highlight-box">
+                <h3>💡 核心价值：改变智能体的"核心人格"</h3>
+                <p>Output Styles 的核心价值在于它能够<strong>彻底改变主智能体的核心行为模式和"人格"</strong>，使其从一个专注的"软件工程师"转变为任何领域的专家，同时完整保留其读写文件、执行本地命令等强大能力。</p>
+            </div>
+
+            <p>这是通过直接修改 Claude Code 的系统提示（System Prompt）来实现的。默认的 Default 风格包含了一系列为软件工程高度优化的指令，例如编写简洁代码、用测试验证等。当你切换到任何非默认风格时，这些针对软件工程的特定优化指令会被<strong>移除</strong>，并替换为新风格的自定义指令。</p>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">🎭</span>
+                    <h3>身份重塑</h3>
+                    <p>从单一的编程助手转变为任何领域的专家：技术写手、架构师、代码审查员等</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🔧</span>
+                    <h3>保留工具能力</h3>
+                    <p>改变人格的同时，完整保留文件操作、脚本执行、网络访问等核心能力</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">📝</span>
+                    <h3>轻松创建</h3>
+                    <p>通过 Markdown 文件轻松创建和分享自定义输出风格</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section fade-in" id="features">
+            <h2 class="section-title"><span class="emoji">⚡</span>内置输出风格</h2>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">🛠️</span>
+                    <h3>Default（默认）</h3>
+                    <p>专为软件工程任务优化的标准模式，强调效率和代码质量</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">📚</span>
+                    <h3>Explanatory（解释模式）</h3>
+                    <p>在完成任务的同时提供教育性的"洞察"，帮助理解实现选择和代码库模式</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🎓</span>
+                    <h3>Learning（学习模式）</h3>
+                    <p>协作式"边做边学"模式，通过 TODO(human) 标记引导用户参与编码过程</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🚀 如何切换输出风格？</h3>
+                <div class="code-showcase">
+                    <div class="code-header">
+                        <div class="code-dot red"></div>
+                        <div class="code-dot yellow"></div>
+                        <div class="code-dot green"></div>
+                        <span class="code-title">Terminal Commands</span>
+                    </div>
+                    <div class="code-content">
+                        <span style="color: #a0aec0;"># 打开风格选择菜单</span><br>
+                        <span style="color: #4299e1;">/output-style</span><br>
+                        <br>
+                        <span style="color: #a0aec0;"># 直接切换到特定风格</span><br>
+                        <span style="color: #4299e1;">/output-style</span> <span style="color: #68d391;">explanatory</span><br>
+                        <span style="color: #4299e1;">/output-style</span> <span style="color: #68d391;">learning</span><br>
+                        <br>
+                        <span style="color: #a0aec0;"># 创建新的自定义风格</span><br>
+                        <span style="color: #4299e1;">/output-style:new</span> <span style="color: #68d391;">I want an output style that focuses on security analysis</span><br>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section fade-in" id="comparison">
+            <h2 class="section-title"><span class="emoji">⚖️</span>Output Styles vs Sub-agents</h2>
+            
+            <p>理解 Output Styles 和 Sub-agents 的区别，是掌握 Claude Code 工作流的关键：</p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>特性</th>
+                        <th>Output Styles（输出风格）</th>
+                        <th>Sub-agents（子智能体）</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>核心隐喻</strong></td>
+                        <td>为同一个智能体<strong>更换帽子</strong>（改变人设）</td>
+                        <td>组建一支<strong>专家团队</strong>（委派任务）</td>
+                    </tr>
+                    <tr>
+                        <td><strong>作用对象</strong></td>
+                        <td>改变<strong>主智能体</strong>的行为模式和系统提示</td>
+                        <td>启动一个<strong>独立的、临时的、专门的智能体</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>上下文窗口</strong></td>
+                        <td><strong>共享</strong>。切换风格时，对话历史和上下文保持不变</td>
+                        <td><strong>隔离</strong>。每个子智能体都有独立的上下文窗口</td>
+                    </tr>
+                    <tr>
+                        <td><strong>核心用途</strong></td>
+                        <td>改变交互模式和领域专长</td>
+                        <td>任务的封装与委派</td>
+                    </tr>
+                    <tr>
+                        <td><strong>适用场景</strong></td>
+                        <td>动态调整主智能体的沟通风格</td>
+                        <td>创建可复用的"工具人"</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="highlight-box">
+                <h3>🎯 简单决策原则</h3>
+                <ul>
+                    <li><strong>Output Styles</strong>：让与你对话的<strong>同一个 Claude</strong> 改变说话方式或思考角度</li>
+                    <li><strong>Sub-agents</strong>：让 Claude <strong>叫一个"帮手"</strong> 去独立完成具体工作然后汇报结果</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="content-section fade-in" id="usage">
+            <h2 class="section-title"><span class="emoji">📋</span>创建自定义 Output Style</h2>
+            
+            <div class="step-timeline">
+                <div class="step-item" data-step="1">
+                    <h3>创建风格文件</h3>
+                    <p>在项目的 <code>.claude/output-styles/</code> 目录下创建 Markdown 文件</p>
+                    <div class="code-showcase">
+                        <div class="code-header">
+                            <div class="code-dot red"></div>
+                            <div class="code-dot yellow"></div>
+                            <div class="code-dot green"></div>
+                            <span class="code-title">Terminal Output</span>
+                        </div>
+                        <div class="code-content">
+                            <span style="color: #a0aec0;"># 用户级别（跨项目使用）</span><br>
+                            <span style="color: #68d391;">~/.claude/output-styles/my-style.md</span><br>
+                            <br>
+                            <span style="color: #a0aec0;"># 项目级别（仅当前项目）</span><br>
+                            <span style="color: #68d391;">.claude/output-styles/my-style.md</span><br>
+                        </div>
+                </div>
+
+                <div class="step-item" data-step="2">
+                    <h3>定义风格结构</h3>
+                    <p>使用标准的 Markdown frontmatter 格式定义风格</p>
+                    <div class="code-showcase">
+                        <div class="code-header">
+                            <div class="code-dot red"></div>
+                            <div class="code-dot yellow"></div>
+                            <div class="code-dot green"></div>
+                            <span class="code-title">Terminal Output</span>
+                        </div>
+                        <div class="code-content">
+                            <span style="color: #a0aec0;">---</span><br>
+                            <span style="color: #4299e1;">name:</span> <span style="color: #68d391;">我的自定义风格</span><br>
+                            <span style="color: #4299e1;">description:</span> <span style="color: #68d391;">专注于代码安全审查的输出风格</span><br>
+                            <span style="color: #a0aec0;">---</span><br>
+                            <br>
+                            <span style="color: #f56565;"># 自定义风格指令</span><br>
+                            <br>
+                            你是一个专业的安全代码审查专家...<br>
+                            <br>
+                            <span style="color: #f56565;">## 具体行为规范</span><br>
+                            <br>
+                            <span style="color: #4299e1;">-</span> 总是从安全角度分析代码<br>
+                            <span style="color: #4299e1;">-</span> 识别潜在的安全漏洞<br>
+                            <span style="color: #4299e1;">-</span> 提供修复建议<br>
+                        </div>
+                </div>
+
+                <div class="step-item" data-step="3">
+                    <h3>激活并使用</h3>
+                    <p>重启 Claude Code 后，新风格将自动可用</p>
+                    <div class="code-showcase">
+                        <div class="code-header">
+                            <div class="code-dot red"></div>
+                            <div class="code-dot yellow"></div>
+                            <div class="code-dot green"></div>
+                            <span class="code-title">Terminal Output</span>
+                        </div>
+                        <div class="code-content">
+                            <span style="color: #a0aec0;"># 切换到自定义风格</span><br>
+                            <span style="color: #4299e1;">/output-style</span> <span style="color: #68d391;">我的自定义风格</span><br>
+                            <br>
+                            <span style="color: #a0aec0;"># 或通过菜单选择</span><br>
+                            <span style="color: #4299e1;">/output-style</span><br>
+                        </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section fade-in" id="examples">
+            <h2 class="section-title"><span class="emoji">🏆</span>生产级最佳实践案例</h2>
+            
+            <div class="highlight-box">
+                <h3>💡 核心理念：专业化的智能体身份</h3>
+                <p>以下案例展示了如何创建<strong>真正专业化的智能体身份</strong>，每个风格都针对特定的工作场景优化，大幅提升工作效率和输出质量。</p>
+            </div>
+
+            <h3>📊 案例1：结构化数据生成器</h3>
+            <p><strong>场景描述</strong>：当需要Claude可靠地生成机器可读的数据时，例如用于Kubernetes配置的YAML、用于API模拟的JSON或用于其他脚本的结构化输入。目标是消除对话中的冗余信息，确保输出是有效且可解析的。</p>
+            <div class="code-showcase">
+                <div class="code-header">
+                    <div class="code-dot red"></div>
+                    <div class="code-dot yellow"></div>
+                    <div class="code-dot green"></div>
+                    <span class="code-title">structured-data-generator.md</span>
+                </div>
+                <div class="code-content">
+                    <span style="color: #a0aec0;">---</span><br>
+                    <span style="color: #4299e1;">name:</span> <span style="color: #68d391;">structured-data-generator</span><br>
+                    <span style="color: #4299e1;">description:</span> <span style="color: #68d391;">专门生成结构化数据（JSON/YAML/HTML），无对话文本</span><br>
+                    <span style="color: #a0aec0;">---</span><br>
+                    <br>
+                    <span style="color: #f56565;"># 结构化数据生成模式</span><br>
+                    <br>
+                    你是一个专门输出结构化数据的AI助手，专注于生成有效的、机器可读的数据。<br>
+                    <br>
+                    <span style="color: #f56565;">## 核心指令</span><br>
+                    <span style="color: #4299e1;">-</span> <strong>严格格式化</strong>：你的整个响应必须只包含请求的数据结构（如JSON、YAML、HTML）。不要包含任何介绍或结尾短语，如"这是您请求的JSON："或"当然，这是YAML："<br>
+                    <span style="color: #4299e1;">-</span> <strong>格式遵循</strong>：严格遵守所请求格式的语法和约定。确保JSON格式良好，YAML缩进正确<br>
+                    <span style="color: #4299e1;">-</span> <strong>无对话输出</strong>：不进行对话交流。如果用户的提示模糊，请要求澄清，但将您的问题格式化为结构化错误消息（例如，带有"error"键的JSON对象）<br>
+                    <span style="color: #4299e1;">-</span> <strong>基于提示内容</strong>：根据用户的提示生成数据。所有键和值应从用户的请求中推导出来<br>
+                    <br>
+                    <span style="color: #f56565;">## 示例：JSON请求</span><br>
+                    用户：为名为"Alex"、年龄30、角色"admin"的用户生成JSON对象<br>
+                    助手：<br>
+                    {<br>
+                    &nbsp;&nbsp;"name": "Alex",<br>
+                    &nbsp;&nbsp;"age": 30,<br>
+                    &nbsp;&nbsp;"role": "admin"<br>
+                    }<br>
+                    <br>
+                    <span style="color: #f56565;">## 示例：YAML请求</span><br>
+                    用户：为名为'webapp'的服务创建docker-compose.yaml，使用'nginx:latest'镜像并暴露端口80<br>
+                    助手：<br>
+                    version: '3.8'<br>
+                    services:<br>
+                    &nbsp;&nbsp;webapp:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;image: nginx:latest<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;ports:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- "80:80"<br>
+                </div>
+            </div>
+            <p><strong>使用指南</strong>：</p>
+            <ol>
+                <li>将上述内容保存到 <code>~/.claude/output-styles/structured-data-generator.md</code>（用户级）或项目的 <code>.claude/output-styles/structured-data-generator.md</code>（项目级）</li>
+                <li>在Claude Code中运行 <code>/output-style structured-data-generator</code> 激活此风格</li>
+                <li>直接向Claude提出生成特定格式数据的请求</li>
+            </ol>
+            <p><strong>示例提示</strong>：</p>
+            <ul>
+                <li>生成一个包含三个用户对象的JSON数组，每个都有id、username和email字段</li>
+                <li>为名为'my-app'的应用创建Kubernetes部署YAML，包含3个副本，使用镜像'my-registry/my-app:1.2.0'</li>
+                <li>输出一个简单登录表单的HTML片段，包含用户名和密码字段，以及提交按钮</li>
+            </ul>
+
+            <h3>💼 案例2：企业级专业沟通</h3>
+            <p><strong>场景描述</strong>：当使用Claude起草报告、电子邮件或技术文档，并需要其语气专业、客观，且不含"您说得太对了！"等谄媚性语言时，此风格非常适用。它满足了社区对于更直接、客观沟通风格的需求。</p>
+            <div class="code-showcase">
+                <div class="code-header">
+                    <div class="code-dot red"></div>
+                    <div class="code-dot yellow"></div>
+                    <div class="code-dot green"></div>
+                    <span class="code-title">direct-objective.md</span>
+                </div>
+                <div class="code-content">
+                    <span style="color: #a0aec0;">---</span><br>
+                    <span style="color: #4299e1;">name:</span> <span style="color: #68d391;">direct-objective</span><br>
+                    <span style="color: #4299e1;">description:</span> <span style="color: #68d391;">清晰、专业的沟通，无过度恭维或谄媚的语言</span><br>
+                    <span style="color: #a0aec0;">---</span><br>
+                    <br>
+                    <span style="color: #f56565;"># 直接客观沟通风格</span><br>
+                    <br>
+                    你是一位专业的AI助手。你的沟通风格必须客观、专注事实、简洁明了。在企业和技术环境中保持专业语调。<br>
+                    <br>
+                    <span style="color: #f56565;">## 核心沟通原则</span><br>
+                    <span style="color: #4299e1;">-</span> <strong>事实确认</strong>：当用户提出有效观点时，用中性、事实性的语言确认<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• 使用："这是正确的"或"有效观点"<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• 而不是："您完全正确！"或"绝佳的观察！"<br>
+                    <span style="color: #4299e1;">-</span> <strong>专注解决方案</strong>：优先提供解决方案、数据和分析，而非表达同意或个人观点<br>
+                    <span style="color: #4299e1;">-</span> <strong>清晰简洁</strong>：使用清晰直接的语言。尽可能避免行话，除非它是该领域的标准。直截了当<br>
+                    <span style="color: #4299e1;">-</span> <strong>专业语调</strong>：保持乐于助人和响应性，但避免过度熟悉或溢美的语言。你的语调应该像一位值得信赖的专家同事<br>
+                    <span style="color: #4299e1;">-</span> <strong>不道歉</strong>：不要为限制或知识缺乏道歉。相反，说明你能做什么或缺少什么信息。例如，说"我无法访问实时数据"，而不是"抱歉，我无法访问实时数据"<br>
+                </div>
+            </div>
+            <p><strong>使用指南</strong>：</p>
+            <ol>
+                <li>将配置文件保存到 <code>~/.claude/output-styles/</code> 目录下</li>
+                <li>运行 <code>/output-style direct-objective</code> 激活</li>
+                <li>适用于起草专业文档、总结会议纪要或进行技术评审等任务</li>
+            </ol>
+            <p><strong>示例提示</strong>：</p>
+            <ul>
+                <li>请总结以下项目更新，重点关注关键指标、已完成的里程碑和当前的障碍："凤凰项目第三季度更新：用户认证模块已完成90%（关键指标）。数据库模式定稿的里程碑已于8月15日达成。目前的障碍是第三方支付网关团队延迟提供API凭证。"</li>
+                <li>请评审以下架构提议，并就其技术可行性、潜在风险和可扩展性提供反馈："提议：我们将使用Node.js和PostgreSQL数据库构建一个单体后端服务，部署在单个大型EC2实例上。所有用户数据将存储在同一个表中。"</li>
+                <li>起草一封给工程团队的电子邮件，内容是关于即将进行的数据库迁移。迁移计划在下周日凌晨2点到4点进行，预计停机时间为2小时。团队需要在迁移后验证他们的服务能连接到新的数据库端点。</li>
+            </ul>
+
+            <h3>🔬 案例3：研究分析师</h3>
+            <p><strong>场景描述</strong>：当需要执行涉及阅读文档或网页、整合信息并以结构化格式呈现研究结果（附带引文）的任务时，此风格可将Claude从软件工程师彻底转变为一名研究人员。这是Anthropic和社区都设想的核心用例之一。</p>
+            <div class="code-showcase">
+                <div class="code-header">
+                    <div class="code-dot red"></div>
+                    <div class="code-dot yellow"></div>
+                    <div class="code-dot green"></div>
+                    <span class="code-title">research-analyst.md</span>
+                </div>
+                <div class="code-content">
+                    <span style="color: #a0aec0;">---</span><br>
+                    <span style="color: #4299e1;">name:</span> <span style="color: #68d391;">research-analyst</span><br>
+                    <span style="color: #4299e1;">description:</span> <span style="color: #68d391;">细致的研究分析师，综合信息并引用来源</span><br>
+                    <span style="color: #a0aec0;">---</span><br>
+                    <br>
+                    <span style="color: #f56565;"># 研究分析师人格</span><br>
+                    <br>
+                    你是一位细致的研究分析师。你的主要目标是从提供的来源（文件、URL）收集信息，综合信息，并呈现结构化、无偏见的报告。<br>
+                    <br>
+                    <span style="color: #f56565;">## 研究工作流</span><br>
+                    <span style="color: #4299e1;">1.</span> <strong>确认与规划</strong>：首先，确认请求并简要概述你的行动计划（例如，"我将分析提供的文本以识别市场趋势..."）<br>
+                    <span style="color: #4299e1;">2.</span> <strong>信息收集</strong>：阅读任何提供的文本、本地文件（.pdf、.md、.txt）或使用WebFetch工具处理URL<br>
+                    <span style="color: #4299e1;">3.</span> <strong>综合发现</strong>：将你的响应结构化为清晰的部分。常见部分包括：<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• <strong>执行摘要</strong>：主要发现的简要概述<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• <strong>关键发现</strong>：最重要要点的详细项目符号列表<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• <strong>数据与证据</strong>：支持发现的具体数据点、引用或证据<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• <strong>矛盾或空白</strong>：任何冲突信息或数据缺乏的领域<br>
+                    <span style="color: #4299e1;">4.</span> <strong>引用来源</strong>：对于你呈现的每个声明或信息，你必须引用其来源。在报告结尾提供"来源"部分，列出所有引用材料<br>
+                    <span style="color: #4299e1;">5.</span> <strong>保持客观</strong>：实事求是地呈现信息。避免推测或个人观点，除非明确要求提供分析<br>
+                </div>
+            </div>
+            <p><strong>使用指南</strong>：</p>
+            <ol>
+                <li>保存配置文件并使用 <code>/output-style research-analyst</code> 激活</li>
+                <li>在提示中提供所有相关的源材料，如文本、文件路径和URL</li>
+                <li>清晰地说明您希望报告包含哪些内容</li>
+            </ol>
+            <p><strong>示例提示</strong>：</p>
+            <ul>
+                <li>根据以下提供的文本，生成一份包含执行摘要和关键发现的研究报告。请将源文本引用为："全球AI驱动的开发者工具市场预计将从2023年的50亿美元增长到2032年的超过290亿美元，复合年增长率超过22%。这一增长由显著的生产力提升驱动；GitHub Copilot用户完成任务的速度提高了55%，92%的开发者报告使用AI工具。主要趋势包括能够处理多步骤任务的代理式AI的兴起、与IDE的更深度集成以及像Code Llama这样的开源模型的出现。企业正在从试点转向生产，2024年AI支出飙升至138亿美元，是2023年的6倍。"</li>
+                <li>请总结以下学术论文摘要的主要贡献、方法论和结论。请将摘要引用为[Abstract]："[Abstract]: 本文介绍了一种在高中阶段教授量子计算的新方法，专为在高等数学或物理学方面背景有限的学生设计。该方法论包含一个四部分的课程结构：量子概念介绍、用于量子计算的矩阵数学、量子电路模型以及量子计算机的物理构造。课程结合了便携式核磁共振（NMR）量子计算机（Gemini/Triangulum系列）的实践经验，使抽象概念变得具体。我们的主要贡献是开发了一套通过关注易于理解的实际应用而非深奥物理理论来揭开量子计算神秘面纱的课程，并通过学生参与度和理解度指标证明了其有效性。"</li>
+            </ul>
+
+            <h3>📝 案例4：Python文档字符串生成器</h3>
+            <p><strong>场景描述</strong>：如果团队采用Google风格指南来编写Python文档字符串（docstrings），此风格可以将Claude变成一个专门读取Python函数并生成合规文档字符串的专家。这是一个非常实用的、与编码紧密相关的工作流程。</p>
+            <div class="code-showcase">
+                <div class="code-header">
+                    <div class="code-dot red"></div>
+                    <div class="code-dot yellow"></div>
+                    <div class="code-dot green"></div>
+                    <span class="code-title">python-docstring-google.md</span>
+                </div>
+                <div class="code-content">
+                    <span style="color: #a0aec0;">---</span><br>
+                    <span style="color: #4299e1;">name:</span> <span style="color: #68d391;">python-docstring-google</span><br>
+                    <span style="color: #4299e1;">description:</span> <span style="color: #68d391;">生成符合Google风格的Python函数文档字符串</span><br>
+                    <span style="color: #a0aec0;">---</span><br>
+                    <br>
+                    <span style="color: #f56565;"># Python Google风格文档字符串生成器</span><br>
+                    <br>
+                    你是一位专精编写高质量文档的Python专家。你的任务是为给定的Python函数生成完整且符合Google风格的文档字符串。<br>
+                    <br>
+                    <span style="color: #f56565;">## 文档字符串结构</span><br>
+                    你必须精确遵循此结构：<br>
+                    <br>
+                    <span style="color: #4299e1;">1.</span> <strong>单行摘要</strong>：函数目的的简洁摘要，以句号结尾<br>
+                    <span style="color: #4299e1;">2.</span> <strong>扩展描述（可选）</strong>：如需要，提供更详细的解释<br>
+                    <span style="color: #4299e1;">3.</span> <strong>Args部分</strong>：在Args:部分下列出每个参数。每个参数应有：<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• 参数名 (类型): 参数描述<br>
+                    <span style="color: #4299e1;">4.</span> <strong>Returns部分</strong>：在Returns:部分下描述返回值。应有：<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• 类型: 返回值描述。如果函数不返回任何内容，可以省略或使用None<br>
+                    <span style="color: #4299e1;">5.</span> <strong>Raises部分（可选）</strong>：在Raises:部分下列出函数可能引发的任何异常<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• 异常类型: 何时以及为什么引发异常<br>
+                    <br>
+                    <span style="color: #f56565;">## 示例</span><br>
+                    <strong>用户提供此函数：</strong><br>
+                    def calculate_average(numbers, precision=2):<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if not isinstance(numbers, list):<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;raise TypeError("Input must be a list of numbers.")<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if not numbers:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return 0.0<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;avg = sum(numbers) / len(numbers)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return round(avg, precision)<br>
+                    <br>
+                    <strong>你必须生成此文档字符串：</strong><br>
+                    """计算数字列表的平均值。<br>
+                    <br>
+                    Args:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;numbers (list): 要平均的数字（int或float）列表<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;precision (int, optional): 结果四舍五入的小数位数。默认为2<br>
+                    <br>
+                    Returns:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;float: 计算得出的平均值，四舍五入到指定精度<br>
+                    <br>
+                    Raises:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;TypeError: 如果输入`numbers`不是列表<br>
+                    """<br>
+                    <br>
+                    你的输出应该只是文档字符串，可以直接插入代码中。<br>
+                </div>
+            </div>
+            <p><strong>使用指南</strong>：</p>
+            <ol>
+                <li>保存配置文件并使用 <code>/output-style python-docstring-google</code> 激活</li>
+                <li>将Python函数代码粘贴到Claude Code中</li>
+            </ol>
+            <p><strong>示例提示</strong>：</p>
+            <ul>
+                <li>请为以下Python函数生成一个符合Google风格的完整文档字符串：<br>
+                def process_user_data(user_id: int, data: dict, send_notification: bool = True) -> bool:<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;if not isinstance(user_id, int) or user_id <= 0:<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;raise ValueError("A valid user ID must be a positive integer.")<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;if not data:<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print("Warning: Data dictionary is empty.")<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;# ... processing logic...<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;if send_notification:<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# ... notification logic...<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;return True</li>
+            </ul>
+
+            <h3>🔄 案例5：规范化提交作者</h3>
+            <p><strong>场景描述</strong>：此风格旨在自动化编写规范化提交（Conventional Commits）信息的繁琐过程，将Claude专精于分析Git暂存区的变更并撰写完美的提交信息。这将强大的功能升华为一个完整的"人格"，供频繁执行此任务的用户使用。</p>
+            <div class="code-showcase">
+                <div class="code-header">
+                    <div class="code-dot red"></div>
+                    <div class="code-dot yellow"></div>
+                    <div class="code-dot green"></div>
+                    <span class="code-title">conventional-committer.md</span>
+                </div>
+                <div class="code-content">
+                    <span style="color: #a0aec0;">---</span><br>
+                    <span style="color: #4299e1;">name:</span> <span style="color: #68d391;">conventional-committer</span><br>
+                    <span style="color: #4299e1;">description:</span> <span style="color: #68d391;">分析暂存的Git更改并编写规范化提交信息</span><br>
+                    <span style="color: #a0aec0;">---</span><br>
+                    <br>
+                    <span style="color: #f56565;"># 规范化提交作者</span><br>
+                    <br>
+                    你是严格遵循Conventional Commits规范的专家软件开发者。你的任务是分析用户的暂存代码变更并生成精确且信息丰富的提交信息。<br>
+                    <br>
+                    <span style="color: #f56565;">## 工作流程</span><br>
+                    <span style="color: #4299e1;">1.</span> <strong>分析变更</strong>：你必须首先运行 git diff --staged 来了解即将提交的变更<br>
+                    <span style="color: #4299e1;">2.</span> <strong>提议信息</strong>：基于你的分析，按以下格式提出提交信息：<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&lt;类型&gt;(&lt;范围&gt;): &lt;描述&gt;<br>
+                    <span style="color: #4299e1;">3.</span> <strong>等待批准</strong>：向用户展示提议的信息并等待他们的批准后再继续<br>
+                    <span style="color: #4299e1;">4.</span> <strong>执行提交</strong>：获得批准后，使用生成的信息执行git commit命令来完成提交<br>
+                    <br>
+                    <span style="color: #f56565;">## 提交类型</span><br>
+                    • <strong>feat</strong>: 新功能<br>
+                    • <strong>fix</strong>: Bug修复<br>
+                    • <strong>docs</strong>: 文档更新<br>
+                    • <strong>style</strong>: 代码格式（不影响逻辑的变更）<br>
+                    • <strong>refactor</strong>: 重构<br>
+                    • <strong>test</strong>: 测试相关<br>
+                    • <strong>chore</strong>: 构建/工具变更<br>
+                </div>
+            </div>
+            <p><strong>使用指南</strong>：</p>
+            <ol>
+                <li>使用 <code>git add</code> 将您的更改添加到暂存区</li>
+                <li>保存配置文件并运行 <code>/output-style conventional-committer</code> 激活</li>
+                <li>向Claude提示："为暂存的更改编写提交信息。"</li>
+                <li>在Claude提出信息后，批准它执行提交</li>
+            </ol>
+            <p><strong>示例提示</strong>：</p>
+            <ul>
+                <li>为我暂存的更改生成一条提交信息</li>
+                <li>检查暂存区的变更，提出一条规范化的提交信息，然后执行提交</li>
+            </ul>
+
+            <h3>🎯 实际使用示例</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">📊</span>
+                    <h3>生成配置文件</h3>
+                    <div style="text-align: left; font-size: 0.9rem; color: var(--text-secondary);">
+                        <code>/output-style structured-data-generator</code><br>
+                        <code>创建包含3个用户的JSON数组</code>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">💼</span>
+                    <h3>撰写技术报告</h3>
+                    <div style="text-align: left; font-size: 0.9rem; color: var(--text-secondary);">
+                        <code>/output-style direct-objective</code><br>
+                        <code>总结项目进展和技术风险评估</code>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🔬</span>
+                    <h3>市场分析报告</h3>
+                    <div style="text-align: left; font-size: 0.9rem; color: var(--text-secondary);">
+                        <code>/output-style research-analyst</code><br>
+                        <code>分析AI工具市场趋势，基于提供的3篇文章</code>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">📝</span>
+                    <h3>代码文档生成</h3>
+                    <div style="text-align: left; font-size: 0.9rem; color: var(--text-secondary);">
+                        <code>/output-style python-docstring-google</code><br>
+                        <code>为utils.py中的所有函数生成文档</code>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🔄</span>
+                    <h3>自动化提交</h3>
+                    <div style="text-align: left; font-size: 0.9rem; color: var(--text-secondary);">
+                        <code>/output-style conventional-committer</code><br>
+                        <code>分析暂存变更并生成规范提交信息</code>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section fade-in">
+            <h2 class="section-title"><span class="emoji">🔗</span>相关功能对比</h2>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">📄</span>
+                    <h3>vs CLAUDE.md</h3>
+                    <p>CLAUDE.md 是作为用户消息添加，Output Styles 直接修改系统提示</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">⚙️</span>
+                    <h3>vs --append-system-prompt</h3>
+                    <p>该参数是追加内容，Output Styles 会替换特定部分</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🤖</span>
+                    <h3>vs Sub-agents</h3>
+                    <p>Output Styles 影响主循环，Sub-agents 处理特定任务</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">💾</span>
+                    <h3>vs 自定义命令</h3>
+                    <p>Output Styles 是"存储的系统提示"，自定义命令是"存储的提示"</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section fade-in">
+            <h2 class="section-title"><span class="emoji">🎓</span>学习资源</h2>
+            
+            <div class="highlight-box">
+                <h3>📚 推荐学习路径</h3>
+                <ol>
+                    <li><strong>从内置风格开始</strong>：尝试 Explanatory 和 Learning 模式</li>
+                    <li><strong>创建简单自定义风格</strong>：如专门的文档写手或代码审查员</li>
+                    <li><strong>探索风格链方法</strong>：将复杂任务分解为多个阶段</li>
+                    <li><strong>研究社区案例</strong>：参考成功的风格实现</li>
+                    <li><strong>分享与协作</strong>：在社区分享你的创新风格</li>
+                </ol>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">🌐</span>
+                    <h3>官方文档</h3>
+                    <p><a href="https://docs.anthropic.com/en/docs/claude-code/output-styles" target="_blank">docs.anthropic.com/claude-code/output-styles</a></p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">💬</span>
+                    <h3>社区讨论</h3>
+                    <p>Reddit r/ClaudeAI 和 r/ClaudeCode 子版块</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">📹</span>
+                    <h3>视频教程</h3>
+                    <p>关注B站UP主分享更多实用技巧</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🔧</span>
+                    <h3>实践项目</h3>
+                    <p>在实际项目中尝试不同的输出风格</p>
+                </div>
+            </div>
+        </section>
+    </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <h3 style="margin-bottom: 1rem; background: var(--gradient-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                解锁AI编程助手的无限可能
+            </h3>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+                Claude Code Output Styles 不只是工具，更是编程思维的革命。<br>
+                从单一角色到多重身份，让AI成为你最强的编程伙伴！
+            </p>
+            
+            <div class="social-links">
+                <a href="#" class="social-link" title="B站">
+                    <i class="fas fa-play"></i>
+                </a>
+                <a href="#" class="social-link" title="GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="#" class="social-link" title="微信">
+                    <i class="fab fa-weixin"></i>
+                </a>
+                <a href="#" class="social-link" title="QQ群">
+                    <i class="fas fa-users"></i>
+                </a>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2025 Claude Code Output Styles 指南. 用 ❤️ 和 🤖 制作</p>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem;">
+                    感谢Anthropic创造了如此强大的工具，感谢开源社区的无私奉献！
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <button class="scroll-to-top" id="scrollToTop">↑</button>
+
+    <script>
+        // 进度条
+        function updateProgressBar() {
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.body.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            document.getElementById('progressBar').style.width = scrollPercent + '%';
+        }
+
+        // 导航栏隐藏/显示
+        let lastScrollTop = 0;
+        function handleNavbar() {
+            const scrollTop = window.pageYOffset;
+            const navbar = document.getElementById('navbar');
+            
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                navbar.classList.add('hidden');
+            } else {
+                navbar.classList.remove('hidden');
+            }
+            lastScrollTop = scrollTop;
+        }
+
+        // 回到顶部按钮
+        function toggleScrollToTop() {
+            const scrollToTop = document.getElementById('scrollToTop');
+            if (window.pageYOffset > 300) {
+                scrollToTop.classList.add('visible');
+            } else {
+                scrollToTop.classList.remove('visible');
+            }
+        }
+
+        // 代码块复制功能
+        function initCodeCopy() {
+            document.querySelectorAll('.code-block').forEach(block => {
+                block.addEventListener('click', function() {
+                    // 获取纯文本内容，移除HTML标签
+                    const text = this.innerText || this.textContent;
+                    navigator.clipboard.writeText(text).then(() => {
+                        const beforeElement = this;
+                        beforeElement.style.setProperty('--copy-text', '"✅ 已复制!"');
+                        beforeElement.classList.add('copied');
+                        setTimeout(() => {
+                            beforeElement.style.setProperty('--copy-text', '"📋 点击复制"');
+                            beforeElement.classList.remove('copied');
+                        }, 2000);
+                    }).catch(err => {
+                        console.error('复制失败:', err);
+                    });
+                });
+            });
+        }
+
+        // 平滑滚动
+        function initSmoothScroll() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        }
+
+        // 回到顶部
+        document.getElementById('scrollToTop').addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // 事件监听
+        window.addEventListener('scroll', () => {
+            updateProgressBar();
+            handleNavbar();
+            toggleScrollToTop();
+        });
+
+        // 滚动动画
+        function observeElements() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right').forEach(el => {
+                observer.observe(el);
+            });
+        }
+
+        // 导航栏滚动效果
+        function initNavbarScroll() {
+            const navbar = document.querySelector('.navbar');
+            let lastScrollY = window.scrollY;
+
+            window.addEventListener('scroll', () => {
+                const currentScrollY = window.scrollY;
+                
+                if (currentScrollY > 100) {
+                    navbar.style.background = 'rgba(26, 31, 58, 0.98)';
+                    navbar.style.backdropFilter = 'blur(20px)';
+                } else {
+                    navbar.style.background = 'rgba(26, 31, 58, 0.95)';
+                    navbar.style.backdropFilter = 'blur(10px)';
+                }
+                
+                lastScrollY = currentScrollY;
+            });
+        }
+
+        // 鼠标跟随效果已移除
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            initCodeCopy();
+            initSmoothScroll();
+            updateProgressBar();
+            observeElements();
+            initNavbarScroll();
+        });
+
+        // 动画观察器
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationDelay = '0s';
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, observerOptions);
+
+        // 观察所有动画元素
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.content-section, .feature-card').forEach(el => {
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>
